@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _MACROS_H_
+#define _MACROS_H_
 
 #define MAX_SIZE 255
 
@@ -29,5 +30,7 @@
 #define RR_1     0x85 // (mudar estes
 #define REJ_0    0x01 //  valores)
 #define REJ_1    0x81
-#define VTIME    0
-#define VMIN     1
+#define VTIME_VALUE    0
+#define VMIN_VALUE     1
+
+#endif

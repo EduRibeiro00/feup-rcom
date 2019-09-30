@@ -87,7 +87,6 @@ int readSupervisionFrame(unsigned char* frame, int fd) {
 }
 
 
-
 int openNonCanonical(char* port, struct termios* oldtio, int vtime, int vmin) {
     
     int fd = open(port, O_RDWR | O_NOCTTY );

@@ -99,7 +99,7 @@ int llopen(char* port, int role) {
     int fd;
 
     // open, in non canonical
-    if((fd = openNonCanonical(port, &oldtio, VTIME, VMIN)) == -1)
+    if((fd = openNonCanonical(port, &oldtio, VTIME_VALUE, VMIN_VALUE)) == -1)
       return -1;
 
 
@@ -111,10 +111,10 @@ int llopen(char* port, int role) {
 
 
     if(role == TRANSMITTER) {
-        return llopenTransmitter(fd);
+        return llOpenTransmitter(fd);
     }
     else if(role == RECEIVER) {
-        return llopenReceiver(fd);
+        return llOpenReceiver(fd);
     }
 
     perror("Invalid role");
