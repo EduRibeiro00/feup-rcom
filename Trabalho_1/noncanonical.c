@@ -10,10 +10,7 @@
 #include <strings.h>
 #include <unistd.h>
 
-#define BAUDRATE B38400
-#define _POSIX_SOURCE 1 /* POSIX compliant source */
-#define FALSE 0
-#define TRUE 1
+#include "macros.h"
 
 volatile int STOP=FALSE;
 
