@@ -29,19 +29,19 @@ typedef struct state_machine {
     state_st state;
 } state_machine_st;
 
-void change_state(state_machine_st sm, state_st st) {
-    sm.state = st;
+void change_state(state_machine_st* sm, state_st st) {
+    sm->state = st;
 }
 
-state_machine_st create_state_machine() {
-    state_machine_st sm;
+state_machine_st* create_state_machine() {
+    state_machine_st* sm = malloc(sizeof(state_machine_st));
     change_state(sm, START);
     return sm;
 }
 
-void event_handler(state_machine_st sm, event_st ev) {
+void event_handler(state_machine_st* sm, event_st ev) {
 
-    switch(sm.state) {
+    switch(sm->state) {
 
         case START:
             if (ev == EV_FLAG_RCV)

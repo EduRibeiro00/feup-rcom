@@ -1,6 +1,9 @@
+#pragma once
+
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+
 #include <termios.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -19,3 +22,27 @@ struct linkLayer {
     falha*/
     unsigned char frame[MAX_SIZE]; /*Trama*/
 };
+
+/**
+ * Function that opens and establishes the connection between the receiver and the transmitter
+ * @param port Port name
+ * @param role Flag that indicates the transmitter or the receiver
+ * @return File descriptor; -1 in case of error 
+ */
+int llopen(char* port, int role);
+
+
+/**
+ * Opens the connection for the receiver
+ * @param File descriptor for the serial port
+ * @return File descriptor; -1 in case of error
+ */
+int llOpenReceiver(int fd);
+
+
+/**
+ * Opens the connection for the transmitter
+ * @param File descriptor for the serial port
+ * @return File descriptor; -1 in case of error
+ */
+int llOpenTransmitter(int fd);
