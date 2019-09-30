@@ -7,7 +7,7 @@
 #include <fcntl.h>
 
 #include "macros.h"
-#include "statemachine.c"
+#include "statemachine.h"
 
 unsigned char createBCC(unsigned char a, unsigned char c) {
     return a ^ c;

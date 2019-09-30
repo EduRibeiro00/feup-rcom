@@ -9,7 +9,7 @@
 #include <unistd.h>
 
 #include "data_link.h"
-#include "statemachine.c"
+#include "statemachine.h"
 #include "aux.h"
 
 // global variables
