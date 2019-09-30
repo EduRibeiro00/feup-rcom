@@ -23,7 +23,7 @@ int createSupervisionFrame(unsigned char* frame, unsigned char controlField, int
         if(controlField == SET || controlField == DISC) {
             frame[1] = END_SEND;
         }
-        else if(controlField == UA || controlField == RR || controlField == REJ) {
+        else if(controlField == UA || controlField == RR_0 || controlField == REJ_0 || controlField == RR_1 || controlField == REJ_1 ) {
             frame[1] = END_REC;
         }
         else return -1;
@@ -32,7 +32,7 @@ int createSupervisionFrame(unsigned char* frame, unsigned char controlField, int
         if(controlField == SET || controlField == DISC) {
             frame[1] = END_REC;
         }
-        else if(controlField == UA || controlField == RR || controlField == REJ) {
+        else if(controlField == UA || controlField == RR_0 || controlField == REJ_0 || controlField == RR_1 || controlField == REJ_1 ) {
             frame[1] = END_SEND;
         }
         else return -1;
@@ -78,8 +78,8 @@ int readSupervisionFrame(unsigned char* frame, int fd) {
 
         if(readByte(&byte, fd) != 0)
             return -1;
-
         
+        event_handler(st, byte, frame);
     }
 
 
@@ -127,7 +127,7 @@ int openNonCanonical(char* port, struct termios* oldtio, int vtime, int vmin) {
 
 int closeNonCanonical(int fd, struct termios* oldtio) {
 
-    if ( tcsetattr(fd,TCSANOW,&oldtio) == -1) {
+    if ( tcsetattr(fd,TCSANOW,oldtio) == -1) {
       perror("tcsetattr");
       return -1;
     }

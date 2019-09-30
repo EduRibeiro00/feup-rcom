@@ -24,15 +24,6 @@ struct linkLayer {
 
 
 /**
- * Function that opens and establishes the connection between the receiver and the transmitter
- * @param port Port name
- * @param role Flag that indicates the transmitter or the receiver
- * @return File descriptor; -1 in case of error 
- */
-int llopen(char* port, int role);
-
-
-/**
  * Opens the connection for the receiver
  * @param File descriptor for the serial port
  * @return File descriptor; -1 in case of error
@@ -46,3 +37,13 @@ int llOpenReceiver(int fd);
  * @return File descriptor; -1 in case of error
  */
 int llOpenTransmitter(int fd);
+
+
+/**
+ * Function that opens and establishes the connection between the receiver and the transmitter
+ * @param port Port name
+ * @param role Flag that indicates the transmitter or the receiver
+ * @return File descriptor; -1 in case of error 
+ */
+int llopen(char* port, int role);
+

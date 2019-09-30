@@ -23,9 +23,32 @@ struct termios oldtio;
  */
 int llOpenReceiver(int fd) {
 
-    state_machine_st *st = create_state_machine();
 
+    if(readSupervisionFrame(ll.frame, fd) == -1)
+        return -1;
 
+    if(ll.frame[1] != END_SEND){
+        printf("NAO FUNCIONOU");
+        return -1;
+    }
+        
+    if(ll.frame[2] == SET){
+        printf("FUNCIONOU");
+    }
+    else{
+        printf("NAO FUNCIONOU");
+        return -1;
+    }
+    
+
+    if(createSupervisionFrame(ll.frame, UA, RECEIVER) != 0)
+        return -1;
+    
+    // send SET frame to receiver
+    if(sendFrame(ll.frame, fd) != 0)
+        return -1;
+
+    return fd;
 }
 
 
@@ -43,11 +66,24 @@ int llOpenTransmitter(int fd) {
     // send SET frame to receiver
     if(sendFrame(ll.frame, fd) != 0)
         return -1;
-
     
+    //alarm(TIMEOUT);
 
+    if(readSupervisionFrame(ll.frame, fd) == -1)
+        return -1;
     
-
+    if(ll.frame[1] != END_SEND){
+        printf("NAO FUNCIONOU");
+        return -1;
+    }
+        
+    if(ll.frame[2] == UA){
+        printf("FUNCIONOU");
+    }
+    else{
+        printf("NAO FUNCIONOU");
+        return -1;
+    }
 
     return fd;
 }
@@ -75,10 +111,10 @@ int llopen(char* port, int role) {
 
 
     if(role == TRANSMITTER) {
-        return llopenTransmitter(port);
+        return llopenTransmitter(fd);
     }
     else if(role == RECEIVER) {
-        return llopenReceiver(port);
+        return llopenReceiver(fd);
     }
 
     perror("Invalid role");

@@ -7,6 +7,7 @@
 #include <string.h>
 #include <strings.h>
 #include <unistd.h>
+#include "aux.h"
 
 typedef enum state {
     START,
@@ -64,15 +65,19 @@ void event_handler(state_machine_st* sm, unsigned char byte, unsigned char* fram
         case A_RCV:
             if (byte == FLAG)
                 change_state(sm, FLAG_RCV);
-            else if (ev == EV_C_RCV)
+            else if (byte == UA || byte  == DISC || byte == UA || byte  == RR_0 || byte == REJ_0 || byte == RR_1 || byte == REJ_1){
                 change_state(sm, C_RCV);
+                frame[2] = byte;
+            }
             else
                 change_state(sm, START);
             break;
 
         case C_RCV:
-            if (ev == EV_CHECK_BCC)
+            if (byte == createBCC(frame[1], frame[2])){
                 change_state(sm, BCC_OK);
+                frame[3] = byte;
+            }
             else if (byte == FLAG)
                 change_state(sm, FLAG_RCV);
             else
@@ -80,8 +85,10 @@ void event_handler(state_machine_st* sm, unsigned char byte, unsigned char* fram
             break;
 
         case BCC_OK:
-            if (byte == FLAG)
+            if (byte == FLAG){
                 change_state(sm, STOP);
+                frame[4] = byte;
+            }
             else
                 change_state(sm, START);            
             break;

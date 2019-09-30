@@ -1,5 +1,4 @@
 /*Non-Canonical Input Processing*/
-
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -9,8 +8,10 @@
 #include <string.h>
 #include <strings.h>
 #include <unistd.h>
-
 #include "macros.h"
+#include "aux.h"
+#include "data_link.h"
+#include "app.h"
 
 volatile int STOP=FALSE;
 
@@ -29,84 +30,14 @@ int main(int argc, char** argv)
     }
 
 
-  /*
-    Open serial port device for reading and writing and not as controlling tty
-    because we don't want to get killed if linenoise sends CTRL-C.
-  */
-  
+    if(llopen(argv[1], RECEIVER) <= 0){
+      return -1;
+    }
+
+    // close, in non canonical
+    if(closeNonCanonical(fd, &oldtio) == -1)
+      return -1;
     
-    fd = open(argv[1], O_RDWR | O_NOCTTY );
-    if (fd <0) {perror(argv[1]); exit(-1); }
-
-    if ( tcgetattr(fd,&oldtio) == -1) { /* save current port settings */
-      perror("tcgetattr");
-      exit(-1);
-    }
-
-    bzero(&newtio, sizeof(newtio));
-    newtio.c_cflag = BAUDRATE | CS8 | CLOCAL | CREAD;
-    newtio.c_iflag = IGNPAR;
-    newtio.c_oflag = 0;
-
-    /* set input mode (non-canonical, no echo,...) */
-    newtio.c_lflag = 0;
-
-    newtio.c_cc[VTIME]    = 0;   /* inter-character timer unused */
-    newtio.c_cc[VMIN]     = 1;   /* blocking read until 5 chars received */
-
-
-
-  /* 
-    VTIME e VMIN devem ser alterados de forma a proteger com um temporizador a 
-    leitura do(s) pr�ximo(s) caracter(es)
-  */
-
-
-
-    tcflush(fd, TCIOFLUSH);
-
-    if ( tcsetattr(fd,TCSANOW,&newtio) == -1) {
-      perror("tcsetattr");
-      exit(-1);
-    }
-
-    printf("New termios structure set\n");
-
-    /*   while (STOP==FALSE) {       /* loop for input */
-  // res = read(fd,buf,255);   /* returns after 5 chars have been input */
-    //  buf[res]=0;               /* so we can printf... */
-    //    printf(":%s:%d\n", buf, res);
-    //  if (buf[0]=='z') STOP=TRUE;
-    // }
-
-    res = 0;
-
-
-     while (STOP==FALSE) {
-       do {
-	        read(fd,&aux, 1);
-	        printf("%c\n", aux);
-	        buf[res] = aux;
-	        res++;
-       } while(aux != '\0');
-       
-       printf(":%s:%d\n", buf,(int) strlen(buf)+1);
-       write(fd, buf, strlen(buf)+1);
-       
-       if (buf[strlen(buf)]=='z') 
-        STOP=TRUE;
-    }
-
-
-
-    
-  /* 
-    O ciclo WHILE deve ser alterado de modo a respeitar o indicado no gui�o 
-  */
-
-
-
-    tcsetattr(fd,TCSANOW,&oldtio);
     close(fd);
     return 0;
 }

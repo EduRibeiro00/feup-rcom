@@ -9,7 +9,6 @@
 #include <string.h>
 #include <strings.h>
 #include <unistd.h>
-
 #include "macros.h"
 #include "aux.h"
 #include "data_link.h"
@@ -34,15 +33,9 @@ int main(int argc, char** argv)
     }
   
   
-    // open, in non canonical
-    if((fd = openNonCanonical(argv[1], &oldtio, VTIME, VMIN)) == -1)
+    if(llopen(argv[1], TRANSMITTER) <= 0){
       return -1;
-  
-
-    
-
-
-
+    }
 
     // close, in non canonical
     if(closeNonCanonical(fd, &oldtio) == -1)
