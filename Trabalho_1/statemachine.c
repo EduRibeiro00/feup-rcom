@@ -39,24 +39,30 @@ state_machine_st* create_state_machine() {
     return sm;
 }
 
-void event_handler(state_machine_st* sm, event_st ev) {
+void event_handler(state_machine_st* sm, unsigned char byte, unsigned char* frame) {
 
     switch(sm->state) {
 
         case START:
-            if (ev == EV_FLAG_RCV)
+            if (byte == FLAG) {
                 change_state(sm, FLAG_RCV);
+                frame[0] = byte;
+            }
             break;
 
         case FLAG_RCV:
-            if (ev == EV_FLAG_RCV)
+            if (byte == FLAG)
                 break;
-            else if (ev == EV_A_RCV)
+            else if ((byte == END_SEND || byte == END_REC)) {
                 change_state(sm, A_RCV);
+                frame[1] = byte;
+            }
+            else
+                change_state(sm, START);
             break;
 
         case A_RCV:
-            if (ev == EV_FLAG_RCV)
+            if (byte == FLAG)
                 change_state(sm, FLAG_RCV);
             else if (ev == EV_C_RCV)
                 change_state(sm, C_RCV);
@@ -67,14 +73,14 @@ void event_handler(state_machine_st* sm, event_st ev) {
         case C_RCV:
             if (ev == EV_CHECK_BCC)
                 change_state(sm, BCC_OK);
-            else if (ev == EV_FLAG_RCV)
+            else if (byte == FLAG)
                 change_state(sm, FLAG_RCV);
             else
                 change_state(sm, START);            
             break;
 
         case BCC_OK:
-            if (ev == EV_FLAG_RCV)
+            if (byte == FLAG)
                 change_state(sm, STOP);
             else
                 change_state(sm, START);            

@@ -12,9 +12,9 @@
 #include "statemachine.c"
 #include "aux.h"
 
-// global struct for the link layer
+// global variables
 struct linkLayer ll;
-
+struct termios oldtio;
 
 /**
  * Opens the connection for the receiver
@@ -36,7 +36,20 @@ int llOpenReceiver(int fd) {
  */
 int llOpenTransmitter(int fd) {
 
-    state_machine_st *st = create_state_machine();
+    // creates SET frame
+    if(createSupervisionFrame(ll.frame, SET, TRANSMITTER) != 0)
+        return -1;
+
+    // send SET frame to receiver
+    if(sendFrame(ll.frame, fd) != 0)
+        return -1;
+
+    
+
+    
+
+
+    return fd;
 }
 
 /**
@@ -47,42 +60,25 @@ int llOpenTransmitter(int fd) {
  */
 int llopen(char* port, int role) {
 
-    int fd = open(port, O_RDWR | O_NOCTTY );
-    if (fd <0) {
-        perror(port); 
-        return -1;
-    }
+    int fd;
 
-    struct termios oldtio,newtio;
-
-    if ( tcgetattr(fd,&oldtio) == -1) { /* save current port settings */
-      perror("tcgetattr");
+    // open, in non canonical
+    if((fd = openNonCanonical(port, &oldtio, VTIME, VMIN)) == -1)
       return -1;
-    }
 
-    bzero(&newtio, sizeof(newtio));
-    newtio.c_cflag = BAUDRATE | CS8 | CLOCAL | CREAD;
-    newtio.c_iflag = IGNPAR;
-    newtio.c_oflag = 0;
 
-    /* set input mode (non-canonical, no echo,...) */
-    newtio.c_lflag = 0;
+    // fills linkLayer fields
+    strcpy(ll.port, port);
+    ll.baudRate = BAUDRATE;
+    ll.numTransmissions = NUM_RETR;
+    ll.timeout = TIMEOUT;
 
-    newtio.c_cc[VTIME]    = 0;   /* inter-character timer unused */
-    newtio.c_cc[VMIN]     = 1;   /* blocking read until 5 chars received */
-
-    tcflush(fd, TCIOFLUSH);
-
-    if ( tcsetattr(fd,TCSANOW,&newtio) == -1) {
-      perror("tcsetattr");
-      return -1;
-    }
 
     if(role == TRANSMITTER) {
-        return llopenTransmitter(fd);
+        return llopenTransmitter(port);
     }
     else if(role == RECEIVER) {
-        return llopenReceiver(fd);
+        return llopenReceiver(port);
     }
 
     perror("Invalid role");

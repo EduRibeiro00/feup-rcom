@@ -18,10 +18,10 @@ struct linkLayer {
     int baudRate; /*Velocidade de transmissão*/
     unsigned int sequenceNumber; /*Número de sequência da trama: 0, 1*/
     unsigned int timeout; /*Valor do temporizador: 1 s*/
-    unsigned int numTransmissions; /*Número de tentativas em caso de
-    falha*/
+    unsigned int numTransmissions; /*Número de tentativas em caso de falha*/
     unsigned char frame[MAX_SIZE]; /*Trama*/
 };
+
 
 /**
  * Function that opens and establishes the connection between the receiver and the transmitter

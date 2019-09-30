@@ -24,3 +24,6 @@
 #define UA       0x07
 #define RR       0xFF // (mudar estes
 #define REJ      0xFF //  valores)
+
+#define VTIME    0
+#define VMIN     1
