@@ -46,7 +46,7 @@ void event_handler(state_machine_st* sm, unsigned char byte, unsigned char* fram
         case A_RCV:
             if (byte == FLAG)
                 change_state(sm, FLAG_RCV);
-            else if (byte == UA || byte  == DISC || byte == UA || byte  == RR_0 || byte == REJ_0 || byte == RR_1 || byte == REJ_1){
+            else if (byte == SET || byte  == DISC || byte == UA || byte  == RR_0 || byte == REJ_0 || byte == RR_1 || byte == REJ_1){
                 change_state(sm, C_RCV);
                 frame[2] = byte;
             }
@@ -62,7 +62,7 @@ void event_handler(state_machine_st* sm, unsigned char byte, unsigned char* fram
             else if (byte == FLAG)
                 change_state(sm, FLAG_RCV);
             else
-                change_state(sm, START);            
+                change_state(sm, START);
             break;
 
         case BCC_OK:
@@ -71,7 +71,7 @@ void event_handler(state_machine_st* sm, unsigned char byte, unsigned char* fram
                 frame[4] = byte;
             }
             else
-                change_state(sm, START);            
+                change_state(sm, START);
             break;
 
         default:

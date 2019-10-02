@@ -23,7 +23,7 @@
 #define END_REC  0x01
 #define S_0      0x00
 #define S_1      0x40
-#define SET      0x02
+#define SET      0x03
 #define DISC     0x0B
 #define UA       0x07
 #define RR_0     0X05
@@ -32,5 +32,7 @@
 #define REJ_1    0x81
 #define VTIME_VALUE    0
 #define VMIN_VALUE     1
+
+#define BUF_SIZE_SUP  5 
 
 #endif

@@ -18,28 +18,33 @@ volatile int STOP=FALSE;
 
 int main(int argc, char** argv)
 {
-    int fd,c, res;
-    struct termios oldtio,newtio;
-    char buf[255];
-    char buf1[255];
-    
+    int fd;
+
     int i, sum = 0, speed = 0;
-    
-    if ( (argc < 2) || 
-  	     ((strcmp("/dev/ttyS0", argv[1])!=0) && 
+
+    if ( (argc < 2) ||
+  	     ((strcmp("/dev/ttyS0", argv[1])!=0) &&
   	      (strcmp("/dev/ttyS1", argv[1])!=0) )) {
       printf("Usage:\tnserial SerialPort\n\tex: nserial /dev/ttyS1\n");
       exit(1);
     }
-  
-  
-    if(llopen(argv[1], TRANSMITTER) <= 0){
+
+    // fills linkLayer fields
+    strcpy(ll.port, argv[1]);
+    ll.baudRate = BAUDRATE;
+    ll.numTransmissions = NUM_RETR;
+    ll.timeout = TIMEOUT;
+
+    if((fd = llopen(ll.port, TRANSMITTER))<= 0){
       return -1;
     }
+
+    printf("Closing file descriptor\n");
 
     // close, in non canonical
     if(closeNonCanonical(fd, &oldtio) == -1)
       return -1;
+
 
     close(fd);
     return 0;

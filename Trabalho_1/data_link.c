@@ -12,9 +12,7 @@
 #include "statemachine.h"
 #include "aux.h"
 
-// global variables
-struct linkLayer ll;
-struct termios oldtio;
+
 
 /**
  * Opens the connection for the receiver
@@ -25,28 +23,19 @@ int llOpenReceiver(int fd) {
 
 
     if(readSupervisionFrame(ll.frame, fd) == -1)
-        return -1;
+      return -1;
 
-    if(ll.frame[1] != END_SEND){
-        printf("NAO FUNCIONOU");
-        return -1;
-    }
-        
-    if(ll.frame[2] == SET){
-        printf("FUNCIONOU");
-    }
-    else{
-        printf("NAO FUNCIONOU");
-        return -1;
-    }
-    
+    if(ll.frame[1] == END_SEND && ll.frame[2] == SET)
+      printf("Received SET frame\n");
 
     if(createSupervisionFrame(ll.frame, UA, RECEIVER) != 0)
-        return -1;
-    
+      return -1;
+
     // send SET frame to receiver
     if(sendFrame(ll.frame, fd) != 0)
-        return -1;
+      return -1;
+
+    printf("Sent UA frame\n");
 
     return fd;
 }
@@ -66,24 +55,16 @@ int llOpenTransmitter(int fd) {
     // send SET frame to receiver
     if(sendFrame(ll.frame, fd) != 0)
         return -1;
-    
+
+    printf("Sent SET frame\n");
+
     //alarm(TIMEOUT);
 
     if(readSupervisionFrame(ll.frame, fd) == -1)
-        return -1;
-    
-    if(ll.frame[1] != END_SEND){
-        printf("NAO FUNCIONOU");
-        return -1;
-    }
-        
-    if(ll.frame[2] == UA){
-        printf("FUNCIONOU");
-    }
-    else{
-        printf("NAO FUNCIONOU");
-        return -1;
-    }
+      return -1;
+
+    if(ll.frame[1] == END_SEND && ll.frame[2] == UA)
+      printf("Received UA frame\n");
 
     return fd;
 }
@@ -92,7 +73,7 @@ int llOpenTransmitter(int fd) {
  * Function that opens and establishes the connection between the receiver and the transmitter
  * @param port Port name
  * @param role Flag that indicates the transmitter or the receiver
- * @return File descriptor; -1 in case of error 
+ * @return File descriptor; -1 in case of error
  */
 int llopen(char* port, int role) {
 
@@ -101,14 +82,6 @@ int llopen(char* port, int role) {
     // open, in non canonical
     if((fd = openNonCanonical(port, &oldtio, VTIME_VALUE, VMIN_VALUE)) == -1)
       return -1;
-
-
-    // fills linkLayer fields
-    strcpy(ll.port, port);
-    ll.baudRate = BAUDRATE;
-    ll.numTransmissions = NUM_RETR;
-    ll.timeout = TIMEOUT;
-
 
     if(role == TRANSMITTER) {
         return llOpenTransmitter(fd);
