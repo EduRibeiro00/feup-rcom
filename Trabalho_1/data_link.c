@@ -7,10 +7,13 @@
 #include <string.h>
 #include <strings.h>
 #include <unistd.h>
-
+#include <signal.h>
 #include "data_link.h"
 #include "statemachine.h"
 #include "aux.h"
+#include "app.h"
+#include "alarm.h"
+
 
 
 
@@ -48,6 +51,24 @@ int llOpenReceiver(int fd) {
  */
 int llOpenTransmitter(int fd) {
 
+    int read_value = -1;
+
+    struct sigaction action;
+    action.sa_handler = alarmHandler;
+
+    if(sigemptyset(&action.sa_mask) == -1){
+      perror("sigemptyset");
+      exit(-1);
+    }
+
+    action.sa_flags = 0;
+
+    if(sigaction(SIGALRM, &action, NULL) != 0){
+      perror("sigaction");
+      exit(-1);
+    }
+
+
     // creates SET frame
     if(createSupervisionFrame(ll.frame, SET, TRANSMITTER) != 0)
         return -1;
@@ -58,13 +79,35 @@ int llOpenTransmitter(int fd) {
 
     printf("Sent SET frame\n");
 
-    //alarm(TIMEOUT);
+    finish = 0;
+    num_retr = 0;
 
-    if(readSupervisionFrame(ll.frame, fd) == -1)
+    alarm(TIMEOUT);
+
+    while (finish != 1) {
+      read_value = readSupervisionFrame(ll.frame, fd);
+
+      if(read_value == 0){
+        if(ll.frame[1] != END_SEND || ll.frame[2] != UA){
+          printf("Wrong frame received (numretries = %d)\n", num_retr);
+          continue;
+        }
+
+        // Cancels alarm
+        alarm(0);
+        finish = 1;
+      }
+    }
+
+
+    if(read_value == -1){
+      printf("Closing file descriptor\n");
+      closeNonCanonical(fd, &oldtio);
       return -1;
+    }
 
-    if(ll.frame[1] == END_SEND && ll.frame[2] == UA)
-      printf("Received UA frame\n");
+
+    printf("Received UA frame\n");
 
     return fd;
 }
@@ -77,7 +120,6 @@ int llOpenTransmitter(int fd) {
  */
 int llopen(char* port, int role) {
 
-    int fd;
 
     // open, in non canonical
     if((fd = openNonCanonical(port, &oldtio, VTIME_VALUE, VMIN_VALUE)) == -1)

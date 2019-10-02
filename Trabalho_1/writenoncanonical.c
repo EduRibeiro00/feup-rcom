@@ -18,9 +18,7 @@ volatile int STOP=FALSE;
 
 int main(int argc, char** argv)
 {
-    int fd;
 
-    int i, sum = 0, speed = 0;
 
     if ( (argc < 2) ||
   	     ((strcmp("/dev/ttyS0", argv[1])!=0) &&
@@ -42,6 +40,7 @@ int main(int argc, char** argv)
     printf("Closing file descriptor\n");
 
     // close, in non canonical
+
     if(closeNonCanonical(fd, &oldtio) == -1)
       return -1;
 

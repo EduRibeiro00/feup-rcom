@@ -9,6 +9,7 @@
 #include <unistd.h>
 #include "aux.h"
 #include "statemachine.h"
+#include "macros.h"
 
 
 void change_state(state_machine_st* sm, state_st st) {
@@ -79,4 +80,9 @@ void event_handler(state_machine_st* sm, unsigned char byte, unsigned char* fram
 
     };
 
+}
+
+
+void destroy_st(state_machine_st* sm) {
+  free(sm);
 }

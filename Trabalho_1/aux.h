@@ -1,15 +1,5 @@
 #pragma once
 
-#include <termios.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <strings.h>
-#include <unistd.h>
-
-#include "data_link.h"
-
-
 unsigned char createBCC(unsigned char a, unsigned char c);
 
 
