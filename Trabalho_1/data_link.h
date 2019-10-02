@@ -3,15 +3,17 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-
 #include <termios.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
 #include <unistd.h>
-
 #include "macros.h"
+
+// global variables
+struct linkLayer ll;
+struct termios oldtio;
 
 struct linkLayer {
     char port[20]; /*Dispositivo /dev/ttySx, x = 0, 1*/
@@ -43,7 +45,6 @@ int llOpenTransmitter(int fd);
  * Function that opens and establishes the connection between the receiver and the transmitter
  * @param port Port name
  * @param role Flag that indicates the transmitter or the receiver
- * @return File descriptor; -1 in case of error 
+ * @return File descriptor; -1 in case of error
  */
 int llopen(char* port, int role);
-

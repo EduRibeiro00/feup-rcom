@@ -7,13 +7,11 @@
 #include <fcntl.h>
 
 #include "macros.h"
-#include "statemachine.c"
+#include "statemachine.h"
 
 unsigned char createBCC(unsigned char a, unsigned char c) {
     return a ^ c;
 }
-
-
 
 int createSupervisionFrame(unsigned char* frame, unsigned char controlField, int role) {
 
@@ -51,14 +49,18 @@ int createSupervisionFrame(unsigned char* frame, unsigned char controlField, int
 
 int sendFrame(unsigned char* frame, int fd) {
 
-    if(write(fd, frame, MAX_SIZE) <= 0)
+    int n;
+
+    if( (n = write(fd, frame, BUF_SIZE_SUP)) <= 0){
         return -1;
+    }
 
     return 0;
 }
 
 
 int readByte(unsigned char* byte, int fd) {
+
 
     if(read(fd, byte, sizeof(unsigned char)) <= 0)
         return -1;
@@ -78,7 +80,7 @@ int readSupervisionFrame(unsigned char* frame, int fd) {
 
         if(readByte(&byte, fd) != 0)
             return -1;
-        
+
         event_handler(st, byte, frame);
     }
 
@@ -87,12 +89,11 @@ int readSupervisionFrame(unsigned char* frame, int fd) {
 }
 
 
-
 int openNonCanonical(char* port, struct termios* oldtio, int vtime, int vmin) {
-    
+
     int fd = open(port, O_RDWR | O_NOCTTY );
     if (fd <0) {
-        perror(port); 
+        perror(port);
         return -1;
     }
 
@@ -127,7 +128,7 @@ int openNonCanonical(char* port, struct termios* oldtio, int vtime, int vmin) {
 
 int closeNonCanonical(int fd, struct termios* oldtio) {
 
-    if ( tcsetattr(fd,TCSANOW,oldtio) == -1) {
+    if (tcsetattr(fd,TCSANOW,oldtio) == -1) {
       perror("tcsetattr");
       return -1;
     }

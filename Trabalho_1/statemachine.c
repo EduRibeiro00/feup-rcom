@@ -8,27 +8,8 @@
 #include <strings.h>
 #include <unistd.h>
 #include "aux.h"
+#include "statemachine.h"
 
-typedef enum state {
-    START,
-    FLAG_RCV,
-    A_RCV,
-    C_RCV,
-    BCC_OK,
-    STOP
-} state_st;
-
-typedef enum event {
-    EV_FLAG_RCV,
-    EV_A_RCV,
-    EV_C_RCV,
-    EV_CHECK_BCC,
-    EV_ERR_BCC
-} event_st;
-
-typedef struct state_machine {
-    state_st state;
-} state_machine_st;
 
 void change_state(state_machine_st* sm, state_st st) {
     sm->state = st;
@@ -65,7 +46,7 @@ void event_handler(state_machine_st* sm, unsigned char byte, unsigned char* fram
         case A_RCV:
             if (byte == FLAG)
                 change_state(sm, FLAG_RCV);
-            else if (byte == UA || byte  == DISC || byte == UA || byte  == RR_0 || byte == REJ_0 || byte == RR_1 || byte == REJ_1){
+            else if (byte == SET || byte  == DISC || byte == UA || byte  == RR_0 || byte == REJ_0 || byte == RR_1 || byte == REJ_1){
                 change_state(sm, C_RCV);
                 frame[2] = byte;
             }
@@ -81,7 +62,7 @@ void event_handler(state_machine_st* sm, unsigned char byte, unsigned char* fram
             else if (byte == FLAG)
                 change_state(sm, FLAG_RCV);
             else
-                change_state(sm, START);            
+                change_state(sm, START);
             break;
 
         case BCC_OK:
@@ -90,7 +71,7 @@ void event_handler(state_machine_st* sm, unsigned char byte, unsigned char* fram
                 frame[4] = byte;
             }
             else
-                change_state(sm, START);            
+                change_state(sm, START);
             break;
 
         default:
