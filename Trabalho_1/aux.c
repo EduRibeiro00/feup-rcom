@@ -5,9 +5,12 @@
 #include <strings.h>
 #include <unistd.h>
 #include <fcntl.h>
-
+#include "app.h"
 #include "macros.h"
 #include "statemachine.h"
+#include "data_link.h"
+#include "alarm.h"
+
 
 unsigned char createBCC(unsigned char a, unsigned char c) {
     return a ^ c;
@@ -61,7 +64,6 @@ int sendFrame(unsigned char* frame, int fd) {
 
 int readByte(unsigned char* byte, int fd) {
 
-
     if(read(fd, byte, sizeof(unsigned char)) <= 0)
         return -1;
 
@@ -76,14 +78,17 @@ int readSupervisionFrame(unsigned char* frame, int fd) {
 
     unsigned char byte;
 
-    while(st->state != STOP) {
+    while(st->state != STOP && finish != 1) {
 
-        if(readByte(&byte, fd) != 0)
-            return -1;
+        readByte(&byte, fd);
 
         event_handler(st, byte, frame);
     }
 
+    destroy_st(st);
+
+    if(finish == 1)
+      return -1;
 
     return 0;
 }

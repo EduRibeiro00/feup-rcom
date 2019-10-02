@@ -1,6 +1,4 @@
 /*Asynchronous Input*/
-
-
 #include <termios.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -26,9 +24,9 @@ int main(int argc, char** argv)
     char buf[255];
     int i;
 
-    //Uses either COM1 or COM2     
-  	if ( (argc < 2) || 
-  	     ((strcmp("/dev/ttyS0", argv[1])!=0) && 
+    //Uses either COM1 or COM2
+  	if ( (argc < 2) ||
+  	     ((strcmp("/dev/ttyS0", argv[1])!=0) &&
   	      (strcmp("/dev/ttyS1", argv[1])!=0) )) {
       printf("Usage:\tasync_read SerialPort\n\tex: async_read /dev/ttyS1\n");
       exit(1);
@@ -106,4 +104,3 @@ void signal_handler_IO (int status)
     printf("received SIGIO signal");
     wait_flag = FALSE;
 }
-

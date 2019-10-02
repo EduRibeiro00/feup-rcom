@@ -24,6 +24,8 @@ struct linkLayer {
     unsigned char frame[MAX_SIZE]; /*Trama*/
 };
 
+  
+
 
 /**
  * Opens the connection for the receiver
