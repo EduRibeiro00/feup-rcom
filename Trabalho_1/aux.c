@@ -30,8 +30,6 @@ unsigned char createBCC_2(unsigned char* frame, unsigned char start, unsigned ch
 
 int byte_stuffing(unsigned char* frame, int start, int end){
 
-  int i = start;
-
   // number of packet bytes in the frame at the beginning, that is going to be on the final frame
   // after byte stuffing
   int counter = 0;
@@ -87,6 +85,63 @@ int byte_stuffing(unsigned char* frame, int start, int end){
 
 
 int byte_destuffing(unsigned char* frame, int start, int end){
+
+  int j = start;
+  char aux_byte;
+
+
+  printf("Before destuffing \n");
+
+  for(int i =0; i < end + 1 ; i++){
+    printf("byte %x\n", frame[i]);
+  }
+
+  char *aux = malloc(sizeof(unsigned char) * ((end - start) + 3) * 2);
+  if(aux == NULL){
+    return -1;
+  }
+
+
+  for(int i = 0; i < end+1 ; i++){
+    aux[i] = frame[i];
+  }
+
+
+  for(int i = start; i < end + 1; i++){
+    
+    if(aux[i] == ESCAPE_BYTE){
+      if (aux[i+1] == BYTE_STUFFING_ESCAPE){
+        frame[j] = ESCAPE_BYTE;
+      }
+      else if(aux[i+1] == BYTE_STUFFING_FLAG)
+      {
+        frame[j] = FLAG;
+      }
+      j++;
+    }
+    else if(aux[i] == BYTE_STUFFING_ESCAPE || aux[i] == BYTE_STUFFING_FLAG){ 
+      continue;
+    }
+    else{
+      frame[j] = aux[i];
+      j++;
+    }
+  }
+
+  frame = realloc(frame, sizeof(unsigned char) * (j-1));
+  if(frame == NULL){
+    free(aux);
+    return -1;
+  }
+
+  printf("After destuffing \n");
+
+  for(int i =0; i < j; i++){
+    printf("byte %x\n", frame[i]);
+  }
+
+  free(aux);
+
   return 0;
 }
 

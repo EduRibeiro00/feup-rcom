@@ -59,27 +59,30 @@ int llOpenTransmitter(int fd) {
 
     printf("Sent SET frame\n");
 
-    // ----------------------
-    // byte stuffing testing
 
-    //  unsigned char bcc2;
 
-    // ll.frame[0] = FLAG;
-    // ll.frame[1] = 0x03;
-    // ll.frame[2] = 0x00;
-    // ll.frame[3] = ll.frame[1] ^ ll.frame[2];
-    // ll.frame[4] = 0x7e;
-    // ll.frame[5] = 0x7e;
-    // ll.frame[6] = 0xfd;
-    // ll.frame[7] = 0x7d;
-    // bcc2 = ll.frame[4];
-    // for(int i = 5; i < 8; i++){
-    //   bcc2 = bcc2 ^ ll.frame[i];
-    // }
-    // ll.frame[8] = bcc2;
-    // ll.frame[9] = FLAG;
+  /*  unsigned char bcc2;
 
-    // byte_stuffing(ll.frame, 3, 9);
+    ll.frame[0] = FLAG;
+    ll.frame[1] = 0x03;
+    ll.frame[2] = 0x00;
+    ll.frame[3] = ll.frame[1] ^ ll.frame[2];
+    ll.frame[4] = 0x7e;
+    ll.frame[5] = 0x7e;
+    ll.frame[6] = 0xfd;
+    ll.frame[7] = 0x7d;
+    bcc2 = ll.frame[4];
+    for(int i = 5; i < 8; i++){
+      bcc2 = bcc2 ^ ll.frame[i];
+    }
+    ll.frame[8] = bcc2;
+    ll.frame[9] = FLAG;
+
+    byte_stuffing(ll.frame, 3, 9);
+
+    byte_destuffing(ll.frame, 3, 9);
+
+    exit(0);*/
 
 
     int read_value = -1;
