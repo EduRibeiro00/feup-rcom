@@ -40,13 +40,13 @@ int main(int argc, char** argv)
       return -1;
     }
 
-    printf("Closing file descriptor\n");
+    printf("\n---------------llopen done---------------\n\n");
 
-    // close, in non canonical
-
-    if(closeNonCanonical(fd, &oldtio) == -1)
+    if(llclose(fd, TRANSMITTER) < 0)
       return -1;
+      
 
+    printf("\n---------------llclose done---------------\n\n");
 
     close(fd);
     return 0;

@@ -4,7 +4,7 @@ void alarmHandler(int signal){
 
   if(num_retr < NUM_RETR){
     sendFrame(ll.frame, fd);
-    printf("Timeout: Sent SET Frame again (numretries = %d)\n", num_retr);
+    printf("Timeout/invalid value: Sent frame again (numretries = %d)\n", num_retr);
     alarm(TIMEOUT);
     num_retr++;
 

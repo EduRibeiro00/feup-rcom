@@ -16,9 +16,11 @@ void change_state(state_machine_st* sm, state_st st) {
     sm->state = st;
 }
 
-state_machine_st* create_state_machine() {
+state_machine_st* create_state_machine(unsigned char wantedByte, unsigned char addressByte) {
     state_machine_st* sm = malloc(sizeof(state_machine_st));
     change_state(sm, START);
+    sm->wantedByte = wantedByte;
+    sm->addressByte = addressByte;
     return sm;
 }
 
@@ -36,7 +38,7 @@ void event_handler(state_machine_st* sm, unsigned char byte, unsigned char* fram
         case FLAG_RCV:
             if (byte == FLAG)
                 break;
-            else if ((byte == END_SEND || byte == END_REC)) {
+            else if (byte == sm->addressByte) {
                 change_state(sm, A_RCV);
                 frame[1] = byte;
             }
@@ -47,7 +49,7 @@ void event_handler(state_machine_st* sm, unsigned char byte, unsigned char* fram
         case A_RCV:
             if (byte == FLAG)
                 change_state(sm, FLAG_RCV);
-            else if (byte == SET || byte  == DISC || byte == UA || byte  == RR_0 || byte == REJ_0 || byte == RR_1 || byte == REJ_1){
+            else if (byte == sm->wantedByte){
                 change_state(sm, C_RCV);
                 frame[2] = byte;
             }

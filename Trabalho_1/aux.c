@@ -16,6 +16,81 @@ unsigned char createBCC(unsigned char a, unsigned char c) {
     return a ^ c;
 }
 
+unsigned char createBCC_2(unsigned char* frame, unsigned char start, unsigned char end) {
+
+  unsigned char bcc2;
+
+  for(int i = start; i < end + 1; i++){
+    bcc2 = bcc2 ^ frame[i];
+  }
+
+  return bcc2;
+}
+
+
+int byte_stuffing(unsigned char* frame, int start, int end){
+
+  int i = start;
+
+  // number of packet bytes in the frame at the beginning, that is going to be on the final frame
+  // after byte stuffing
+  int counter = 0;
+  int j = start;
+  char aux_byte;
+
+  char *aux = malloc(sizeof(unsigned char) * ((end - start) + 3) * 2);
+  if(aux == NULL){
+    return -1;
+  }
+
+  frame = realloc(frame ,sizeof(unsigned char ) * ((end - start) + 3) * 2);
+  if (frame == NULL){
+    free(aux);
+    return -1;
+  }
+
+  for(int i = 0; i < end+1 ; i++){
+    aux[i] = frame[i];
+  }
+
+
+  for(int i = start; i < end + 1; i++){
+    if(aux[i] == FLAG && i != end){
+      frame[j] = ESCAPE_BYTE;
+      frame[j+1] = BYTE_STUFFING_FLAG;
+      j = j + 2;
+      counter++;
+    }
+    else if(aux[i] == ESCAPE_BYTE && i != end){
+      frame[j] = ESCAPE_BYTE;
+      frame[j+1] = BYTE_STUFFING_ESCAPE;
+      j = j + 2;
+      counter++;
+    }
+    else{
+      frame[j] = aux[i];
+      j++;
+    }
+  }
+
+  frame = realloc(frame, sizeof(unsigned char) * ((end - start) + 3 + counter));
+  if(frame == NULL){
+    free(aux);
+    return -1;
+  }
+
+
+  free(aux);
+
+  return 0;
+}
+
+
+int byte_destuffing(unsigned char* frame, int start, int end){
+  return 0;
+}
+
+
 int createSupervisionFrame(unsigned char* frame, unsigned char controlField, int role) {
 
     frame[0] = FLAG;
@@ -72,9 +147,9 @@ int readByte(unsigned char* byte, int fd) {
 
 
 
-int readSupervisionFrame(unsigned char* frame, int fd) {
+int readSupervisionFrame(unsigned char* frame, int fd, unsigned char wantedByte, unsigned char addressByte) {
 
-    state_machine_st *st = create_state_machine();
+    state_machine_st *st = create_state_machine(wantedByte, addressByte);
 
     unsigned char byte;
 
@@ -140,4 +215,22 @@ int closeNonCanonical(int fd, struct termios* oldtio) {
     }
 
     return 0;
+}
+
+
+void alarmHandlerInstaller() {
+    struct sigaction action;
+    action.sa_handler = alarmHandler;
+
+    if(sigemptyset(&action.sa_mask) == -1){
+      perror("sigemptyset");
+      exit(-1);
+    }
+
+    action.sa_flags = 0;
+
+    if(sigaction(SIGALRM, &action, NULL) != 0){
+      perror("sigaction");
+      exit(-1);
+    }
 }

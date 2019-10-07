@@ -21,7 +21,7 @@ struct linkLayer {
     unsigned int sequenceNumber; /*Número de sequência da trama: 0, 1*/
     unsigned int timeout; /*Valor do temporizador: 1 s*/
     unsigned int numTransmissions; /*Número de tentativas em caso de falha*/
-    unsigned char frame[MAX_SIZE]; /*Trama*/
+    unsigned char *frame; /*Trama*/
 };
 
   
@@ -50,3 +50,28 @@ int llOpenTransmitter(int fd);
  * @return File descriptor; -1 in case of error
  */
 int llopen(char* port, int role);
+
+
+/**
+ * Closes the connection for the receiver
+ * @param File descriptor for the serial port
+ * @return Positive value when sucess; negative value when error
+ */
+int llCloseReceiver(int fd);
+
+
+/**
+ * Closes the connection for the transmitter
+ * @param File descriptor for the serial port
+ * @return Positive value when sucess; negative value when error
+ */
+int llCloseTransmitter(int fd);
+
+
+/**
+ * Function that closes the connection between the receiver and the transmitter
+ * @param File descriptor of the port
+ * @param Flag that indicates the transmitter or the receiver
+ * @return Positive value when sucess; negative value when error
+ */
+int llclose(int fd, int role);

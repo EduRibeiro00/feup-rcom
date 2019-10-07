@@ -30,6 +30,10 @@
 #define VTIME_VALUE    0
 #define VMIN_VALUE     1
 
+#define BYTE_STUFFING_ESCAPE 0x5D
+#define BYTE_STUFFING_FLAG 0x5E
+#define ESCAPE_BYTE 0x7D
+
 #define BUF_SIZE_SUP  5
 
 #endif
