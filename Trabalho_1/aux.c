@@ -80,9 +80,8 @@ int readSupervisionFrame(unsigned char* frame, int fd) {
 
     while(st->state != STOP && finish != 1) {
 
-        readByte(&byte, fd);
-
-        event_handler(st, byte, frame);
+        if(readByte(&byte, fd) == 0)
+          event_handler(st, byte, frame);
     }
 
     destroy_st(st);
@@ -132,6 +131,8 @@ int openNonCanonical(char* port, struct termios* oldtio, int vtime, int vmin) {
 
 
 int closeNonCanonical(int fd, struct termios* oldtio) {
+
+    sleep(1);
 
     if (tcsetattr(fd,TCSANOW,oldtio) == -1) {
       perror("tcsetattr");

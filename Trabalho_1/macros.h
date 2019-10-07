@@ -3,7 +3,7 @@
 
 #define MAX_SIZE 255
 
-#define BAUDRATE B38400
+#define BAUDRATE B38400 //38400 is the normal value
 #define MODEMDEVICE "/dev/ttyS1"
 #define _POSIX_SOURCE 1 /* POSIX compliant source */
 #define FALSE 0
@@ -24,7 +24,7 @@
 #define DISC     0x0B
 #define UA       0x07
 #define RR_0     0X05
-#define RR_1     0x85 
+#define RR_1     0x85
 #define REJ_0    0x01
 #define REJ_1    0x81
 #define VTIME_VALUE    0
