@@ -11,15 +11,19 @@ typedef enum state {
 
 typedef struct state_machine {
     state_st state;
-    unsigned char wantedByte;
+    unsigned char* wantedBytes;
+    int wantedBytesLength;
     unsigned char addressByte;
 } state_machine_st;
+
+
+int isWanted(unsigned char byte, state_machine_st* sm);
 
 
 void change_state(state_machine_st* sm, state_st st);
 
 
-state_machine_st* create_state_machine(unsigned char wantedByte, unsigned char addressByte);
+state_machine_st* create_state_machine(unsigned char* wantedByte, int wantedBytesLength, unsigned char addressByte);
 
 
 void event_handler(state_machine_st* sm, unsigned char byte, unsigned char* frame);

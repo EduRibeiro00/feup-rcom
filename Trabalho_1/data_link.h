@@ -24,7 +24,7 @@ struct linkLayer {
     unsigned char *frame; /*Trama*/
 };
 
-  
+
 
 
 /**
@@ -51,6 +51,23 @@ int llOpenTransmitter(int fd);
  */
 int llopen(char* port, int role);
 
+
+/**
+ * Function that writes the information contained in the buffer to the serial port
+ * @param fd File descriptor of the serial port
+ * @param buffer Information to be written
+ * @param length Length of the buffer
+ * @return Number of characters written; -1 in case of error
+ */
+int llwrite(int fd, char* buffer, int length);
+
+/**
+ * Function that reads the information written in the serial port
+ * @param fd File descriptor of the serial port
+ * @param buffer Array of characters where the read information will be stored
+ * @return Number of characters read; -1 in case of error
+ */
+int llread(int fd, char* buffer);
 
 /**
  * Closes the connection for the receiver

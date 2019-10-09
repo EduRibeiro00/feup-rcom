@@ -11,15 +11,24 @@
 #include "statemachine.h"
 #include "macros.h"
 
+int isWanted(unsigned char byte, state_machine_st* sm) {
+  for (int i = 0; i < sm->wantedBytesLength; i++) {
+    if (sm->wantedBytes[i] == byte)
+      return 1;
+  }
+
+  return 0;
+}
 
 void change_state(state_machine_st* sm, state_st st) {
     sm->state = st;
 }
 
-state_machine_st* create_state_machine(unsigned char wantedByte, unsigned char addressByte) {
+state_machine_st* create_state_machine(unsigned char* wantedBytes, int wantedBytesLength, unsigned char addressByte) {
     state_machine_st* sm = malloc(sizeof(state_machine_st));
     change_state(sm, START);
-    sm->wantedByte = wantedByte;
+    sm->wantedBytes = wantedBytes;
+    sm->wantedBytesLength = wantedBytesLength;
     sm->addressByte = addressByte;
     return sm;
 }
@@ -49,7 +58,7 @@ void event_handler(state_machine_st* sm, unsigned char byte, unsigned char* fram
         case A_RCV:
             if (byte == FLAG)
                 change_state(sm, FLAG_RCV);
-            else if (byte == sm->wantedByte){
+            else if (isWanted(byte, sm)){
                 change_state(sm, C_RCV);
                 frame[2] = byte;
             }

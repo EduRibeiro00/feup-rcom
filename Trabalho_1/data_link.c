@@ -24,7 +24,9 @@
  */
 int llOpenReceiver(int fd) {
 
-    if(readSupervisionFrame(ll.frame, fd, SET, END_SEND) == -1)
+    unsigned char wantedByte[1];
+    wantedByte[0] = SET;
+    if(readSupervisionFrame(ll.frame, fd, wantedByte, 1, END_SEND) == -1)
       return -1;
 
     printf("Received SET frame\n");
@@ -59,40 +61,17 @@ int llOpenTransmitter(int fd) {
 
     printf("Sent SET frame\n");
 
-
-
-  /*  unsigned char bcc2;
-
-    ll.frame[0] = FLAG;
-    ll.frame[1] = 0x03;
-    ll.frame[2] = 0x00;
-    ll.frame[3] = ll.frame[1] ^ ll.frame[2];
-    ll.frame[4] = 0x7e;
-    ll.frame[5] = 0x7e;
-    ll.frame[6] = 0xfd;
-    ll.frame[7] = 0x7d;
-    bcc2 = ll.frame[4];
-    for(int i = 5; i < 8; i++){
-      bcc2 = bcc2 ^ ll.frame[i];
-    }
-    ll.frame[8] = bcc2;
-    ll.frame[9] = FLAG;
-
-    byte_stuffing(ll.frame, 3, 9);
-
-    byte_destuffing(ll.frame, 3, 9);
-
-    exit(0);*/
-
-
     int read_value = -1;
     finish = 0;
     num_retr = 0;
 
     alarm(TIMEOUT);
 
+    unsigned char wantedByte[1];
+    wantedByte[0] = UA;
+
     while (finish != 1) {
-      read_value = readSupervisionFrame(ll.frame, fd, UA, END_SEND);
+      read_value = readSupervisionFrame(ll.frame, fd, wantedByte, 1, END_SEND);
 
       if(read_value == 0){
 
@@ -105,7 +84,6 @@ int llOpenTransmitter(int fd) {
 
     if(read_value == -1){
       printf("Closing file descriptor\n");
-      closeNonCanonical(fd, &oldtio);
       return -1;
     }
 
@@ -139,6 +117,7 @@ int llopen(char* port, int role) {
         returnFd = llOpenTransmitter(fd);
         if(returnFd < 0) {
           free(ll.frame);
+          closeNonCanonical(fd, &oldtio);
           return -1;
         }
         else return returnFd;
@@ -148,6 +127,7 @@ int llopen(char* port, int role) {
         returnFd = llOpenReceiver(fd);
         if(returnFd < 0) {
           free(ll.frame);
+          closeNonCanonical(fd, &oldtio);
           return -1;
         }
         else return returnFd;
@@ -155,7 +135,91 @@ int llopen(char* port, int role) {
 
     perror("Invalid role");
     free(ll.frame);
+    closeNonCanonical(fd, &oldtio);
     return -1;
+}
+
+
+/**
+ * Function that writes the information contained in the buffer to the serial port
+ * @param fd File descriptor of the serial port
+ * @param buffer Information to be written
+ * @param length Length of the buffer
+ * @return Number of characters written; -1 in case of error
+ */
+int llwrite(int fd, char* buffer, int length) {
+
+  static unsigned char controlByte = S_0;
+
+  if (createInformationFrame(ll.frame, controlByte, buffer, length) != 0) {
+    free(ll.frame);
+    closeNonCanonical(fd, &oldtio);
+    return -1;
+  }
+
+  if(sendFrame(ll.frame, fd) != 0)
+    return -1;
+
+  printf("Sent I frame\n");
+
+
+  int read_value = -1;
+  finish = 0;
+  num_retr = 0;
+
+  alarm(TIMEOUT);
+
+  unsigned char wantedBytes[2];
+
+  while (finish != 1) {
+
+    if (controlByte == S_0) {
+      wantedBytes[0] = RR_1;
+      wantedBytes[1] = REJ_1;
+      read_value = readSupervisionFrame(ll.frame, fd, wantedBytes, 2, END_SEND);
+    }
+    else if (controlByte == S_1) {
+      wantedBytes[0] = RR_0;
+      wantedBytes[1] = REJ_0;
+      read_value = readSupervisionFrame(ll.frame, fd, wantedBytes, 2, END_SEND);
+    }
+
+    if(read_value == 0){
+
+      // Cancels alarm
+      alarm(0);
+      finish = 1;
+
+    }
+
+  }
+
+
+  if(read_value == -1){
+    printf("Closing file descriptor\n");
+    return -1;
+  }
+
+
+  printf("Received RR frame\n");
+
+  if (controlByte == S_0)
+    controlByte = S_1;
+  else if (controlByte == S_1)
+    controlByte = S_0;
+  else return -1;
+
+}
+
+
+/**
+ * Function that reads the information written in the serial port
+ * @param fd File descriptor of the serial port
+ * @param buffer Array of characters where the read information will be stored
+ * @return Number of characters read; -1 in case of error
+ */
+int llread(int fd, char* buffer) {
+
 }
 
 
@@ -185,8 +249,11 @@ int llCloseTransmitter(int fd) {
 
     alarm(TIMEOUT);
 
+    unsigned char wantedByte[1];
+    wantedByte[0] = DISC;
+
     while (finish != 1) {
-      read_value = readSupervisionFrame(ll.frame, fd, DISC, END_REC);
+      read_value = readSupervisionFrame(ll.frame, fd, wantedByte, 1, END_REC);
 
       if(read_value == 0){
 
@@ -198,7 +265,6 @@ int llCloseTransmitter(int fd) {
 
     if(read_value == -1){
       printf("Closing file descriptor\n");
-      closeNonCanonical(fd, &oldtio);
       return -1;
     }
 
@@ -228,7 +294,10 @@ int llCloseTransmitter(int fd) {
  */
 int llCloseReceiver(int fd) {
 
-    if(readSupervisionFrame(ll.frame, fd, DISC, END_SEND) == -1)
+    unsigned char wantedByte[1];
+    wantedByte[0] = DISC;
+
+    if(readSupervisionFrame(ll.frame, fd, wantedByte, 1, END_SEND) == -1)
       return -1;
 
     printf("Received DISC frame\n");
@@ -251,8 +320,10 @@ int llCloseReceiver(int fd) {
 
     alarm(TIMEOUT);
 
+    wantedByte[0] = UA;
+
     while (finish != 1) {
-      read_value = readSupervisionFrame(ll.frame, fd, UA, END_REC);
+      read_value = readSupervisionFrame(ll.frame, fd, wantedByte, 1, END_REC);
 
       if(read_value == 0){
 
@@ -265,7 +336,6 @@ int llCloseReceiver(int fd) {
 
     if(read_value == -1){
       printf("Closing file descriptor\n");
-      closeNonCanonical(fd, &oldtio);
       return -1;
     }
 
@@ -286,12 +356,14 @@ int llclose(int fd, int role) {
     if(role == TRANSMITTER) {
       if(llCloseTransmitter(fd) < 0) {
         free(ll.frame);
+        closeNonCanonical(fd, &oldtio);
         return -1;
       }
     }
     else if(role == RECEIVER) {
       if(llCloseReceiver(fd) < 0) {
         free(ll.frame);
+        closeNonCanonical(fd, &oldtio);
         return -1;
       }
     }

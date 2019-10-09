@@ -16,11 +16,11 @@ unsigned char createBCC(unsigned char a, unsigned char c) {
     return a ^ c;
 }
 
-unsigned char createBCC_2(unsigned char* frame, unsigned char start, unsigned char end) {
+unsigned char createBCC_2(unsigned char* frame, int length) {
 
-  unsigned char bcc2;
+  unsigned char bcc2 = frame[0];
 
-  for(int i = start; i < end + 1; i++){
+  for(int i = 1; i < length; i++){
     bcc2 = bcc2 ^ frame[i];
   }
 
@@ -108,7 +108,7 @@ int byte_destuffing(unsigned char* frame, int start, int end){
 
 
   for(int i = start; i < end + 1; i++){
-    
+
     if(aux[i] == ESCAPE_BYTE){
       if (aux[i+1] == BYTE_STUFFING_ESCAPE){
         frame[j] = ESCAPE_BYTE;
@@ -119,7 +119,7 @@ int byte_destuffing(unsigned char* frame, int start, int end){
       }
       j++;
     }
-    else if(aux[i] == BYTE_STUFFING_ESCAPE || aux[i] == BYTE_STUFFING_FLAG){ 
+    else if(aux[i] == BYTE_STUFFING_ESCAPE || aux[i] == BYTE_STUFFING_FLAG){
       continue;
     }
     else{
@@ -180,6 +180,30 @@ int createSupervisionFrame(unsigned char* frame, unsigned char controlField, int
 }
 
 
+int createInformationFrame(unsigned char* frame, unsigned char controlField, unsigned char* infoField, int infoFieldLength) {
+
+  frame[0] = FLAG;
+
+  frame[1] = END_SEND; // como so o emissor envia tramas I, assume-se que o campo de endereco e sempre 0x03.
+
+  frame[2] = controlField;
+
+  frame[3] = createBCC(frame[1], frame[2]);
+
+  for(int i = 0; i < infoFieldLength; i++) {
+    frame[i + 4] = infoField[i];
+  }
+
+  unsigned bcc2 = createBCC_2(infoField, infoFieldLength);
+
+  frame[infoFieldLength + 4] = bcc2;
+
+  frame[infoFieldLength + 5] = FLAG;
+
+  return 0;
+}
+
+
 int sendFrame(unsigned char* frame, int fd) {
 
     int n;
@@ -202,14 +226,13 @@ int readByte(unsigned char* byte, int fd) {
 
 
 
-int readSupervisionFrame(unsigned char* frame, int fd, unsigned char wantedByte, unsigned char addressByte) {
+int readSupervisionFrame(unsigned char* frame, int fd, unsigned char* wantedBytes, int wantedBytesLength, unsigned char addressByte) {
 
-    state_machine_st *st = create_state_machine(wantedByte, addressByte);
+    state_machine_st *st = create_state_machine(wantedBytes, wantedBytesLength, addressByte);
 
     unsigned char byte;
 
     while(st->state != STOP && finish != 1) {
-
         if(readByte(&byte, fd) == 0)
           event_handler(st, byte, frame);
     }
