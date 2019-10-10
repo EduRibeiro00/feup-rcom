@@ -142,7 +142,7 @@ int byte_destuffing(unsigned char* frame, int start, int end){
 
   free(aux);
 
-  return 0;
+  return j;
 }
 
 
@@ -212,7 +212,7 @@ int sendFrame(unsigned char* frame, int fd) {
         return -1;
     }
 
-    return 0;
+    return n;
 }
 
 
@@ -225,7 +225,6 @@ int readByte(unsigned char* byte, int fd) {
 }
 
 
-
 int readSupervisionFrame(unsigned char* frame, int fd, unsigned char* wantedBytes, int wantedBytesLength, unsigned char addressByte) {
 
     state_machine_st *st = create_state_machine(wantedBytes, wantedBytesLength, addressByte);
@@ -234,15 +233,44 @@ int readSupervisionFrame(unsigned char* frame, int fd, unsigned char* wantedByte
 
     while(st->state != STOP && finish != 1) {
         if(readByte(&byte, fd) == 0)
-          event_handler(st, byte, frame);
+          event_handler(st, byte, frame, SUPERVISION);
     }
+
+    int ret = st->foundIndex;
 
     destroy_st(st);
 
     if(finish == 1)
       return -1;
 
-    return 0;
+    return ret;
+
+}
+
+int readInformationFrame(unsigned char* frame, int fd, unsigned char* wantedBytes, int wantedBytesLength, unsigned char addressByte) {
+
+  state_machine_st *st = create_state_machine(wantedBytes, wantedBytesLength, addressByte);
+  unsigned char byte;
+
+  while(st->state != STOP && st->state != STOP_BAD_BCC2 && finish != 1) {
+
+      if(readByte(&byte, fd) == 0)
+        event_handler(st, byte, frame, INFORMATION);
+
+      else{
+          change_state(st, START);
+        }
+  }
+
+  int ret = st->dataLength;
+
+  destroy_st(st);
+
+  if(finish == 1)
+    return -1;
+
+  return ret;
+
 }
 
 

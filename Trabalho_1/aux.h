@@ -21,6 +21,9 @@ int createInformationFrame(unsigned char* frame, unsigned char controlField, uns
 int readSupervisionFrame(unsigned char* frame, int fd, unsigned char* wantedBytes, int wantedBytesLength, unsigned char addressByte);
 
 
+int readInformationFrame(unsigned char* frame, int fd, unsigned char* wantedBytes, int wantedBytesLength, unsigned char addressByte);
+
+
 int sendFrame(unsigned char* frame, int fd);
 
 

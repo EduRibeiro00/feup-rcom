@@ -35,7 +35,7 @@ int llOpenReceiver(int fd) {
       return -1;
 
     // send SET frame to receiver
-    if(sendFrame(ll.frame, fd) != 0)
+    if(sendFrame(ll.frame, fd) == -1)
       return -1;
 
     printf("Sent UA frame\n");
@@ -56,7 +56,7 @@ int llOpenTransmitter(int fd) {
         return -1;
 
     // send SET frame to receiver
-    if(sendFrame(ll.frame, fd) != 0)
+    if(sendFrame(ll.frame, fd) == -1)
         return -1;
 
     printf("Sent SET frame\n");
@@ -73,7 +73,7 @@ int llOpenTransmitter(int fd) {
     while (finish != 1) {
       read_value = readSupervisionFrame(ll.frame, fd, wantedByte, 1, END_SEND);
 
-      if(read_value == 0){
+      if(read_value >= 0){
 
         // Cancels alarm
         alarm(0);
@@ -157,7 +157,14 @@ int llwrite(int fd, char* buffer, int length) {
     return -1;
   }
 
-  if(sendFrame(ll.frame, fd) != 0)
+  if(byte_stuffing(ll.frame, DATA_START, length) != 0){
+    free(ll.frame);
+    closeNonCanonical(fd, &oldtio);
+    return -1;
+  }
+
+  int numWritten;
+  if((numWritten = sendFrame(ll.frame, fd)) == -1)
     return -1;
 
   printf("Sent I frame\n");
@@ -175,31 +182,28 @@ int llwrite(int fd, char* buffer, int length) {
 
     if (controlByte == S_0) {
       wantedBytes[0] = RR_1;
-      wantedBytes[1] = REJ_1;
-      read_value = readSupervisionFrame(ll.frame, fd, wantedBytes, 2, END_SEND);
+      wantedBytes[1] = REJ_0;
     }
     else if (controlByte == S_1) {
       wantedBytes[0] = RR_0;
-      wantedBytes[1] = REJ_0;
-      read_value = readSupervisionFrame(ll.frame, fd, wantedBytes, 2, END_SEND);
+      wantedBytes[1] = REJ_1;
     }
 
-    if(read_value == 0){
+    read_value = readSupervisionFrame(ll.frame, fd, wantedBytes, 2, END_SEND);
 
+    if(read_value == 0) { // read_value é o índice do wantedByte que foi encontrado
       // Cancels alarm
       alarm(0);
       finish = 1;
-
     }
 
   }
 
 
-  if(read_value == -1){
+  if(read_value != 0){
     printf("Closing file descriptor\n");
     return -1;
   }
-
 
   printf("Received RR frame\n");
 
@@ -208,6 +212,8 @@ int llwrite(int fd, char* buffer, int length) {
   else if (controlByte == S_1)
     controlByte = S_0;
   else return -1;
+
+  return numWritten;
 
 }
 
@@ -219,6 +225,41 @@ int llwrite(int fd, char* buffer, int length) {
  * @return Number of characters read; -1 in case of error
  */
 int llread(int fd, char* buffer) {
+
+  static int controlVal = 0;
+
+  unsigned char wantedBytes[2];
+  wantedBytes[0] = S_0;
+  wantedBytes[1] = S_1;
+
+  int read_value;
+  unsigned char responseByte;
+
+  if((read_value = readInformationFrame(ll.frame, fd, wantedBytes, 2, END_SEND)) == -1) {
+    if (controlVal == 0) {
+      responseByte = REJ_1;
+    }
+    else responseByte = REJ_0;
+  }
+  else {
+    if (controlVal == 0) {
+      responseByte = RR_1;
+    }
+    else responseByte = RR_0;
+  }
+
+  printf("Received I frame\n");
+
+  if(createSupervisionFrame(ll.frame, responseByte, RECEIVER) != 0)
+    return -1;
+
+  // send SET frame to receiver
+  if(sendFrame(ll.frame, fd) == -1)
+    return -1;
+
+  printf("Sent ACK frame\n");
+
+  return read_value;
 
 }
 
@@ -235,7 +276,7 @@ int llCloseTransmitter(int fd) {
         return -1;
 
     // send DISC frame to receiver
-    if(sendFrame(ll.frame, fd) != 0)
+    if(sendFrame(ll.frame, fd) == -1)
         return -1;
 
     printf("Sent DISC frame\n");
@@ -255,7 +296,7 @@ int llCloseTransmitter(int fd) {
     while (finish != 1) {
       read_value = readSupervisionFrame(ll.frame, fd, wantedByte, 1, END_REC);
 
-      if(read_value == 0){
+      if(read_value >= 0){
 
         // Cancels alarm
         alarm(0);
@@ -278,7 +319,7 @@ int llCloseTransmitter(int fd) {
         return -1;
 
     // send DISC frame to receiver
-    if(sendFrame(ll.frame, fd) != 0)
+    if(sendFrame(ll.frame, fd) == -1)
         return -1;
 
     printf("Sent UA frame\n");
@@ -307,7 +348,7 @@ int llCloseReceiver(int fd) {
         return -1;
 
     // send DISC frame to receiver
-    if(sendFrame(ll.frame, fd) != 0)
+    if(sendFrame(ll.frame, fd) == -1)
         return -1;
 
     printf("Sent DISC frame\n");
@@ -325,7 +366,7 @@ int llCloseReceiver(int fd) {
     while (finish != 1) {
       read_value = readSupervisionFrame(ll.frame, fd, wantedByte, 1, END_REC);
 
-      if(read_value == 0){
+      if(read_value >= 0){
 
         // Cancels alarm
         alarm(0);

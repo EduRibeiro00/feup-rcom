@@ -3,7 +3,7 @@
 
 #define MAX_SIZE 255
 
-#define BAUDRATE B38400 //38400 is the normal value
+#define BAUDRATE B4800 //38400 is the normal value
 #define MODEMDEVICE "/dev/ttyS1"
 #define _POSIX_SOURCE 1 /* POSIX compliant source */
 #define FALSE 0
@@ -11,6 +11,9 @@
 
 #define TRANSMITTER 0
 #define RECEIVER    1
+
+#define SUPERVISION 0
+#define INFORMATION 1
 
 #define NUM_RETR    3
 #define TIMEOUT     3
@@ -35,5 +38,7 @@
 #define ESCAPE_BYTE 0x7D
 
 #define BUF_SIZE_SUP  5
+
+#define DATA_START    4
 
 #endif

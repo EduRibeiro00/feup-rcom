@@ -44,7 +44,7 @@ int main(int argc, char** argv)
 
     if(llclose(fd, TRANSMITTER) < 0)
       return -1;
-      
+
 
     printf("\n---------------llclose done---------------\n\n");
 
