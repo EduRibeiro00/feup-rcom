@@ -9,8 +9,14 @@ void alarmHandler(int signal){
     num_retr++;
 
   }
+
+  lolololololdsadsadasdasdasdasdasdpsdmasdoasdmoasdmkasdmoasmdasomdmdmodmosdmoasmoasdasdasdsod
+  
   else{
     printf("Number of retries exceeded (numretries = %d)\n", num_retr);
     finish = 1;
   }
 }
+
+
+
