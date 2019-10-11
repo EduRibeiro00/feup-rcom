@@ -3,6 +3,7 @@
 #include <fcntl.h>
 #include <termios.h>
 #include <stdio.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
@@ -24,6 +25,8 @@
  */
 int llOpenReceiver(int fd) {
 
+    ll.frameLength = BUF_SIZE_SUP;
+
     unsigned char wantedByte[1];
     wantedByte[0] = SET;
     if(readSupervisionFrame(ll.frame, fd, wantedByte, 1, END_SEND) == -1)
@@ -34,8 +37,9 @@ int llOpenReceiver(int fd) {
     if(createSupervisionFrame(ll.frame, UA, RECEIVER) != 0)
       return -1;
 
+    
     // send SET frame to receiver
-    if(sendFrame(ll.frame, fd) == -1)
+    if(sendFrame(ll.frame, fd, ll.frameLength) == -1)
       return -1;
 
     printf("Sent UA frame\n");
@@ -51,12 +55,14 @@ int llOpenReceiver(int fd) {
  */
 int llOpenTransmitter(int fd) {
 
+    ll.frameLength = BUF_SIZE_SUP;
+
     // creates SET frame
     if(createSupervisionFrame(ll.frame, SET, TRANSMITTER) != 0)
         return -1;
 
     // send SET frame to receiver
-    if(sendFrame(ll.frame, fd) == -1)
+    if(sendFrame(ll.frame, fd, ll.frameLength) == -1)
         return -1;
 
     printf("Sent SET frame\n");
@@ -65,7 +71,7 @@ int llOpenTransmitter(int fd) {
     finish = 0;
     num_retr = 0;
 
-    alarm(TIMEOUT);
+    alarm(ll.timeout);
 
     unsigned char wantedByte[1];
     wantedByte[0] = UA;
@@ -149,7 +155,11 @@ int llopen(char* port, int role) {
  */
 int llwrite(int fd, char* buffer, int length) {
 
-  static unsigned char controlByte = S_0;
+  unsigned char controlByte;
+  if(ll.sequenceNumber == 0)
+    controlByte = S_0;
+  else controlByte = S_1;
+
 
   if (createInformationFrame(ll.frame, controlByte, buffer, length) != 0) {
     free(ll.frame);
@@ -157,29 +167,39 @@ int llwrite(int fd, char* buffer, int length) {
     return -1;
   }
 
-  if(byte_stuffing(ll.frame, DATA_START, length) != 0){
+  int j; // frame length after stuffing
+
+  if((j = byte_stuffing(ll.frame, length)) < 0){
     free(ll.frame);
     closeNonCanonical(fd, &oldtio);
     return -1;
   }
 
+  ll.frameLength = j;
   int numWritten;
-  if((numWritten = sendFrame(ll.frame, fd)) == -1)
-    return -1;
 
-  printf("Sent I frame\n");
+  bool dataSent = false;
 
+  
+  while(!dataSent) {
+  
+    if((numWritten = sendFrame(ll.frame, fd, ll.frameLength)) == -1) {
+      free(ll.frame);
+      closeNonCanonical(fd, &oldtio);
+      return -1;
+    }
+  
+    printf("Sent I frame\n");
+  
 
-  int read_value = -1;
-  finish = 0;
-  num_retr = 0;
-
-  alarm(TIMEOUT);
-
-  unsigned char wantedBytes[2];
-
-  while (finish != 1) {
-
+    int read_value = -1;
+    finish = 0;
+    num_retr = 0;
+  
+    alarm(ll.timeout);
+  
+    unsigned char wantedBytes[2];
+  
     if (controlByte == S_0) {
       wantedBytes[0] = RR_1;
       wantedBytes[1] = REJ_0;
@@ -188,33 +208,45 @@ int llwrite(int fd, char* buffer, int length) {
       wantedBytes[0] = RR_0;
       wantedBytes[1] = REJ_1;
     }
+  
+    while (finish != 1) {
+    
+      read_value = readSupervisionFrame(ll.frame, fd, wantedBytes, 2, END_SEND);
+  
+      if(read_value >= 0) { // read_value é o índice do wantedByte que foi encontrado
+        // Cancels alarm
+        alarm(0);
+        finish = 1;
+      }
 
-    read_value = readSupervisionFrame(ll.frame, fd, wantedBytes, 2, END_SEND);
-
-    if(read_value == 0) { // read_value é o índice do wantedByte que foi encontrado
-      // Cancels alarm
-      alarm(0);
-      finish = 1;
+    }
+  
+    if(read_value == -1){
+      printf("Closing file descriptor\n");
+      free(ll.frame);
+      closeNonCanonical(fd, &oldtio);
+      return -1;
     }
 
+
+    if(read_value == 0) // read a RR
+      dataSent = true;
+    else // read a REJ
+      dataSent = false;
+  
+
+    printf("Received response frame (%x)\n", ll.frame[2]);
   }
 
 
-  if(read_value != 0){
-    printf("Closing file descriptor\n");
-    return -1;
-  }
-
-  printf("Received RR frame\n");
-
-  if (controlByte == S_0)
-    controlByte = S_1;
-  else if (controlByte == S_1)
-    controlByte = S_0;
+  if (ll.sequenceNumber == 0)
+    ll.sequenceNumber = 1;
+  else if (ll.sequenceNumber == 1)
+    ll.sequenceNumber = 0;
   else return -1;
 
-  return numWritten;
 
+  return numWritten - 6; // length of the data packet length sent to the receiver
 }
 
 
@@ -225,42 +257,125 @@ int llwrite(int fd, char* buffer, int length) {
  * @return Number of characters read; -1 in case of error
  */
 int llread(int fd, char* buffer) {
+  // ASSUMINDO QUE BUFFER TEM TAMANHO SUFICIENTE PARA TER TODOS OS DADOS
 
-  static int controlVal = 0;
+  int numBytes;
 
   unsigned char wantedBytes[2];
   wantedBytes[0] = S_0;
   wantedBytes[1] = S_1;
 
   int read_value;
-  unsigned char responseByte;
 
-  if((read_value = readInformationFrame(ll.frame, fd, wantedBytes, 2, END_SEND)) == -1) {
-    if (controlVal == 0) {
-      responseByte = REJ_1;
+  bool isBufferFull = false;
+
+  while(!isBufferFull) {
+
+    read_value = readInformationFrame(ll.frame, fd, wantedBytes, 2, END_SEND);
+
+    printf("Received I frame\n");
+
+
+    if((numBytes = byte_destuffing(ll.frame, read_value)) < 0) {
+      free(ll.frame);
+      closeNonCanonical(fd, &oldtio);
+      return -1;
     }
-    else responseByte = REJ_0;
-  }
-  else {
-    if (controlVal == 0) {
-      responseByte = RR_1;
+
+    int controlByteRead;
+    if(ll.frame[2] == S_0)
+      controlByteRead = 0;
+    else if(ll.frame[2] == S_1)
+      controlByteRead = 1;
+
+
+    unsigned char responseByte;
+    if(ll.frame[numBytes - 2] == createBCC_2(&ll.frame[DATA_START], numBytes - 6)) { // if bcc2 is correct
+
+        if(controlByteRead != ll.sequenceNumber) { // duplicated trama; discard information
+
+          // ignora dados da trama
+
+          if(controlByteRead == 0) {
+            responseByte = RR_1;
+            ll.sequenceNumber = 1;
+          }
+          else {
+            responseByte = RR_0;
+            ll.sequenceNumber = 0;
+          }
+
+        }
+        else { // new trama
+
+          // passes information to the buffer
+          for(int i = 0; i < numBytes - 6; i++) {
+            buffer[i] = ll.frame[DATA_START + i];
+          }
+
+          isBufferFull = true;
+
+          if(controlByteRead == 0) {
+            responseByte = RR_1;
+            ll.sequenceNumber = 1;
+          }
+          else {
+            responseByte = RR_0;
+            ll.sequenceNumber = 0;
+          }
+        }
     }
-    else responseByte = RR_0;
+    else { // if bcc2 is not correct
+        if(controlByteRead != ll.sequenceNumber) { // duplicated trama
+
+          // ignora dados da trama
+
+          if(controlByteRead == 0) {
+            responseByte = RR_1;
+            ll.sequenceNumber = 1;
+          }
+          else {
+            responseByte = RR_0;
+            ll.sequenceNumber = 0;
+          }
+        }
+        else {
+
+          // ignora dados da trama, por erro
+
+          if(controlByteRead == 0) {
+            responseByte = REJ_0;
+            ll.sequenceNumber = 0;
+          }
+          else {
+            responseByte = REJ_1;
+            ll.sequenceNumber = 1;
+          }
+        }
+
+    }
+
+
+
+    if(createSupervisionFrame(ll.frame, responseByte, RECEIVER) != 0) {
+      free(ll.frame);
+      closeNonCanonical(fd, &oldtio);
+      return -1;
+    }
+
+    ll.frameLength = BUF_SIZE_SUP;
+
+    // send RR/REJ frame to receiver
+    if(sendFrame(ll.frame, fd, ll.frameLength) == -1) {
+      free(ll.frame);
+      closeNonCanonical(fd, &oldtio);
+      return -1;
+    }
+
   }
 
-  printf("Received I frame\n");
 
-  if(createSupervisionFrame(ll.frame, responseByte, RECEIVER) != 0)
-    return -1;
-
-  // send SET frame to receiver
-  if(sendFrame(ll.frame, fd) == -1)
-    return -1;
-
-  printf("Sent ACK frame\n");
-
-  return read_value;
-
+  return (numBytes - 6); // number of bytes of the data packet read
 }
 
 
@@ -271,12 +386,14 @@ int llread(int fd, char* buffer) {
  */
 int llCloseTransmitter(int fd) {
 
+    ll.frameLength = BUF_SIZE_SUP;
+
     // creates DISC frame
     if(createSupervisionFrame(ll.frame, DISC, TRANSMITTER) != 0)
         return -1;
 
     // send DISC frame to receiver
-    if(sendFrame(ll.frame, fd) == -1)
+    if(sendFrame(ll.frame, fd, ll.frameLength) == -1)
         return -1;
 
     printf("Sent DISC frame\n");
@@ -288,7 +405,7 @@ int llCloseTransmitter(int fd) {
     finish = 0;
     num_retr = 0;
 
-    alarm(TIMEOUT);
+    alarm(ll.timeout);
 
     unsigned char wantedByte[1];
     wantedByte[0] = DISC;
@@ -319,7 +436,7 @@ int llCloseTransmitter(int fd) {
         return -1;
 
     // send DISC frame to receiver
-    if(sendFrame(ll.frame, fd) == -1)
+    if(sendFrame(ll.frame, fd,  ll.frameLength) == -1)
         return -1;
 
     printf("Sent UA frame\n");
@@ -335,6 +452,8 @@ int llCloseTransmitter(int fd) {
  */
 int llCloseReceiver(int fd) {
 
+    ll.frameLength = BUF_SIZE_SUP;
+
     unsigned char wantedByte[1];
     wantedByte[0] = DISC;
 
@@ -343,12 +462,14 @@ int llCloseReceiver(int fd) {
 
     printf("Received DISC frame\n");
 
+
+
     // creates DISC frame
     if(createSupervisionFrame(ll.frame, DISC, RECEIVER) != 0)
         return -1;
 
     // send DISC frame to receiver
-    if(sendFrame(ll.frame, fd) == -1)
+    if(sendFrame(ll.frame, fd, ll.frameLength) == -1)
         return -1;
 
     printf("Sent DISC frame\n");
@@ -359,7 +480,7 @@ int llCloseReceiver(int fd) {
     finish = 0;
     num_retr = 0;
 
-    alarm(TIMEOUT);
+    alarm(ll.timeout);
 
     wantedByte[0] = UA;
 

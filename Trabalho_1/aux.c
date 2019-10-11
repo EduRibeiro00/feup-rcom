@@ -28,38 +28,46 @@ unsigned char createBCC_2(unsigned char* frame, int length) {
 }
 
 
-int byte_stuffing(unsigned char* frame, int start, int end){
+int byte_stuffing(unsigned char* frame, int length) {
 
   // number of packet bytes in the frame at the beginning, that is going to be on the final frame
   // after byte stuffing
   int counter = 0;
-  int j = start;
-  char aux_byte;
 
-  char *aux = malloc(sizeof(unsigned char) * ((end - start) + 3) * 2);
+  // allocates space for auxiliary buffer
+  unsigned char *aux = malloc(sizeof(unsigned char) * (length + 6));
   if(aux == NULL){
     return -1;
   }
 
-  frame = realloc(frame ,sizeof(unsigned char ) * ((end - start) + 3) * 2);
+  // allocates maximum space that could be necessary for the frame
+  frame = realloc(frame ,sizeof(unsigned char ) * ((length + 1) * 2) + 5);
   if (frame == NULL){
     free(aux);
     return -1;
   }
 
-  for(int i = 0; i < end+1 ; i++){
+
+  // passes information from the frame to aux
+  for(int i = 0; i < length + 6 ; i++){
     aux[i] = frame[i];
   }
 
 
-  for(int i = start; i < end + 1; i++){
-    if(aux[i] == FLAG && i != end){
+
+  int j = DATA_START;
+
+
+  // parses aux buffer, and fills in correctly the frame buffer
+  for(int i = DATA_START; i < (length + 6); i++){
+
+    if(aux[i] == FLAG && i != (length + 5)) {
       frame[j] = ESCAPE_BYTE;
       frame[j+1] = BYTE_STUFFING_FLAG;
       j = j + 2;
       counter++;
     }
-    else if(aux[i] == ESCAPE_BYTE && i != end){
+    else if(aux[i] == ESCAPE_BYTE && i != (length + 5)) {
       frame[j] = ESCAPE_BYTE;
       frame[j+1] = BYTE_STUFFING_ESCAPE;
       j = j + 2;
@@ -71,7 +79,8 @@ int byte_stuffing(unsigned char* frame, int start, int end){
     }
   }
 
-  frame = realloc(frame, sizeof(unsigned char) * ((end - start) + 3 + counter));
+  // reallocates space for the frame buffer in order to occupy only the necessary space
+  frame = realloc(frame, sizeof(unsigned char) * (length + 6 + counter));
   if(frame == NULL){
     free(aux);
     return -1;
@@ -80,47 +89,37 @@ int byte_stuffing(unsigned char* frame, int start, int end){
 
   free(aux);
 
-  return 0;
+  return j;
 }
 
 
-int byte_destuffing(unsigned char* frame, int start, int end){
+int byte_destuffing(unsigned char* frame, int length) {
 
-  int j = start;
-  char aux_byte;
-
-
-  printf("Before destuffing \n");
-
-  for(int i =0; i < end + 1 ; i++){
-    printf("byte %x\n", frame[i]);
-  }
-
-  char *aux = malloc(sizeof(unsigned char) * ((end - start) + 3) * 2);
+  // allocates space for the maximum possible frame length read
+  char *aux = malloc(sizeof(unsigned char) * (length + 5));
   if(aux == NULL){
     return -1;
   }
 
-
-  for(int i = 0; i < end+1 ; i++){
+  // copies the content of the frame (with stuffing) to the aux frame
+  for(int i = 0; i < (length + 5) ; i++) {
     aux[i] = frame[i];
   }
 
+  int j = DATA_START;
 
-  for(int i = start; i < end + 1; i++){
+  // iterates through the aux buffer, and fills the frame buffer with destuffed content
+  for(int i = DATA_START; i < (length + 5); i++) {
 
     if(aux[i] == ESCAPE_BYTE){
-      if (aux[i+1] == BYTE_STUFFING_ESCAPE){
+      if (aux[i+1] == BYTE_STUFFING_ESCAPE) {
         frame[j] = ESCAPE_BYTE;
       }
-      else if(aux[i+1] == BYTE_STUFFING_FLAG)
-      {
+      else if(aux[i+1] == BYTE_STUFFING_FLAG) {
         frame[j] = FLAG;
       }
+      i++;
       j++;
-    }
-    else if(aux[i] == BYTE_STUFFING_ESCAPE || aux[i] == BYTE_STUFFING_FLAG){
-      continue;
     }
     else{
       frame[j] = aux[i];
@@ -128,17 +127,13 @@ int byte_destuffing(unsigned char* frame, int start, int end){
     }
   }
 
-  frame = realloc(frame, sizeof(unsigned char) * (j-1));
+  // reallocates only the space required for the final frame contents
+  frame = realloc(frame, sizeof(unsigned char) * j);
   if(frame == NULL){
     free(aux);
     return -1;
   }
 
-  printf("After destuffing \n");
-
-  for(int i =0; i < j; i++){
-    printf("byte %x\n", frame[i]);
-  }
 
   free(aux);
 
@@ -204,11 +199,11 @@ int createInformationFrame(unsigned char* frame, unsigned char controlField, uns
 }
 
 
-int sendFrame(unsigned char* frame, int fd) {
+int sendFrame(unsigned char* frame, int fd, int length) {
 
     int n;
 
-    if( (n = write(fd, frame, BUF_SIZE_SUP)) <= 0){
+    if( (n = write(fd, frame, length)) <= 0){
         return -1;
     }
 
@@ -252,25 +247,18 @@ int readInformationFrame(unsigned char* frame, int fd, unsigned char* wantedByte
   state_machine_st *st = create_state_machine(wantedBytes, wantedBytesLength, addressByte);
   unsigned char byte;
 
-  while(st->state != STOP && st->state != STOP_BAD_BCC2 && finish != 1) {
-
+  while(st->state != STOP) {
       if(readByte(&byte, fd) == 0)
         event_handler(st, byte, frame, INFORMATION);
-
-      else{
-          change_state(st, START);
-        }
   }
 
+  // dataLength = length of the data packet sent from the application on the transmitter side
+  //              (includes data packet + bcc2, with stuffing)
   int ret = st->dataLength;
 
   destroy_st(st);
 
-  if(finish == 1)
-    return -1;
-
   return ret;
-
 }
 
 

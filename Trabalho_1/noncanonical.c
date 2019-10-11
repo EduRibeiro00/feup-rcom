@@ -34,6 +34,8 @@ int main(int argc, char** argv)
     ll.baudRate = BAUDRATE;
     ll.numTransmissions = NUM_RETR;
     ll.timeout = TIMEOUT;
+    ll.sequenceNumber = 0;
+
 
 
     if((fd = llopen(ll.port, RECEIVER)) <= 0){
@@ -41,6 +43,37 @@ int main(int argc, char** argv)
     }
 
     printf("\n---------------llopen done---------------\n\n");
+
+    char buffer[20];
+    int numRead;
+
+    if((numRead = llread(fd, buffer)) < 0) {
+      printf("correu mal :(\n");
+      return -1;
+    }
+
+    printf("\n\n\n");
+
+    for(int i = 0; i < numRead; i++)
+      printf("%c", buffer[i]);
+
+
+    printf("\n\n\n");
+
+
+    if((numRead = llread(fd, buffer)) < 0) {
+      printf("correu mal :(\n");
+      return -1;
+    }
+
+    printf("\n\n\n");
+
+    for(int i = 0; i < numRead; i++)
+      printf("%c", buffer[i]);
+
+
+    printf("\n\n\n");
+
 
     // close, in non canonical
     if(llclose(fd, RECEIVER) < 0)

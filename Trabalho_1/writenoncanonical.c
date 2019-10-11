@@ -35,12 +35,39 @@ int main(int argc, char** argv)
     ll.baudRate = BAUDRATE;
     ll.numTransmissions = NUM_RETR;
     ll.timeout = TIMEOUT;
+    ll.sequenceNumber = 0;
+
+
+
 
     if((fd = llopen(ll.port, TRANSMITTER))<= 0){
       return -1;
     }
 
     printf("\n---------------llopen done---------------\n\n");
+
+    char buffer[20];
+    buffer[0] = 'o';
+    buffer[1] = 'l';
+    buffer[2] = 'a';
+    buffer[3] = '!';
+    buffer[4] = ':';
+    buffer[5] = ')';
+
+
+    if(llwrite(fd, buffer, 6) < 0) {
+      printf("deu erro");
+      return -1;
+    }
+
+
+    buffer[2] = 'e';
+
+    if(llwrite(fd, buffer, 6) < 0) {
+      printf("deu erro");
+      return -1;
+    }
+
 
     if(llclose(fd, TRANSMITTER) < 0)
       return -1;

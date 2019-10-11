@@ -1,17 +1,14 @@
 #include "alarm.h"
 
-void alarmHandler(int signal){
+void alarmHandler(int signal) {
 
-  if(num_retr < NUM_RETR){
-    sendFrame(ll.frame, fd);
+  if(num_retr < ll.numTransmissions){
+    sendFrame(ll.frame, fd, ll.frameLength);
     printf("Timeout/invalid value: Sent frame again (numretries = %d)\n", num_retr);
-    alarm(TIMEOUT);
+    alarm(ll.timeout);
     num_retr++;
 
   }
-
-  lolololololdsadsadasdasdasdasdasdpsdmasdoasdmoasdmkasdmoasmdasomdmdmodmosdmoasmoasdasdasdsod
-  
   else{
     printf("Number of retries exceeded (numretries = %d)\n", num_retr);
     finish = 1;

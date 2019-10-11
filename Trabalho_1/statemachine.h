@@ -6,8 +6,7 @@ typedef enum state {
     A_RCV,
     C_RCV,
     BCC_OK,
-    STOP,
-    STOP_BAD_BCC2
+    STOP
 } state_st;
 
 typedef struct state_machine {

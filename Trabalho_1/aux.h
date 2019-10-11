@@ -6,10 +6,10 @@ unsigned char createBCC(unsigned char a, unsigned char c);
 unsigned char createBCC_2(unsigned char* frame, int length);
 
 
-int byte_stuffing(unsigned char* frame, int start, int end);
+int byte_stuffing(unsigned char* frame, int length);
 
 
-int byte_destuffing(unsigned char* frame, int start, int end);
+int byte_destuffing(unsigned char* frame, int length);
 
 
 int createSupervisionFrame(unsigned char* frame, unsigned char controlField, int role);
@@ -24,7 +24,7 @@ int readSupervisionFrame(unsigned char* frame, int fd, unsigned char* wantedByte
 int readInformationFrame(unsigned char* frame, int fd, unsigned char* wantedBytes, int wantedBytesLength, unsigned char addressByte);
 
 
-int sendFrame(unsigned char* frame, int fd);
+int sendFrame(unsigned char* frame, int fd, int length);
 
 
 int readByte(unsigned char* byte, int fd);

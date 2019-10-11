@@ -160,7 +160,7 @@ void event_handler(state_machine_st* sm, unsigned char byte, unsigned char* fram
             if(byte ==  FLAG){
               frame[i] = byte;
               change_state(sm, STOP);
-              sm->dataLength = i-5;
+              sm->dataLength = i-4;
             }
           else{
               frame[i++] = byte;
