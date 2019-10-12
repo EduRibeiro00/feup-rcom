@@ -246,7 +246,7 @@ int llwrite(int fd, char* buffer, int length) {
   else return -1;
 
 
-  return numWritten - 6; // length of the data packet length sent to the receiver
+  return (numWritten - 6); // length of the data packet length sent to the receiver
 }
 
 
@@ -339,7 +339,7 @@ int llread(int fd, char* buffer) {
             ll.sequenceNumber = 0;
           }
         }
-        else {
+        else { // new trama
 
           // ignora dados da trama, por erro
 
