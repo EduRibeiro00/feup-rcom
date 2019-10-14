@@ -37,3 +37,10 @@ int closeNonCanonical(int fd, struct termios* oldtio);
 
 
 void alarmHandlerInstaller();
+
+// ------------------------------
+
+void convertValueInTwo(int k, int* l1, int* l2);
+
+
+int convertValueInOne(int l1, int l2);

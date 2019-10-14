@@ -108,6 +108,7 @@ int llOpenTransmitter(int fd) {
 int llopen(char* port, int role) {
 
     ll.frame = malloc(sizeof(unsigned char) * (MAX_SIZE));
+    int fd;
 
     // open, in non canonical
     if((fd = openNonCanonical(port, &oldtio, VTIME_VALUE, VMIN_VALUE)) == -1)
@@ -546,7 +547,6 @@ int llclose(int fd, int role) {
     if(closeNonCanonical(fd, &oldtio) == -1)
       return -1;
 
-    printf("Closed file descriptor\n");
     free(ll.frame);
 
     return 1;

@@ -328,3 +328,16 @@ void alarmHandlerInstaller() {
       exit(-1);
     }
 }
+
+
+// ------------------------------
+
+void convertValueInTwo(int k, int* l1, int* l2) {
+  *l1 = k % 256;
+  *l2 = k / 256;
+}
+
+
+int convertValueInOne(int l1, int l2) {
+  return 256 * l2 + l1;
+}

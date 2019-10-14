@@ -14,7 +14,6 @@
 #include "data_link.h"
 #include "app.h"
 
-volatile int STOP=FALSE;
 
 int main(int argc, char** argv)
 {
@@ -37,10 +36,11 @@ int main(int argc, char** argv)
     ll.timeout = TIMEOUT;
     ll.sequenceNumber = 0;
 
+    // fills appLayer fields
+    al.status = TRANSMITTER;
 
 
-
-    if((fd = llopen(ll.port, TRANSMITTER))<= 0){
+    if((al.fileDescriptor = llopen(ll.port, al.status))<= 0){
       return -1;
     }
 
@@ -55,7 +55,7 @@ int main(int argc, char** argv)
     buffer[5] = ')';
 
   
-    if(llwrite(fd, buffer, 6) < 0) {
+    if(llwrite(al.fileDescriptor, buffer, 6) < 0) {
       printf("deu erro");
       return -1;
     }
@@ -66,7 +66,7 @@ int main(int argc, char** argv)
     buffer[8] = 'g';
     buffer[9] = 'a';
 
-    if(llwrite(fd, buffer, 10) < 0) {
+    if(llwrite(al.fileDescriptor, buffer, 10) < 0) {
       printf("deu erro");
       return -1;
     }
@@ -76,17 +76,17 @@ int main(int argc, char** argv)
     buffer[12] = 'l';
     buffer[13] = 'h';
 
-    if(llwrite(fd, buffer, 14) < 0) {
+    if(llwrite(al.fileDescriptor, buffer, 14) < 0) {
       printf("deu erro");
       return -1;
     }
     
-    if(llclose(fd, TRANSMITTER) < 0)
+    if(llclose(al.fileDescriptor, TRANSMITTER) < 0)
       return -1;
 
 
     printf("\n---------------llclose done---------------\n\n");
 
-    close(fd);
+    close(al.fileDescriptor);
     return 0;
 }

@@ -3,7 +3,8 @@
 
 // ---- macros for data link layer ----
 
-#define MAX_SIZE 255
+#define MAX_SIZE 65545 // max size of data in a packet, + 4 bytes fot packet head, + 6 bytes for frame header and tail
+
 
 #define BAUDRATE B4800 //38400 is the normal value
 #define MODEMDEVICE "/dev/ttyS1"

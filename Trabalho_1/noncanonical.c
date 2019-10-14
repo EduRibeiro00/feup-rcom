@@ -13,7 +13,6 @@
 #include "data_link.h"
 #include "app.h"
 
-volatile int STOP=FALSE;
 
 int main(int argc, char** argv)
 {
@@ -37,8 +36,11 @@ int main(int argc, char** argv)
     ll.sequenceNumber = 0;
 
 
+    // fills appLayer fields
+    al.status = RECEIVER;
 
-    if((fd = llopen(ll.port, RECEIVER)) <= 0){
+
+    if((al.fileDescriptor = llopen(ll.port, al.status)) <= 0){
       return -1;
     }
 
@@ -47,7 +49,7 @@ int main(int argc, char** argv)
     char buffer[20];
     int numRead;
 
-    if((numRead = llread(fd, buffer)) < 0) {
+    if((numRead = llread(al.fileDescriptor, buffer)) < 0) {
       printf("correu mal :(\n");
       return -1;
     }
@@ -61,7 +63,7 @@ int main(int argc, char** argv)
     printf("\n%d\n\n", numRead);
 
 
-    if((numRead = llread(fd, buffer)) < 0) {
+    if((numRead = llread(al.fileDescriptor, buffer)) < 0) {
       printf("correu mal :(\n");
       return -1;
     }
@@ -72,7 +74,7 @@ int main(int argc, char** argv)
 
     printf("\n%d\n\n", numRead);
 
-    if((numRead = llread(fd, buffer)) < 0) {
+    if((numRead = llread(al.fileDescriptor, buffer)) < 0) {
       printf("correu mal :(\n");
       return -1;
     }
@@ -85,13 +87,13 @@ int main(int argc, char** argv)
 
 
     // close, in non canonical
-    if(llclose(fd, RECEIVER) < 0)
+    if(llclose(al.fileDescriptor, RECEIVER) < 0)
       return -1;
 
 
     printf("\n---------------llclose done---------------\n\n");
 
 
-    close(fd);
+    close(al.fileDescriptor);
     return 0;
 }
