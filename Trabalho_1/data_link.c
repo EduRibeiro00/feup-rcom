@@ -161,7 +161,6 @@ int llwrite(int fd, char* buffer, int length) {
     controlByte = S_0;
   else controlByte = S_1;
 
-
   if (createInformationFrame(ll.frame, controlByte,(unsigned char*) buffer, length) != 0) {
     free(ll.frame);
     closeNonCanonical(fd, &oldtio);
@@ -247,6 +246,9 @@ int llwrite(int fd, char* buffer, int length) {
     ll.sequenceNumber = 0;
   else return -1;
 
+
+  // resets the size of the frame buffer, for the next function call
+  ll.frame = realloc(ll.frame, sizeof(unsigned char) * (MAX_SIZE));
 
   return (numWritten - 6); // length of the data packet length sent to the receiver
 }
@@ -354,6 +356,10 @@ int llread(int fd, char* buffer) {
         }
 
     }
+
+
+    // resets the size of the frame buffer, for the next function call
+    ll.frame = realloc(ll.frame, sizeof(unsigned char) * (MAX_SIZE));
 
 
 

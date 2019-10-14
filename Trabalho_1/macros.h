@@ -1,6 +1,8 @@
 #ifndef _MACROS_H_
 #define _MACROS_H_
 
+// ---- macros for data link layer ----
+
 #define MAX_SIZE 255
 
 #define BAUDRATE B4800 //38400 is the normal value
@@ -38,7 +40,17 @@
 #define ESCAPE_BYTE 0x7D
 
 #define BUF_SIZE_SUP  5
-
 #define DATA_START    4
+
+
+// ---- macros for application layer ----
+
+#define CTRL_DATA       0x01
+#define CTRL_START      0x02
+#define CTRL_END        0x03
+
+#define TYPE_FILESIZE   0x00
+#define TYPE_FILENAME   0x01
+
 
 #endif

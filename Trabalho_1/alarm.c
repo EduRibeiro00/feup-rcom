@@ -14,6 +14,3 @@ void alarmHandler(int signal) {
     finish = 1;
   }
 }
-
-
-

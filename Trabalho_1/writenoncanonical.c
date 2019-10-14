@@ -61,13 +61,26 @@ int main(int argc, char** argv)
     }
 
     buffer[2] = 'e';
+    buffer[6] = 'f';
+    buffer[7] = 'i';
+    buffer[8] = 'g';
+    buffer[9] = 'a';
 
-    if(llwrite(fd, buffer, 6) < 0) {
+    if(llwrite(fd, buffer, 10) < 0) {
       printf("deu erro");
       return -1;
     }
 
+    buffer[10] = 'c';
+    buffer[11] = 'r';
+    buffer[12] = 'l';
+    buffer[13] = 'h';
 
+    if(llwrite(fd, buffer, 14) < 0) {
+      printf("deu erro");
+      return -1;
+    }
+    
     if(llclose(fd, TRANSMITTER) < 0)
       return -1;
 

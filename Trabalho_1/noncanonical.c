@@ -58,7 +58,7 @@ int main(int argc, char** argv)
       printf("%c", buffer[i]);
 
 
-    printf("\n\n\n");
+    printf("\n%d\n\n", numRead);
 
 
     if((numRead = llread(fd, buffer)) < 0) {
@@ -66,13 +66,22 @@ int main(int argc, char** argv)
       return -1;
     }
 
-    printf("\n\n\n");
 
     for(int i = 0; i < numRead; i++)
       printf("%c", buffer[i]);
 
+    printf("\n%d\n\n", numRead);
 
-    printf("\n\n\n");
+    if((numRead = llread(fd, buffer)) < 0) {
+      printf("correu mal :(\n");
+      return -1;
+    }
+
+    for(int i = 0; i < numRead; i++)
+      printf("%c", buffer[i]);
+
+    printf("\n%d\n\n", numRead);
+
 
 
     // close, in non canonical
