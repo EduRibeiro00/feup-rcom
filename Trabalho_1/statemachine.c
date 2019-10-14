@@ -62,12 +62,16 @@ void event_handler(state_machine_st* sm, unsigned char byte, unsigned char* fram
       case A_RCV:
           if (byte == FLAG)
               change_state(sm, FLAG_RCV);
-          else if (isWanted(byte, sm)!=-1){
-              change_state(sm, C_RCV);
-              frame[2] = byte;
+          else {
+              int n;
+              if ((n = isWanted(byte, sm))>=0){
+                change_state(sm, C_RCV);
+                sm->foundIndex = n;
+                frame[2] = byte;
+              }
+              else
+                change_state(sm, START);
           }
-          else
-              change_state(sm, START);
           break;
 
       case C_RCV:
@@ -128,9 +132,7 @@ void event_handler(state_machine_st* sm, unsigned char byte, unsigned char* fram
                 i = (int) sm->state;
             }
             else {
-              int n;
-              if ((n = isWanted(byte, sm)) >= 0){
-                sm->foundIndex = n;
+              if (isWanted(byte, sm) >= 0){
                 change_state(sm, C_RCV);
                 frame[i++] = byte;
               }

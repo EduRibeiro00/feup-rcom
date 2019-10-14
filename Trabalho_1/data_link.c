@@ -156,12 +156,13 @@ int llopen(char* port, int role) {
 int llwrite(int fd, char* buffer, int length) {
 
   unsigned char controlByte;
+  unsigned char answer_buffer[MAX_SIZE];
   if(ll.sequenceNumber == 0)
     controlByte = S_0;
   else controlByte = S_1;
 
 
-  if (createInformationFrame(ll.frame, controlByte, buffer, length) != 0) {
+  if (createInformationFrame(ll.frame, controlByte,(unsigned char*) buffer, length) != 0) {
     free(ll.frame);
     closeNonCanonical(fd, &oldtio);
     return -1;
@@ -182,7 +183,7 @@ int llwrite(int fd, char* buffer, int length) {
 
   
   while(!dataSent) {
-  
+
     if((numWritten = sendFrame(ll.frame, fd, ll.frameLength)) == -1) {
       free(ll.frame);
       closeNonCanonical(fd, &oldtio);
@@ -211,7 +212,7 @@ int llwrite(int fd, char* buffer, int length) {
   
     while (finish != 1) {
     
-      read_value = readSupervisionFrame(ll.frame, fd, wantedBytes, 2, END_SEND);
+      read_value = readSupervisionFrame(answer_buffer, fd, wantedBytes, 2, END_SEND);
   
       if(read_value >= 0) { // read_value é o índice do wantedByte que foi encontrado
         // Cancels alarm
@@ -220,6 +221,7 @@ int llwrite(int fd, char* buffer, int length) {
       }
 
     }
+
   
     if(read_value == -1){
       printf("Closing file descriptor\n");
@@ -235,7 +237,7 @@ int llwrite(int fd, char* buffer, int length) {
       dataSent = false;
   
 
-    printf("Received response frame (%x)\n", ll.frame[2]);
+    printf("Received response frame (%x)\n", answer_buffer[2]);
   }
 
 
@@ -258,7 +260,6 @@ int llwrite(int fd, char* buffer, int length) {
  */
 int llread(int fd, char* buffer) {
   // ASSUMINDO QUE BUFFER TEM TAMANHO SUFICIENTE PARA TER TODOS OS DADOS
-
   int numBytes;
 
   unsigned char wantedBytes[2];
@@ -295,7 +296,6 @@ int llread(int fd, char* buffer) {
         if(controlByteRead != ll.sequenceNumber) { // duplicated trama; discard information
 
           // ignora dados da trama
-
           if(controlByteRead == 0) {
             responseByte = RR_1;
             ll.sequenceNumber = 1;
@@ -364,7 +364,7 @@ int llread(int fd, char* buffer) {
     }
 
     ll.frameLength = BUF_SIZE_SUP;
-
+    
     // send RR/REJ frame to receiver
     if(sendFrame(ll.frame, fd, ll.frameLength) == -1) {
       free(ll.frame);

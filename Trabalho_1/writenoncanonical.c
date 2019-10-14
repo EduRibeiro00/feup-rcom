@@ -54,12 +54,11 @@ int main(int argc, char** argv)
     buffer[4] = ':';
     buffer[5] = ')';
 
-
+  
     if(llwrite(fd, buffer, 6) < 0) {
       printf("deu erro");
       return -1;
     }
-
 
     buffer[2] = 'e';
 
