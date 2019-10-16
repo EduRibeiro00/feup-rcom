@@ -1,7 +1,10 @@
 
 #pragma once
 
+#include <stdio.h>
 
-int file_read(char* file_name);
+int getFileSize(FILE *fp);
 
-int file_writer(char * file_name);
+FILE* openFile(char* fileName, char* mode);
+
+int closeFile(FILE* fp);

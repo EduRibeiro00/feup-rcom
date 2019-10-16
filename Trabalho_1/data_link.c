@@ -70,6 +70,7 @@ int llOpenTransmitter(int fd) {
     int read_value = -1;
     finish = 0;
     num_retr = 0;
+    resendFrame = false;
 
     alarm(ll.timeout);
 
@@ -78,7 +79,10 @@ int llOpenTransmitter(int fd) {
 
     while (finish != 1) {
       read_value = readSupervisionFrame(ll.frame, fd, wantedByte, 1, END_SEND);
-
+      if(resendFrame){
+         sendFrame(ll.frame,fd, ll.frameLength);
+         resendFrame = false;
+      }
       if(read_value >= 0){
 
         // Cancels alarm
@@ -107,7 +111,13 @@ int llOpenTransmitter(int fd) {
  */
 int llopen(char* port, int role) {
 
+    strcpy(ll.port,port);
+    ll.baudRate = BAUDRATE;
+    ll.numTransmissions = NUM_RETR;
+    ll.timeout = TIMEOUT;
+    ll.sequenceNumber = 0;
     ll.frame = malloc(sizeof(unsigned char) * (MAX_SIZE));
+    
     int fd;
 
     // open, in non canonical
@@ -154,7 +164,7 @@ int llopen(char* port, int role) {
  * @param length Length of the buffer
  * @return Number of characters written; -1 in case of error
  */
-int llwrite(int fd, char* buffer, int length) {
+int llwrite(int fd, unsigned char* buffer, int length) {
 
   unsigned char controlByte;
   unsigned char answer_buffer[MAX_SIZE];
@@ -162,7 +172,7 @@ int llwrite(int fd, char* buffer, int length) {
     controlByte = S_0;
   else controlByte = S_1;
 
-  if (createInformationFrame(ll.frame, controlByte,(unsigned char*) buffer, length) != 0) {
+  if (createInformationFrame(ll.frame, controlByte, buffer, length) != 0) {
     free(ll.frame);
     closeNonCanonical(fd, &oldtio);
     return -1;
@@ -213,7 +223,12 @@ int llwrite(int fd, char* buffer, int length) {
     while (finish != 1) {
     
       read_value = readSupervisionFrame(answer_buffer, fd, wantedBytes, 2, END_SEND);
-  
+      
+      if(resendFrame){
+         sendFrame(ll.frame,fd, ll.frameLength);
+         resendFrame = false;
+      }
+
       if(read_value >= 0) { // read_value é o índice do wantedByte que foi encontrado
         // Cancels alarm
         alarm(0);
@@ -261,10 +276,10 @@ int llwrite(int fd, char* buffer, int length) {
  * @param buffer Array of characters where the read information will be stored
  * @return Number of characters read; -1 in case of error
  */
-int llread(int fd, char* buffer) {
-  // ASSUMINDO QUE BUFFER TEM TAMANHO SUFICIENTE PARA TER TODOS OS DADOS
-  int numBytes;
+int llread(int fd, unsigned char* buffer) {
 
+  printf("entrei no llread\n");
+  int numBytes;
   unsigned char wantedBytes[2];
   wantedBytes[0] = S_0;
   wantedBytes[1] = S_1;
@@ -278,13 +293,13 @@ int llread(int fd, char* buffer) {
     read_value = readInformationFrame(ll.frame, fd, wantedBytes, 2, END_SEND);
 
     printf("Received I frame\n");
-
-
+    printf("Before destufying\n");
     if((numBytes = byte_destuffing(ll.frame, read_value)) < 0) {
       free(ll.frame);
       closeNonCanonical(fd, &oldtio);
       return -1;
     }
+    printf("after destufying\n");
 
     int controlByteRead;
     if(ll.frame[2] == S_0)
@@ -419,6 +434,11 @@ int llCloseTransmitter(int fd) {
 
     while (finish != 1) {
       read_value = readSupervisionFrame(ll.frame, fd, wantedByte, 1, END_REC);
+      
+      if(resendFrame){
+         sendFrame(ll.frame,fd, ll.frameLength);
+         resendFrame = false;
+      }
 
       if(read_value >= 0){
 
@@ -493,6 +513,11 @@ int llCloseReceiver(int fd) {
 
     while (finish != 1) {
       read_value = readSupervisionFrame(ll.frame, fd, wantedByte, 1, END_REC);
+      
+      if(resendFrame){
+         sendFrame(ll.frame,fd, ll.frameLength);
+         resendFrame = false;
+      }
 
       if(read_value >= 0){
 
@@ -509,6 +534,7 @@ int llCloseReceiver(int fd) {
     }
 
     printf("Received UA frame\n");
+
 
     return 0;
 }
@@ -548,6 +574,9 @@ int llclose(int fd, int role) {
       return -1;
 
     free(ll.frame);
+
+    if(close(al.fileDescriptor)!= 0)
+        return -1;
 
     return 1;
 }

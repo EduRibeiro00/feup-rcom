@@ -11,9 +11,6 @@
 #include <unistd.h>
 #include "macros.h"
 
-// global variables
-struct linkLayer ll;
-struct termios oldtio;
 
 struct linkLayer {
     char port[20]; /*Dispositivo /dev/ttySx, x = 0, 1*/
@@ -25,7 +22,10 @@ struct linkLayer {
     unsigned int frameLength; /*Comprimento atual da trama*/
 };
 
-
+// global variables
+struct linkLayer ll;
+struct termios oldtio;
+int fd;
 
 
 /**
@@ -60,7 +60,7 @@ int llopen(char* port, int role);
  * @param length Length of the buffer
  * @return Number of characters written; -1 in case of error
  */
-int llwrite(int fd, char* buffer, int length);
+int llwrite(int fd, unsigned char* buffer, int length);
 
 /**
  * Function that reads the information written in the serial port
@@ -68,7 +68,7 @@ int llwrite(int fd, char* buffer, int length);
  * @param buffer Array of characters where the read information will be stored
  * @return Number of characters read; -1 in case of error
  */
-int llread(int fd, char* buffer);
+int llread(int fd, unsigned char* buffer);
 
 /**
  * Closes the connection for the receiver

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <stdio.h>
 
 struct applicationLayer {
     int fileDescriptor; /*Descritor correspondente à porta série*/
@@ -18,7 +19,7 @@ struct applicationLayer al;
  * @param dataLength Length of the data in the buffer
  * @return Length of the packet buffer
  */
-int buildDataPacket(char* packetBuffer, int sequenceNumber, char* dataBuffer, int dataLength); 
+int buildDataPacket(unsigned char* packetBuffer, int sequenceNumber, unsigned char* dataBuffer, int dataLength); 
 
 
 /**
@@ -30,14 +31,30 @@ int buildDataPacket(char* packetBuffer, int sequenceNumber, char* dataBuffer, in
  * @fileName Name of the file
  * @return Length of the packet buffer
  */
-int buildControlPacket(unsigned char controlByte, char* packetBuffer, int fileSize, char* fileName);
+int buildControlPacket(unsigned char controlByte, unsigned char* packetBuffer, int fileSize, char* fileName);
+
+/**
+ * Function, to be called by the reader, that parses the control packets
+ * 
+ * @param packetBuffer Buffer with the control packet
+ * @param fileSize Pointer to the size of the file, to be returned by the function
+ * @param fileName Pointer to the name of the file, to be returned by the function
+ * @return 0 if it was sucessful; negative value otherwise
+ */
+int parseControlPacket(unsigned char* packetBuffer, int* fileSize, char* fileName);
 
 
 /**
- * Function, to be called by the sender, that sends a whole file to the receiver
+ * Function, to be called by the reader, that parses the data packets
  * 
- * @param fileName Name of the file
- * @param fileSize Size of the file
+ * @param packetBuffer Buffer with the data packet
+ * @param data Pointer to the file data packet extracted, to be returned by the function
+ * @param sequenceNumber Pointer to the sequence number of the packet, to be returned by the function
  * @return 0 if it was sucessful; negative value otherwise
  */
-int sendFile(char* fileName, int fileSize);
+int parseDataPacket(unsigned char* packetBuffer, unsigned char* data, int* sequenceNumber);
+
+
+int sendFile(char *port , char* fileName);
+
+int receiveFile(char *port);

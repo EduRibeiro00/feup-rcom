@@ -1,5 +1,8 @@
 #pragma once
 
+#include <termios.h>
+#include <unistd.h>
+
 unsigned char createBCC(unsigned char a, unsigned char c);
 
 

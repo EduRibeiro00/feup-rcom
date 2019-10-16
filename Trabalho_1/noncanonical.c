@@ -16,6 +16,7 @@
 
 int main(int argc, char** argv)
 {
+    printf("estou aqui no main\n");
     int fd;
 
     if ( (argc < 2) ||
@@ -28,72 +29,9 @@ int main(int argc, char** argv)
       exit(1);
     }
 
-    // fills linkLayer fields
-    strcpy(ll.port, argv[1]);
-    ll.baudRate = BAUDRATE;
-    ll.numTransmissions = NUM_RETR;
-    ll.timeout = TIMEOUT;
-    ll.sequenceNumber = 0;
-
-
-    // fills appLayer fields
-    al.status = RECEIVER;
-
-
-    if((al.fileDescriptor = llopen(ll.port, al.status)) <= 0){
+    if(receiveFile(argv[1])<0){
       return -1;
     }
-
-    printf("\n---------------llopen done---------------\n\n");
-
-    char buffer[20];
-    int numRead;
-
-    if((numRead = llread(al.fileDescriptor, buffer)) < 0) {
-      printf("correu mal :(\n");
-      return -1;
-    }
-
-    printf("\n\n\n");
-
-    for(int i = 0; i < numRead; i++)
-      printf("%c", buffer[i]);
-
-
-    printf("\n%d\n\n", numRead);
-
-
-    if((numRead = llread(al.fileDescriptor, buffer)) < 0) {
-      printf("correu mal :(\n");
-      return -1;
-    }
-
-
-    for(int i = 0; i < numRead; i++)
-      printf("%c", buffer[i]);
-
-    printf("\n%d\n\n", numRead);
-
-    if((numRead = llread(al.fileDescriptor, buffer)) < 0) {
-      printf("correu mal :(\n");
-      return -1;
-    }
-
-    for(int i = 0; i < numRead; i++)
-      printf("%c", buffer[i]);
-
-    printf("\n%d\n\n", numRead);
-
-
-
-    // close, in non canonical
-    if(llclose(al.fileDescriptor, RECEIVER) < 0)
-      return -1;
-
-
-    printf("\n---------------llclose done---------------\n\n");
-
-
-    close(al.fileDescriptor);
     return 0;
 }
+

@@ -226,7 +226,7 @@ int readSupervisionFrame(unsigned char* frame, int fd, unsigned char* wantedByte
 
     unsigned char byte;
 
-    while(st->state != STOP && finish != 1) {
+    while(st->state != STOP && finish != 1 && !resendFrame) {
         if(readByte(&byte, fd) == 0)
           event_handler(st, byte, frame, SUPERVISION);
     }
@@ -235,7 +235,7 @@ int readSupervisionFrame(unsigned char* frame, int fd, unsigned char* wantedByte
 
     destroy_st(st);
 
-    if(finish == 1)
+    if(finish == 1 || resendFrame)
       return -1;
 
     return ret;
