@@ -32,35 +32,34 @@ int buildControlPacket(unsigned char controlByte, char* packetBuffer, int fileSi
     int length = 0;
     int currentFileSize = fileSize;
 
-    while(1) {
+    // cicle to separate file size (v1) in bytes
+    while(currentFileSize > 0) {
         int rest = currentFileSize % 256;
         int div = currentFileSize / 256;
         length++;
-    
-        // if value already fits in 1 byte, no need to subdivide more
-        if(div < 1)
-            break;
 
-        packetBuffer[2 + length] = (unsigned char) rest;
-        currentFileSize = rest;
+        // shifts all bytes to the right, to make space for the new byte
+        for (unsigned int i = 2 + length; i > 3; i++)
+            packetBuffer[i] = packetBuffer[i-1];
+
+
+        packetBuffer[3] = (unsigned char) rest;
+
+        currentFileSize = div;
     }
 
     packetBuffer[2] = (unsigned char) length;
 
     packetBuffer[2 + length + 1] = TYPE_FILENAME;
 
-    int curPos = 2 + length + 3;
-    int nameSize = 0;
+    int fileNameStart = 2 + length + 3; // beginning of v2
 
-    while(fileName[nameSize] != '\0') {
-        packetBuffer[curPos] = fileName[nameSize]; // adds, char by char, the file name to the packet
-        nameSize++;
-        curPos++;
+    packetBuffer[2 + length + 2] = (unsigned char) (strlen(fileName) + 1); // adds file name length (including '\0)
+
+    for(unsigned int j = 0; j < (strlen(fileName) + 1); j++) { // strlen(fileName) + 1 in order to add the '\0' char
+        packetBuffer[fileNameStart + j] = fileName[j];
     }
 
-    packetBuffer[curPos] = fileName[nameSize]; // adds the '\0' char
-    packetBuffer[2 + length + 2] = (unsigned char) (nameSize + 1); // adds file name length (including '\0)
 
-
-    return 6 + length + nameSize; // full length of the packet buffer
+    return 3 + length + 2 + strlen(fileName) + 1; // total length of the packet
 }
