@@ -141,7 +141,7 @@ int receiveFile(char *port)
     // fills appLayer fields
     al.status = RECEIVER;
 
-    if ((al.fileDescriptor = llopen(port, al.status)) <= 0)
+    if ((al.fileDescriptor = llopen(port, al.status)) <= 0) 
     {
         return -1;
     }
@@ -154,7 +154,6 @@ int receiveFile(char *port)
     int fileSize;
     unsigned char data[MAX_DATA_SIZE];
     char fileName[255];
-    int expectedSequenceNumber = 0;
 
     packetSize = llread(al.fileDescriptor, packetBuffer);
 
@@ -163,6 +162,7 @@ int receiveFile(char *port)
         return -1;
     }
 
+    // if start control packet was received
     if (packetBuffer[0] == CTRL_START)
     {
         if (parseControlPacket(packetBuffer, &fileSize, fileName) < 0)
@@ -178,36 +178,47 @@ int receiveFile(char *port)
     FILE *fp = openFile(fileName, "w");
     if (fp == NULL)
         return -1;
-
      
 
+
+    int expectedSequenceNumber = 0;
+
+    // starts received data packets (file data)
     while (1)
     {
         packetSize = llread(al.fileDescriptor, packetBuffer);
-        printf("estou a entrar no parse data\n");
+
         if (packetSize < 0)
         {
             return -1;
         }
+
+        // received data packet
         if (packetBuffer[0] == CTRL_DATA)
         {
-
             int sequenceNumber;
-            printf("estou a entrar no parse data\n");
+        
             if (parseDataPacket(packetBuffer, data, &sequenceNumber) < 0)
                 return -1;
 
-            if (expectedSequenceNumber++ != sequenceNumber)
+            // if sequence number doesn't match
+            if (expectedSequenceNumber != sequenceNumber)
             {
                 printf("Sequence number does not match!\n");
                 return -1;
             }
+
+            expectedSequenceNumber = (expectedSequenceNumber + 1) % 256;
+
             int dataLength = packetSize - 4;
+            
+            // writes to the file the content read from the serial port
             if (fwrite(data, sizeof(unsigned char), dataLength, fp) != dataLength)
             {
                 return -1;
             }
         }
+        // received end packet; file was fully transmitted
         else if (packetBuffer[0] == CTRL_END)
         {
             break;
@@ -228,14 +239,13 @@ int receiveFile(char *port)
         return -1;
     }
 
-    if(fileSize != fileSizeEnd || !strcmp(fileNameEnd, fileName)){
-        printf("iinformation in start and end packets doesnt match");
+    if((fileSize != fileSizeEnd) || (!strcmp(fileNameEnd, fileName))){
+        printf("iinformation in start and end packets does not match");
         return -1;
     }
-    
 
     // close, in non canonical
-    if (llclose(al.fileDescriptor, RECEIVER) < 0)
+    if (llclose(al.fileDescriptor, al.status) < 0)
         return -1;
 
     printf("\n---------------llclose done---------------\n\n");
@@ -243,8 +253,8 @@ int receiveFile(char *port)
     return 0;
 }
 
-int sendFile(char *port, char *fileName)
-{
+
+int sendFile(char *port, char *fileName) {
 
     FILE *fp = openFile(fileName, "r");
     if (fp == NULL)
@@ -253,9 +263,6 @@ int sendFile(char *port, char *fileName)
     // fills appLayer fields
     al.status = TRANSMITTER;
 
-    unsigned char packetBuffer[MAX_PACK_SIZE];
-
-    int fileSize = getFileSize(fp);
 
     if ((al.fileDescriptor = llopen(port, al.status)) <= 0)
     {
@@ -264,8 +271,13 @@ int sendFile(char *port, char *fileName)
 
     printf("\n---------------llopen done---------------\n\n");
 
+
+    unsigned char packetBuffer[MAX_PACK_SIZE];
+    int fileSize = getFileSize(fp);
+
     int packetSize = buildControlPacket(CTRL_START, packetBuffer, fileSize, fileName);
 
+    // sends control start packet, to indicate the start of the file transfer
     if (llwrite(al.fileDescriptor, packetBuffer, packetSize) < 0)
     {
         closeFile(fp);
@@ -280,20 +292,24 @@ int sendFile(char *port, char *fileName)
 
     while (1)
     {
+        // reads a data chunk from the file
         length_read = fread(data, sizeof(unsigned char), MAX_DATA_SIZE, fp);
+
         if (length_read != MAX_DATA_SIZE)
         {
             if (feof(fp))
             {
+
                 packetSize = buildDataPacket(packetBuffer, sequenceNumber, data, length_read);
                 sequenceNumber = (sequenceNumber + 1) % 256;
-                //manda a ultima trama de dados
-
+                
+                // sends the last data frame
                 if (llwrite(al.fileDescriptor, packetBuffer, packetSize) < 0)
                 {
                     closeFile(fp);
                     return -1;
                 }
+
                 break;
             }
             else
@@ -305,19 +321,19 @@ int sendFile(char *port, char *fileName)
 
         packetSize = buildDataPacket(packetBuffer, sequenceNumber, data, length_read);
         sequenceNumber = (sequenceNumber + 1) % 256;
-        //manda a ultima trama de dados
-
+    
+        // sends a data frame
         if (llwrite(al.fileDescriptor, packetBuffer, packetSize) < 0)
         {
             closeFile(fp);
             return -1;
         }
-
        
     }
 
     packetSize = buildControlPacket(CTRL_END, packetBuffer, fileSize, fileName);
 
+    // sends control end packet; indicating the end of the file transfer
     if (llwrite(al.fileDescriptor, packetBuffer, packetSize) < 0)
     {
         closeFile(fp);
@@ -326,7 +342,7 @@ int sendFile(char *port, char *fileName)
 
     printf("\n---------------ENDED SENDING FILE---------------\n\n");
 
-    if (llclose(al.fileDescriptor, TRANSMITTER) < 0)
+    if (llclose(al.fileDescriptor, al.status) < 0)
         return -1;
 
     printf("\n---------------llclose done---------------\n\n");
