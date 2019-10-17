@@ -575,7 +575,7 @@ int llclose(int fd, int role) {
 
     free(ll.frame);
 
-    if(close(al.fileDescriptor)!= 0)
+    if(close(fd)!= 0)
         return -1;
 
     return 1;
