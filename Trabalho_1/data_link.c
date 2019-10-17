@@ -180,11 +180,16 @@ int llwrite(int fd, unsigned char* buffer, int length) {
 
   int j; // frame length after stuffing
 
+  printf("-- pre byte stuffing\n");
+
   if((j = byte_stuffing(ll.frame, length)) < 0){
     free(ll.frame);
     closeNonCanonical(fd, &oldtio);
     return -1;
   }
+
+  printf("-- j = %d\n", j);
+  printf("-- post byte stuffing\n");
 
   ll.frameLength = j;
   int numWritten;
@@ -222,8 +227,10 @@ int llwrite(int fd, unsigned char* buffer, int length) {
   
     while (finish != 1) {
     
+      printf("Cal?\n");
       read_value = readSupervisionFrame(answer_buffer, fd, wantedBytes, 2, END_SEND);
-      
+      printf("CAL!!*\n");
+
       if(resendFrame){
          sendFrame(ll.frame,fd, ll.frameLength);
          resendFrame = false;
@@ -261,7 +268,6 @@ int llwrite(int fd, unsigned char* buffer, int length) {
   else if (ll.sequenceNumber == 1)
     ll.sequenceNumber = 0;
   else return -1;
-
 
   // resets the size of the frame buffer, for the next function call
   ll.frame = realloc(ll.frame, sizeof(unsigned char) * (MAX_SIZE));
@@ -393,6 +399,8 @@ int llread(int fd, unsigned char* buffer) {
       closeNonCanonical(fd, &oldtio);
       return -1;
     }
+
+    printf("sent response frame %x\n", ll.frame[2]);
 
   }
 

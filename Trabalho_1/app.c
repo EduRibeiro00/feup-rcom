@@ -186,7 +186,10 @@ int receiveFile(char *port)
     // starts received data packets (file data)
     while (1)
     {
+
         packetSize = llread(al.fileDescriptor, packetBuffer);
+
+        printf("IT'S A BOY!!!!\n");
 
         if (packetSize < 0)
         {
@@ -197,7 +200,7 @@ int receiveFile(char *port)
         if (packetBuffer[0] == CTRL_DATA)
         {
             int sequenceNumber;
-        
+
             if (parseDataPacket(packetBuffer, data, &sequenceNumber) < 0)
                 return -1;
 

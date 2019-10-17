@@ -164,10 +164,10 @@ void event_handler(state_machine_st* sm, unsigned char byte, unsigned char* fram
               change_state(sm, STOP);
               sm->dataLength = i-4;
             }
-          else{
+            else{
               frame[i++] = byte;
-          }
-          break;
+            }
+            break;
 
 
         default:

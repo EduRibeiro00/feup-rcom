@@ -47,7 +47,6 @@ int byte_stuffing(unsigned char* frame, int length) {
     return -1;
   }
 
-
   // passes information from the frame to aux
   for(int i = 0; i < length + 6 ; i++){
     aux[i] = frame[i];
@@ -250,6 +249,7 @@ int readInformationFrame(unsigned char* frame, int fd, unsigned char* wantedByte
   while(st->state != STOP) {
       if(readByte(&byte, fd) == 0)
         event_handler(st, byte, frame, INFORMATION);
+      printf("-- after readByte\n");
   }
 
   // dataLength = length of the data packet sent from the application on the transmitter side
