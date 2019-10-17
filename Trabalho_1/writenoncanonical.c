@@ -13,14 +13,14 @@
 #include "aux.h"
 #include "data_link.h"
 #include "app.h"
+#include "files.h"
 
-volatile int STOP=FALSE;
 
 int main(int argc, char** argv)
 {
 
 
-    if ( (argc < 2) ||
+    if ( (argc < 3) ||
   	     ((strcmp("/dev/ttyS0", argv[1])!=0) &&
   	      (strcmp("/dev/ttyS1", argv[1])!=0) &&
           (strcmp("/dev/ttyS2", argv[1])!=0) &&
@@ -29,64 +29,10 @@ int main(int argc, char** argv)
       printf("Usage:\tnserial SerialPort\n\tex: nserial /dev/ttyS1\n");
       exit(1);
     }
-
-    // fills linkLayer fields
-    strcpy(ll.port, argv[1]);
-    ll.baudRate = BAUDRATE;
-    ll.numTransmissions = NUM_RETR;
-    ll.timeout = TIMEOUT;
-    ll.sequenceNumber = 0;
-
-
-
-
-    if((fd = llopen(ll.port, TRANSMITTER))<= 0){
-      return -1;
-    }
-
-    printf("\n---------------llopen done---------------\n\n");
-
-    char buffer[20];
-    buffer[0] = 'o';
-    buffer[1] = 'l';
-    buffer[2] = 'a';
-    buffer[3] = '!';
-    buffer[4] = ':';
-    buffer[5] = ')';
-
   
-    if(llwrite(fd, buffer, 6) < 0) {
-      printf("deu erro");
-      return -1;
-    }
-
-    buffer[2] = 'e';
-    buffer[6] = 'f';
-    buffer[7] = 'i';
-    buffer[8] = 'g';
-    buffer[9] = 'a';
-
-    if(llwrite(fd, buffer, 10) < 0) {
-      printf("deu erro");
-      return -1;
-    }
-
-    buffer[10] = 'c';
-    buffer[11] = 'r';
-    buffer[12] = 'l';
-    buffer[13] = 'h';
-
-    if(llwrite(fd, buffer, 14) < 0) {
-      printf("deu erro");
+    if(sendFile(argv[1], argv[2])<0){
       return -1;
     }
     
-    if(llclose(fd, TRANSMITTER) < 0)
-      return -1;
-
-
-    printf("\n---------------llclose done---------------\n\n");
-
-    close(fd);
     return 0;
 }
