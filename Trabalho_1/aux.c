@@ -52,8 +52,6 @@ int byte_stuffing(unsigned char* frame, int length) {
     aux[i] = frame[i];
   }
 
-
-
   int j = DATA_START;
 
 
@@ -84,7 +82,6 @@ int byte_stuffing(unsigned char* frame, int length) {
     free(aux);
     return -1;
   }
-
 
   free(aux);
 

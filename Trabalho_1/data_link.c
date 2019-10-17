@@ -180,22 +180,16 @@ int llwrite(int fd, unsigned char* buffer, int length) {
 
   int j; // frame length after stuffing
 
-  printf("-- pre byte stuffing\n");
-
   if((j = byte_stuffing(ll.frame, length)) < 0){
     free(ll.frame);
     closeNonCanonical(fd, &oldtio);
     return -1;
   }
 
-  printf("-- j = %d\n", j);
-  printf("-- post byte stuffing\n");
-
   ll.frameLength = j;
   int numWritten;
 
   bool dataSent = false;
-
   
   while(!dataSent) {
 
