@@ -189,8 +189,6 @@ int receiveFile(char *port)
 
         packetSize = llread(al.fileDescriptor, packetBuffer);
 
-        printf("IT'S A BOY!!!!\n");
-
         if (packetSize < 0)
         {
             return -1;
@@ -242,8 +240,8 @@ int receiveFile(char *port)
         return -1;
     }
 
-    if((fileSize != fileSizeEnd) || (!strcmp(fileNameEnd, fileName))){
-        printf("iinformation in start and end packets does not match");
+    if((fileSize != fileSizeEnd) || (strcmp(fileNameEnd, fileName) != 0)){
+        printf("information in start and end packets does not match");
         return -1;
     }
 
