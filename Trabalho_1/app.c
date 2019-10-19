@@ -258,8 +258,10 @@ int receiveFile(char *port)
 int sendFile(char *port, char *fileName) {
 
     FILE *fp = openFile(fileName, "r");
-    if (fp == NULL)
+    if (fp == NULL){
+        printf("Cannot find the file to transmit\n");
         return -1;
+    }
 
     // fills appLayer fields
     al.status = TRANSMITTER;
