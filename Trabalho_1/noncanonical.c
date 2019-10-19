@@ -13,11 +13,9 @@
 #include "data_link.h"
 #include "app.h"
 
-volatile int STOP=FALSE;
 
 int main(int argc, char** argv)
 {
-    int fd;
 
     if ( (argc < 2) ||
   	     ((strcmp("/dev/ttyS0", argv[1])!=0) &&
@@ -29,69 +27,42 @@ int main(int argc, char** argv)
       exit(1);
     }
 
-    // fills linkLayer fields
-    strcpy(ll.port, argv[1]);
-    ll.baudRate = BAUDRATE;
-    ll.numTransmissions = NUM_RETR;
-    ll.timeout = TIMEOUT;
-    ll.sequenceNumber = 0;
+    // // fills appLayer fields
+    // al.status = RECEIVER;
 
+    // if ((al.fileDescriptor = llopen(argv[1], al.status)) <= 0)
+    // {
+    //     return -1;
+    // }
 
+    // unsigned char dataBuffer[20];
+    // unsigned char packetBuffer[MAX_DATA_SIZE];
+    // int packetLength;
+    // int sequenceNumber;
+    // int dataLength;
 
-    if((fd = llopen(ll.port, RECEIVER)) <= 0){
+    // if((packetLength = llread(al.fileDescriptor, packetBuffer)) < 0)
+    //   return -1;
+
+    // for(int i = 0; i < packetLength; i++) {
+    //   printf("%x\n", packetBuffer[i]);
+    // }
+
+    // if(parseDataPacket(packetBuffer, dataBuffer, &sequenceNumber) < 0)
+    //   return -1;
+
+    // printf("Packet length: %d\n", packetLength);
+    // printf("Sequence number: %d\n", sequenceNumber);
+    // printf("Data length: %d", packetLength - 4);
+
+    // for(int i = 0; i < packetLength - 4; i++) {
+    //   printf("%x\n", dataBuffer[i]);
+    // }
+
+    if(receiveFile(argv[1])<0){
       return -1;
     }
 
-    printf("\n---------------llopen done---------------\n\n");
-
-    char buffer[20];
-    int numRead;
-
-    if((numRead = llread(fd, buffer)) < 0) {
-      printf("correu mal :(\n");
-      return -1;
-    }
-
-    printf("\n\n\n");
-
-    for(int i = 0; i < numRead; i++)
-      printf("%c", buffer[i]);
-
-
-    printf("\n%d\n\n", numRead);
-
-
-    if((numRead = llread(fd, buffer)) < 0) {
-      printf("correu mal :(\n");
-      return -1;
-    }
-
-
-    for(int i = 0; i < numRead; i++)
-      printf("%c", buffer[i]);
-
-    printf("\n%d\n\n", numRead);
-
-    if((numRead = llread(fd, buffer)) < 0) {
-      printf("correu mal :(\n");
-      return -1;
-    }
-
-    for(int i = 0; i < numRead; i++)
-      printf("%c", buffer[i]);
-
-    printf("\n%d\n\n", numRead);
-
-
-
-    // close, in non canonical
-    if(llclose(fd, RECEIVER) < 0)
-      return -1;
-
-
-    printf("\n---------------llclose done---------------\n\n");
-
-
-    close(fd);
     return 0;
 }
+

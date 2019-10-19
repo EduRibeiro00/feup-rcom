@@ -28,116 +28,74 @@ unsigned char createBCC_2(unsigned char* frame, int length) {
 }
 
 
-int byte_stuffing(unsigned char* frame, int length) {
+int byteStuffing(unsigned char* frame, int length) {
 
-  // number of packet bytes in the frame at the beginning, that is going to be on the final frame
-  // after byte stuffing
-  int counter = 0;
+  // allocates space for auxiliary buffer (length of the packet, plus 6 bytes for the frame header and tail)
+  unsigned char aux[length + 6];
 
-  // allocates space for auxiliary buffer
-  unsigned char *aux = malloc(sizeof(unsigned char) * (length + 6));
-  if(aux == NULL){
-    return -1;
-  }
-
-  // allocates maximum space that could be necessary for the frame
-  frame = realloc(frame ,sizeof(unsigned char ) * ((length + 1) * 2) + 5);
-  if (frame == NULL){
-    free(aux);
-    return -1;
-  }
-
-
-  // passes information from the frame to aux
   for(int i = 0; i < length + 6 ; i++){
     aux[i] = frame[i];
   }
 
 
-
-  int j = DATA_START;
-
-
+  // passes information from the frame to aux
+  
+  int finalLength = DATA_START;
   // parses aux buffer, and fills in correctly the frame buffer
   for(int i = DATA_START; i < (length + 6); i++){
 
     if(aux[i] == FLAG && i != (length + 5)) {
-      frame[j] = ESCAPE_BYTE;
-      frame[j+1] = BYTE_STUFFING_FLAG;
-      j = j + 2;
-      counter++;
+      frame[finalLength] = ESCAPE_BYTE;
+      frame[finalLength+1] = BYTE_STUFFING_FLAG;
+      finalLength = finalLength + 2;
     }
     else if(aux[i] == ESCAPE_BYTE && i != (length + 5)) {
-      frame[j] = ESCAPE_BYTE;
-      frame[j+1] = BYTE_STUFFING_ESCAPE;
-      j = j + 2;
-      counter++;
+      frame[finalLength] = ESCAPE_BYTE;
+      frame[finalLength+1] = BYTE_STUFFING_ESCAPE;
+      finalLength = finalLength + 2;
     }
     else{
-      frame[j] = aux[i];
-      j++;
+      frame[finalLength] = aux[i];
+      finalLength++;
     }
   }
 
-  // reallocates space for the frame buffer in order to occupy only the necessary space
-  frame = realloc(frame, sizeof(unsigned char) * (length + 6 + counter));
-  if(frame == NULL){
-    free(aux);
-    return -1;
-  }
-
-
-  free(aux);
-
-  return j;
+  return finalLength;
 }
 
 
-int byte_destuffing(unsigned char* frame, int length) {
+int byteDestuffing(unsigned char* frame, int length) {
 
-  // allocates space for the maximum possible frame length read
-  char *aux = malloc(sizeof(unsigned char) * (length + 5));
-  if(aux == NULL){
-    return -1;
-  }
+  // allocates space for the maximum possible frame length read (length of the data packet + bcc2, already with stuffing, plus the other 5 bytes in the frame)
+  unsigned char aux[length + 5];
 
   // copies the content of the frame (with stuffing) to the aux frame
   for(int i = 0; i < (length + 5) ; i++) {
     aux[i] = frame[i];
   }
 
-  int j = DATA_START;
+  int finalLength = DATA_START;
 
   // iterates through the aux buffer, and fills the frame buffer with destuffed content
   for(int i = DATA_START; i < (length + 5); i++) {
 
     if(aux[i] == ESCAPE_BYTE){
       if (aux[i+1] == BYTE_STUFFING_ESCAPE) {
-        frame[j] = ESCAPE_BYTE;
+        frame[finalLength] = ESCAPE_BYTE;
       }
       else if(aux[i+1] == BYTE_STUFFING_FLAG) {
-        frame[j] = FLAG;
+        frame[finalLength] = FLAG;
       }
       i++;
-      j++;
+      finalLength++;
     }
     else{
-      frame[j] = aux[i];
-      j++;
+      frame[finalLength] = aux[i];
+      finalLength++;
     }
   }
 
-  // reallocates only the space required for the final frame contents
-  frame = realloc(frame, sizeof(unsigned char) * j);
-  if(frame == NULL){
-    free(aux);
-    return -1;
-  }
-
-
-  free(aux);
-
-  return j;
+  return finalLength;
 }
 
 
@@ -226,7 +184,7 @@ int readSupervisionFrame(unsigned char* frame, int fd, unsigned char* wantedByte
 
     unsigned char byte;
 
-    while(st->state != STOP && finish != 1) {
+    while(st->state != STOP && finish != 1 && !resendFrame) {
         if(readByte(&byte, fd) == 0)
           event_handler(st, byte, frame, SUPERVISION);
     }
@@ -235,7 +193,7 @@ int readSupervisionFrame(unsigned char* frame, int fd, unsigned char* wantedByte
 
     destroy_st(st);
 
-    if(finish == 1)
+    if(finish == 1 || resendFrame)
       return -1;
 
     return ret;
@@ -327,4 +285,17 @@ void alarmHandlerInstaller() {
       perror("sigaction");
       exit(-1);
     }
+}
+
+
+// ------------------------------
+
+void convertValueInTwo(int k, int* l1, int* l2) {
+  *l1 = k % 256;
+  *l2 = k / 256;
+}
+
+
+int convertValueInOne(int l1, int l2) {
+  return 256 * l2 + l1;
 }

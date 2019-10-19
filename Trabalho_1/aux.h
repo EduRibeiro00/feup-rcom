@@ -1,15 +1,18 @@
 #pragma once
 
+#include <termios.h>
+#include <unistd.h>
+
 unsigned char createBCC(unsigned char a, unsigned char c);
 
 
 unsigned char createBCC_2(unsigned char* frame, int length);
 
 
-int byte_stuffing(unsigned char* frame, int length);
+int byteStuffing(unsigned char* frame, int length);
 
 
-int byte_destuffing(unsigned char* frame, int length);
+int byteDestuffing(unsigned char* frame, int length);
 
 
 int createSupervisionFrame(unsigned char* frame, unsigned char controlField, int role);
@@ -37,3 +40,10 @@ int closeNonCanonical(int fd, struct termios* oldtio);
 
 
 void alarmHandlerInstaller();
+
+// ------------------------------
+
+void convertValueInTwo(int k, int* l1, int* l2);
+
+
+int convertValueInOne(int l1, int l2);

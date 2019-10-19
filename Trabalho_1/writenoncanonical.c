@@ -13,14 +13,13 @@
 #include "aux.h"
 #include "data_link.h"
 #include "app.h"
+#include "files.h"
 
-volatile int STOP=FALSE;
 
 int main(int argc, char** argv)
 {
 
-
-    if ( (argc < 2) ||
+    if ( (argc < 3) ||
   	     ((strcmp("/dev/ttyS0", argv[1])!=0) &&
   	      (strcmp("/dev/ttyS1", argv[1])!=0) &&
           (strcmp("/dev/ttyS2", argv[1])!=0) &&
@@ -29,64 +28,50 @@ int main(int argc, char** argv)
       printf("Usage:\tnserial SerialPort\n\tex: nserial /dev/ttyS1\n");
       exit(1);
     }
-
-    // fills linkLayer fields
-    strcpy(ll.port, argv[1]);
-    ll.baudRate = BAUDRATE;
-    ll.numTransmissions = NUM_RETR;
-    ll.timeout = TIMEOUT;
-    ll.sequenceNumber = 0;
-
-
-
-
-    if((fd = llopen(ll.port, TRANSMITTER))<= 0){
-      return -1;
-    }
-
-    printf("\n---------------llopen done---------------\n\n");
-
-    char buffer[20];
-    buffer[0] = 'o';
-    buffer[1] = 'l';
-    buffer[2] = 'a';
-    buffer[3] = '!';
-    buffer[4] = ':';
-    buffer[5] = ')';
-
   
-    if(llwrite(fd, buffer, 6) < 0) {
-      printf("deu erro");
-      return -1;
-    }
+    // // fills appLayer fields
+    // al.status = TRANSMITTER;
 
-    buffer[2] = 'e';
-    buffer[6] = 'f';
-    buffer[7] = 'i';
-    buffer[8] = 'g';
-    buffer[9] = 'a';
+    // if ((al.fileDescriptor = llopen(argv[1], al.status)) <= 0)
+    // {
+    //     return -1;
+    // }
 
-    if(llwrite(fd, buffer, 10) < 0) {
-      printf("deu erro");
-      return -1;
-    }
+    // unsigned char dataBuffer[20];
+    // dataBuffer[0] = 'o';
+    // dataBuffer[1] = 'l';
+    // dataBuffer[2] = 'a';
+    // dataBuffer[3] = 'o';
+    // dataBuffer[4] = 'l';
+    // dataBuffer[5] = 'e';
+    // dataBuffer[6] = '1';
+    // dataBuffer[7] = '2';
+    // dataBuffer[8] = '3';
 
-    buffer[10] = 'c';
-    buffer[11] = 'r';
-    buffer[12] = 'l';
-    buffer[13] = 'h';
+    // unsigned char packetBuffer[MAX_DATA_SIZE];
+    // int packetLength;
+    // int sequenceNumber = 0;
+    // int dataLength = 9;
 
-    if(llwrite(fd, buffer, 14) < 0) {
-      printf("deu erro");
+
+    // printf("Sequence number: %d\n", sequenceNumber);
+    // printf("Data length: %d", dataLength);
+
+    // if((packetLength = buildDataPacket(packetBuffer, sequenceNumber, dataBuffer, dataLength)) < 0)
+    //   return -1;
+
+    // printf("Packet length: %d\n", packetLength);
+
+    // for(int i = 0; i < packetLength; i++) {
+    //   printf("%x\n", packetBuffer[i]);
+    // }
+
+    // if((packetLength = llwrite(al.fileDescriptor, packetBuffer, packetLength)) < 0)
+    //   return -1;
+
+    if(sendFile(argv[1], argv[2])<0){
       return -1;
     }
     
-    if(llclose(fd, TRANSMITTER) < 0)
-      return -1;
-
-
-    printf("\n---------------llclose done---------------\n\n");
-
-    close(fd);
     return 0;
 }
