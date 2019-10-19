@@ -51,6 +51,7 @@ int llOpenReceiver(int fd)
  */
 int llOpenTransmitter(int fd)
 {
+  unsigned char responseBuffer[BUF_SIZE_SUP]; // buffer to read the response 
 
   ll.frameLength = BUF_SIZE_SUP;
 
@@ -64,6 +65,7 @@ int llOpenTransmitter(int fd)
 
   printf("Sent SET frame\n");
 
+
   int read_value = -1;
   finish = 0;
   num_retr = 0;
@@ -76,15 +78,15 @@ int llOpenTransmitter(int fd)
 
   while (finish != 1)
   {
-    read_value = readSupervisionFrame(ll.frame, fd, wantedByte, 1, END_SEND);
+    read_value = readSupervisionFrame(responseBuffer, fd, wantedByte, 1, END_SEND);
     if (resendFrame)
     {
       sendFrame(ll.frame, fd, ll.frameLength);
       resendFrame = false;
     }
+
     if (read_value >= 0)
     {
-
       // Cancels alarm
       alarm(0);
       finish = 1;
@@ -169,9 +171,9 @@ int llopen(char *port, int role)
  */
 int llwrite(int fd, unsigned char *buffer, int length)
 {
+  unsigned char responseBuffer[BUF_SIZE_SUP]; // buffer to receive the response
 
   unsigned char controlByte;
-  unsigned char answer_buffer[MAX_SIZE];
   if (ll.sequenceNumber == 0)
     controlByte = S_0;
   else
@@ -232,7 +234,7 @@ int llwrite(int fd, unsigned char *buffer, int length)
     while (finish != 1)
     {
 
-      read_value = readSupervisionFrame(answer_buffer, fd, wantedBytes, 2, END_SEND);
+      read_value = readSupervisionFrame(responseBuffer, fd, wantedBytes, 2, END_SEND);
 
       if (resendFrame)
       {
@@ -261,7 +263,7 @@ int llwrite(int fd, unsigned char *buffer, int length)
     else // read a REJ
       dataSent = false;
 
-    printf("Received response frame (%x)\n", answer_buffer[2]);
+    printf("Received response frame (%x)\n", responseBuffer[2]);
   }
 
   if (ll.sequenceNumber == 0)
@@ -360,7 +362,7 @@ int llread(int fd, unsigned char *buffer)
       if (controlByteRead != ll.sequenceNumber)
       { // duplicated trama
 
-        // ignora dados da trama
+        // ignores frame data
 
         if (controlByteRead == 0)
         {
@@ -376,7 +378,7 @@ int llread(int fd, unsigned char *buffer)
       else
       { // new trama
 
-        // ignora dados da trama, por erro
+        // ignores frame data, because of error
 
         if (controlByteRead == 0)
         {
@@ -411,7 +413,8 @@ int llread(int fd, unsigned char *buffer)
       return -1;
     }
 
-    printf("sent response frame %x\n", ll.frame[2]);
+    printf("Sent response frame (%x)\n", ll.frame[2]);
+
   }
 
   return (numBytes - 6); // number of bytes of the data packet read
@@ -424,6 +427,7 @@ int llread(int fd, unsigned char *buffer)
  */
 int llCloseTransmitter(int fd)
 {
+  unsigned char responseBuffer[BUF_SIZE_SUP]; // buffer to receive the response
 
   ll.frameLength = BUF_SIZE_SUP;
 
@@ -448,7 +452,7 @@ int llCloseTransmitter(int fd)
 
   while (finish != 1)
   {
-    read_value = readSupervisionFrame(ll.frame, fd, wantedByte, 1, END_REC);
+    read_value = readSupervisionFrame(responseBuffer, fd, wantedByte, 1, END_REC);
 
     if (resendFrame)
     {
@@ -458,7 +462,6 @@ int llCloseTransmitter(int fd)
 
     if (read_value >= 0)
     {
-
       // Cancels alarm
       alarm(0);
       finish = 1;
@@ -493,6 +496,7 @@ int llCloseTransmitter(int fd)
  */
 int llCloseReceiver(int fd)
 {
+  unsigned char responseBuffer[BUF_SIZE_SUP]; // buffer to receive the response
 
   ll.frameLength = BUF_SIZE_SUP;
 
@@ -524,7 +528,7 @@ int llCloseReceiver(int fd)
 
   while (finish != 1)
   {
-    read_value = readSupervisionFrame(ll.frame, fd, wantedByte, 1, END_REC);
+    read_value = readSupervisionFrame(responseBuffer, fd, wantedByte, 1, END_REC);
 
     if (resendFrame)
     {
@@ -534,7 +538,6 @@ int llCloseReceiver(int fd)
 
     if (read_value >= 0)
     {
-
       // Cancels alarm
       alarm(0);
       finish = 1;

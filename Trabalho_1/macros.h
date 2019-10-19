@@ -6,6 +6,7 @@
 #define MAX_SIZE 1034 // max size of data in a packet, + 4 bytes fot packet head, + 6 bytes for frame header and tail
 #define MAX_PACK_SIZE 1028 // max size of a data packet + 4 bytes for packet head
 #define MAX_DATA_SIZE 1024 // max size of a data
+#define BUF_SIZE_SUP  5 // size of a supervision frame
 
 #define BAUDRATE B38400 //38400 is the normal value
 #define MODEMDEVICE "/dev/ttyS1"
@@ -41,7 +42,6 @@
 #define BYTE_STUFFING_FLAG 0x5E
 #define ESCAPE_BYTE 0x7D
 
-#define BUF_SIZE_SUP  5
 #define DATA_START    4
 
 
