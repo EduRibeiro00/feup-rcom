@@ -94,7 +94,7 @@ int byte_stuffing(int length) {
 int byte_destuffing(int length) {
 
   // allocates space for the maximum possible frame length read
-  char *aux = malloc(sizeof(unsigned char) * (length + 5));
+  unsigned char *aux = malloc(sizeof(unsigned char) * (length + 5));
   if(aux == NULL){
     return -1;
   }

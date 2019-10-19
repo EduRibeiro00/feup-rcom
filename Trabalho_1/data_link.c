@@ -274,7 +274,8 @@ int llwrite(int fd, unsigned char *buffer, int length)
     return -1;
 
   // resets the size of the frame buffer, for the next function call
-  ll.frame = realloc(ll.frame, sizeof(unsigned char) * (MAX_SIZE));
+  free(ll.frame);
+  ll.frame = malloc(sizeof(unsigned char) * (MAX_SIZE));
 
   return (numWritten - 6); // length of the data packet length sent to the receiver
 }
@@ -301,6 +302,9 @@ int llread(int fd, unsigned char *buffer)
   {
 
     read_value = readInformationFrame(ll.frame, fd, wantedBytes, 2, END_SEND);
+
+    printf("Received I frame\n");
+
 
     if ((numBytes = byte_destuffing(read_value)) < 0)
     {
@@ -394,7 +398,8 @@ int llread(int fd, unsigned char *buffer)
     }
 
     // resets the size of the frame buffer, for the next function call
-    ll.frame = realloc(ll.frame, sizeof(unsigned char) * (MAX_SIZE));
+    free(ll.frame);
+    ll.frame = malloc(sizeof(unsigned char) * (MAX_SIZE));
 
     if (createSupervisionFrame(ll.frame, responseByte, RECEIVER) != 0)
     {

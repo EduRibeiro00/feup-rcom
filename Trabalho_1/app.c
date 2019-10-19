@@ -175,11 +175,12 @@ int receiveFile(char *port)
         return -1;
     }
 
-    FILE *fp = openFile(fileName, "w");
+    char auxfileName[] = "images/teste2.jpg";
+
+    FILE *fp = openFile(auxfileName, "w");
     if (fp == NULL)
         return -1;
      
-
 
     int expectedSequenceNumber = 0;
 
