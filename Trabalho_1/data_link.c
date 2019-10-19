@@ -22,9 +22,6 @@
  */
 int llOpenReceiver(int fd)
 {
-
-  ll.frameLength = BUF_SIZE_SUP;
-
   unsigned char wantedByte[1];
   wantedByte[0] = SET;
   if (readSupervisionFrame(ll.frame, fd, wantedByte, 1, END_SEND) == -1)
@@ -34,6 +31,8 @@ int llOpenReceiver(int fd)
 
   if (createSupervisionFrame(ll.frame, UA, RECEIVER) != 0)
     return -1;
+
+  ll.frameLength = BUF_SIZE_SUP;
 
   // send SET frame to receiver
   if (sendFrame(ll.frame, fd, ll.frameLength) == -1)
@@ -53,11 +52,12 @@ int llOpenTransmitter(int fd)
 {
   unsigned char responseBuffer[BUF_SIZE_SUP]; // buffer to read the response 
 
-  ll.frameLength = BUF_SIZE_SUP;
 
   // creates SET frame
   if (createSupervisionFrame(ll.frame, SET, TRANSMITTER) != 0)
     return -1;
+
+  ll.frameLength = BUF_SIZE_SUP;
 
   // send SET frame to receiver
   if (sendFrame(ll.frame, fd, ll.frameLength) == -1)
@@ -118,7 +118,6 @@ int llopen(char *port, int role)
   ll.numTransmissions = NUM_RETR;
   ll.timeout = TIMEOUT;
   ll.sequenceNumber = 0;
-  ll.frame = malloc(sizeof(unsigned char) * (MAX_SIZE));
 
   int fd;
 
@@ -136,7 +135,6 @@ int llopen(char *port, int role)
     returnFd = llOpenTransmitter(fd);
     if (returnFd < 0)
     {
-      free(ll.frame);
       closeNonCanonical(fd, &oldtio);
       return -1;
     }
@@ -147,8 +145,7 @@ int llopen(char *port, int role)
   {
     returnFd = llOpenReceiver(fd);
     if (returnFd < 0)
-    {
-      free(ll.frame);
+    { 
       closeNonCanonical(fd, &oldtio);
       return -1;
     }
@@ -157,7 +154,6 @@ int llopen(char *port, int role)
   }
 
   perror("Invalid role");
-  free(ll.frame);
   closeNonCanonical(fd, &oldtio);
   return -1;
 }
@@ -181,31 +177,27 @@ int llwrite(int fd, unsigned char *buffer, int length)
 
   if (createInformationFrame(ll.frame, controlByte, buffer, length) != 0)
   {
-    free(ll.frame);
     closeNonCanonical(fd, &oldtio);
     return -1;
   }
 
-  int j; // frame length after stuffing
+  int fullLength; // frame length after stuffing
 
-  if ((j = byte_stuffing(length)) < 0)
+  if ((fullLength = byteStuffing(ll.frame, length)) < 0)
   {
-    free(ll.frame);
     closeNonCanonical(fd, &oldtio);
     return -1;
   }
 
-  ll.frameLength = j;
+  ll.frameLength = fullLength;
   int numWritten;
 
   bool dataSent = false;
 
   while (!dataSent)
   {
-
     if ((numWritten = sendFrame(ll.frame, fd, ll.frameLength)) == -1)
     {
-      free(ll.frame);
       closeNonCanonical(fd, &oldtio);
       return -1;
     }
@@ -233,7 +225,6 @@ int llwrite(int fd, unsigned char *buffer, int length)
 
     while (finish != 1)
     {
-
       read_value = readSupervisionFrame(responseBuffer, fd, wantedBytes, 2, END_SEND);
 
       if (resendFrame)
@@ -253,7 +244,7 @@ int llwrite(int fd, unsigned char *buffer, int length)
     if (read_value == -1)
     {
       printf("Closing file descriptor\n");
-      free(ll.frame);
+      
       closeNonCanonical(fd, &oldtio);
       return -1;
     }
@@ -273,9 +264,6 @@ int llwrite(int fd, unsigned char *buffer, int length)
   else
     return -1;
 
-  // resets the size of the frame buffer, for the next function call
-  free(ll.frame);
-  ll.frame = malloc(sizeof(unsigned char) * (MAX_SIZE));
 
   return (numWritten - 6); // length of the data packet length sent to the receiver
 }
@@ -306,9 +294,8 @@ int llread(int fd, unsigned char *buffer)
     printf("Received I frame\n");
 
 
-    if ((numBytes = byte_destuffing(read_value)) < 0)
+    if ((numBytes = byteDestuffing(ll.frame, read_value)) < 0)
     {
-      free(ll.frame);
       closeNonCanonical(fd, &oldtio);
       return -1;
     }
@@ -397,13 +384,9 @@ int llread(int fd, unsigned char *buffer)
       }
     }
 
-    // resets the size of the frame buffer, for the next function call
-    free(ll.frame);
-    ll.frame = malloc(sizeof(unsigned char) * (MAX_SIZE));
 
     if (createSupervisionFrame(ll.frame, responseByte, RECEIVER) != 0)
     {
-      free(ll.frame);
       closeNonCanonical(fd, &oldtio);
       return -1;
     }
@@ -413,7 +396,6 @@ int llread(int fd, unsigned char *buffer)
     // send RR/REJ frame to receiver
     if (sendFrame(ll.frame, fd, ll.frameLength) == -1)
     {
-      free(ll.frame);
       closeNonCanonical(fd, &oldtio);
       return -1;
     }
@@ -573,7 +555,6 @@ int llclose(int fd, int role)
   {
     if (llCloseTransmitter(fd) < 0)
     {
-      free(ll.frame);
       closeNonCanonical(fd, &oldtio);
       return -1;
     }
@@ -581,8 +562,7 @@ int llclose(int fd, int role)
   else if (role == RECEIVER)
   {
     if (llCloseReceiver(fd) < 0)
-    {
-      free(ll.frame);
+    { 
       closeNonCanonical(fd, &oldtio);
       return -1;
     }
@@ -590,15 +570,12 @@ int llclose(int fd, int role)
   else
   {
     perror("Invalid role");
-    free(ll.frame);
     return -1;
   }
 
   // close, in non canonical
   if (closeNonCanonical(fd, &oldtio) == -1)
     return -1;
-
-  free(ll.frame);
 
   if (close(fd) != 0)
     return -1;

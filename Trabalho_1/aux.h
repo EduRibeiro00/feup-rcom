@@ -9,10 +9,10 @@ unsigned char createBCC(unsigned char a, unsigned char c);
 unsigned char createBCC_2(unsigned char* frame, int length);
 
 
-int byte_stuffing(int length);
+int byteStuffing(unsigned char* frame, int length);
 
 
-int byte_destuffing(int length);
+int byteDestuffing(unsigned char* frame, int length);
 
 
 int createSupervisionFrame(unsigned char* frame, unsigned char controlField, int role);

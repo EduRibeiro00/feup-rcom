@@ -28,114 +28,74 @@ unsigned char createBCC_2(unsigned char* frame, int length) {
 }
 
 
-int byte_stuffing(int length) {
+int byteStuffing(unsigned char* frame, int length) {
 
-  // number of packet bytes in the frame at the beginning, that is going to be on the final frame
-  // after byte stuffing
-  int counter = 0;
-
-  // allocates space for auxiliary buffer
-  unsigned char *aux = malloc(sizeof(unsigned char) * (length + 6));
-  if(aux == NULL){
-    return -1;
-  }
+  // allocates space for auxiliary buffer (length of the packet, plus 6 bytes for the frame header and tail)
+  unsigned char aux[length + 6];
 
   for(int i = 0; i < length + 6 ; i++){
-    aux[i] = ll.frame[i];
+    aux[i] = frame[i];
   }
 
-
- 
-  // allocates maximum space that could be necessary for the frame
-  ll.frame = realloc(ll.frame ,sizeof(unsigned char ) * ((length + 1) * 2) + 5);
-  if (ll.frame == NULL){
-    free(aux);
-    return -1;
-  }
 
   // passes information from the frame to aux
   
-  int j = DATA_START;
+  int finalLength = DATA_START;
   // parses aux buffer, and fills in correctly the frame buffer
   for(int i = DATA_START; i < (length + 6); i++){
 
     if(aux[i] == FLAG && i != (length + 5)) {
-      ll.frame[j] = ESCAPE_BYTE;
-      ll.frame[j+1] = BYTE_STUFFING_FLAG;
-      j = j + 2;
-      counter++;
+      frame[finalLength] = ESCAPE_BYTE;
+      frame[finalLength+1] = BYTE_STUFFING_FLAG;
+      finalLength = finalLength + 2;
     }
     else if(aux[i] == ESCAPE_BYTE && i != (length + 5)) {
-      ll.frame[j] = ESCAPE_BYTE;
-      ll.frame[j+1] = BYTE_STUFFING_ESCAPE;
-      j = j + 2;
-      counter++;
+      frame[finalLength] = ESCAPE_BYTE;
+      frame[finalLength+1] = BYTE_STUFFING_ESCAPE;
+      finalLength = finalLength + 2;
     }
     else{
-      ll.frame[j] = aux[i];
-      j++;
+      frame[finalLength] = aux[i];
+      finalLength++;
     }
   }
 
-  // reallocates space for the frame buffer in order to occupy only the necessary space
-  ll.frame = realloc(ll.frame, sizeof(unsigned char) * (length + 6 + counter));
-  if(ll.frame == NULL){
-    free(aux);
-    return -1;
-  }
-
-  free(aux);
-
-
-  return j;
+  return finalLength;
 }
 
 
-int byte_destuffing(int length) {
+int byteDestuffing(unsigned char* frame, int length) {
 
-  // allocates space for the maximum possible frame length read
-  unsigned char *aux = malloc(sizeof(unsigned char) * (length + 5));
-  if(aux == NULL){
-    return -1;
-  }
+  // allocates space for the maximum possible frame length read (length of the data packet + bcc2, already with stuffing, plus the other 5 bytes in the frame)
+  unsigned char aux[length + 5];
 
   // copies the content of the frame (with stuffing) to the aux frame
   for(int i = 0; i < (length + 5) ; i++) {
-    aux[i] = ll.frame[i];
+    aux[i] = frame[i];
   }
 
-  int j = DATA_START;
+  int finalLength = DATA_START;
 
-  // iterates through the aux buffer, and fills the ll.frame buffer with destuffed content
+  // iterates through the aux buffer, and fills the frame buffer with destuffed content
   for(int i = DATA_START; i < (length + 5); i++) {
 
     if(aux[i] == ESCAPE_BYTE){
       if (aux[i+1] == BYTE_STUFFING_ESCAPE) {
-        ll.frame[j] = ESCAPE_BYTE;
+        frame[finalLength] = ESCAPE_BYTE;
       }
       else if(aux[i+1] == BYTE_STUFFING_FLAG) {
-        ll.frame[j] = FLAG;
+        frame[finalLength] = FLAG;
       }
       i++;
-      j++;
+      finalLength++;
     }
     else{
-      ll.frame[j] = aux[i];
-      j++;
+      frame[finalLength] = aux[i];
+      finalLength++;
     }
   }
 
-  // reallocates only the space required for the final ll.frame contents
-  ll.frame = realloc(ll.frame, sizeof(unsigned char) * j);
-  if(ll.frame == NULL){
-    free(aux);
-    return -1;
-  }
-
-
-  free(aux);
-
-  return j;
+  return finalLength;
 }
 
 

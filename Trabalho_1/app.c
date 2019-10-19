@@ -175,12 +175,10 @@ int receiveFile(char *port)
         return -1;
     }
 
-    char auxfileName[] = "images/teste2.jpg";
 
-    FILE *fp = openFile(auxfileName, "w");
+    FILE *fp = openFile(fileName, "w");
     if (fp == NULL)
         return -1;
-     
 
     int expectedSequenceNumber = 0;
 
@@ -242,7 +240,7 @@ int receiveFile(char *port)
     }
 
     if((fileSize != fileSizeEnd) || (strcmp(fileNameEnd, fileName) != 0)){
-        printf("information in start and end packets does not match");
+        printf("Information in start and end packets does not match");
         return -1;
     }
 
