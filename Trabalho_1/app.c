@@ -167,6 +167,12 @@ int parseControlPacket(unsigned char *packetBuffer, int *fileSize, char *fileNam
     return 0;
 }
 
+
+/**
+ * Function to receive a file, sent through the serial port
+ * @param port Name of the serial port
+ * @return 0 if successful; negative if an error occurs
+ */
 int receiveFile(char *port)
 {
 
@@ -206,7 +212,6 @@ int receiveFile(char *port)
     {
         return -1;
     }
-
 
     FILE *fp = openFile(fileName, "w");
     if (fp == NULL)
@@ -286,6 +291,12 @@ int receiveFile(char *port)
 }
 
 
+/**
+ * Function to send a file, using the serial port, to its destination
+ * @param port Name of the serial port
+ * @param fileName Name of the file to be sent
+ * @return 0 if successful; negative if an error occurs
+ */
 int sendFile(char *port, char *fileName) {
 
     FILE *fp = openFile(fileName, "r");
