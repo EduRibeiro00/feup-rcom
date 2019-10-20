@@ -13,4 +13,8 @@
 int finish, num_retr;
 bool resendFrame;
 
+/**
+ * Handles the alarm signal
+ * @param signal Signal that is received
+ */
 void alarmHandler(int signal);

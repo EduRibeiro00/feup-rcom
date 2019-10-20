@@ -30,7 +30,7 @@ int fd;
 
 /**
  * Opens the connection for the receiver
- * @param File descriptor for the serial port
+ * @param fd File descriptor for the serial port
  * @return File descriptor; -1 in case of error
  */
 int llOpenReceiver(int fd);
@@ -38,7 +38,7 @@ int llOpenReceiver(int fd);
 
 /**
  * Opens the connection for the transmitter
- * @param File descriptor for the serial port
+ * @param fd File descriptor for the serial port
  * @return File descriptor; -1 in case of error
  */
 int llOpenTransmitter(int fd);
@@ -72,7 +72,7 @@ int llread(int fd, unsigned char* buffer);
 
 /**
  * Closes the connection for the receiver
- * @param File descriptor for the serial port
+ * @param fd File descriptor for the serial port
  * @return Positive value when sucess; negative value when error
  */
 int llCloseReceiver(int fd);
@@ -80,7 +80,7 @@ int llCloseReceiver(int fd);
 
 /**
  * Closes the connection for the transmitter
- * @param File descriptor for the serial port
+ * @param fd File descriptor for the serial port
  * @return Positive value when sucess; negative value when error
  */
 int llCloseTransmitter(int fd);
@@ -88,8 +88,8 @@ int llCloseTransmitter(int fd);
 
 /**
  * Function that closes the connection between the receiver and the transmitter
- * @param File descriptor of the port
- * @param Flag that indicates the transmitter or the receiver
+ * @param fd File descriptor of the port
+ * @param role Flag that indicates the transmitter or the receiver
  * @return Positive value when sucess; negative value when error
  */
 int llclose(int fd, int role);

@@ -1,6 +1,9 @@
 #include "alarm.h"
 
-
+/**
+ * Handles the alarm signal
+ * @param signal Signal that is received
+ */
 void alarmHandler(int signal) {
 
   if(num_retr < ll.numTransmissions){
