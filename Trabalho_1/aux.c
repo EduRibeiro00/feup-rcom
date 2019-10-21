@@ -43,9 +43,9 @@ unsigned char createBCC_2(unsigned char* frame, int length) {
 
 /**
  * Function to apply byte stuffing to the Data Characters of a frame
- * @param frame Frame position where the Data starts
+ * @param frame Address of the frame
  * @param length Number of Data Characters to process
- * @return Length of the new Data section, post byte stuffing
+ * @return Length of the new frame, post byte stuffing
  */
 int byteStuffing(unsigned char* frame, int length) {
 
@@ -85,9 +85,9 @@ int byteStuffing(unsigned char* frame, int length) {
 
 /**
  * Function to reverse the byte stuffing applied to the Data Characters of a frame
- * @param frame Frame position where the Data starts
+ * @param frame Address of the frame
  * @param length Number of Data Characters to process
- * @return Length of the new Data section, post byte destuffing
+ * @return Length of the new frame, post byte destuffing
  */
 int byteDestuffing(unsigned char* frame, int length) {
 

@@ -9,7 +9,7 @@
 
 #define MAX_SIZE        1034 // max size of data in a frame, + 4 bytes fot packet head, + 6 bytes for frame header and tail
 #define MAX_PACK_SIZE   1028 // max size of a data packet + 4 bytes for packet head
-#define MAX_DATA_SIZE   1024 // max size of a data
+#define MAX_DATA_SIZE   1024 // max size of a data packet
 #define BUF_SIZE_SUP    5 // size of a supervision frame
 
 #define BAUDRATE B38400 //38400 is the normal value
