@@ -25,7 +25,6 @@ struct linkLayer {
 // global variables
 struct linkLayer ll;
 struct termios oldtio;
-int fd;
 
 
 /**
