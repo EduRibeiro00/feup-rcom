@@ -207,6 +207,7 @@ int llwrite(int fd, unsigned char *buffer, int length)
     int read_value = -1;
     finish = 0;
     num_retr = 0;
+    resendFrame = false;
 
     alarm(ll.timeout);
 
@@ -431,6 +432,7 @@ int llCloseTransmitter(int fd)
   int read_value = -1;
   finish = 0;
   num_retr = 0;
+  resendFrame = false;
 
   alarm(ll.timeout);
 
@@ -508,6 +510,7 @@ int llCloseReceiver(int fd)
   int read_value = -1;
   finish = 0;
   num_retr = 0;
+  resendFrame = false;
 
   alarm(ll.timeout);
 
