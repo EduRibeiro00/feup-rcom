@@ -1,3 +1,7 @@
+#include <sys/times.h>
+#include <sys/time.h>
+#include <unistd.h>
+#include <stdio.h>
 #include "app.h"
 #include "macros.h"
 #include "aux.h"
@@ -36,7 +40,7 @@ int buildDataPacket(unsigned char *packetBuffer, int sequenceNumber, unsigned ch
 
 /**
  * Function that builds a control packet
- * @param controlByte Can be CTRL_START or CTRL_END, to show if the control packet indicates the beginning or end of the file 
+ * @param controlByte Can be CTRL_START or CTRL_END, to show if the control packet indicates the beginning or end of the file
  * @param packetBuffer Buffer that will have the final contents of the packet
  * @param fileSize Size of the full file, in bytes
  * @param fileName Name of the file
@@ -93,6 +97,7 @@ int buildControlPacket(unsigned char controlByte, unsigned char *packetBuffer, i
  */
 int parseDataPacket(unsigned char *packetBuffer, unsigned char *data, int *sequenceNumber)
 {
+    
 
     if (packetBuffer[0] != CTRL_DATA)
     {
@@ -175,11 +180,16 @@ int parseControlPacket(unsigned char *packetBuffer, int *fileSize, char *fileNam
  */
 int receiveFile(char *port)
 {
+    struct timeval start, end;
 
+
+    //srand(time(0));
+
+    int numBitsReceived= 0;
     // fills appLayer fields
     al.status = RECEIVER;
 
-    if ((al.fileDescriptor = llopen(port, al.status)) <= 0) 
+    if ((al.fileDescriptor = llopen(port, al.status)) <= 0)
     {
         return -1;
     }
@@ -193,12 +203,19 @@ int receiveFile(char *port)
     unsigned char data[MAX_DATA_SIZE];
     char fileName[255];
 
+
+    /* Mark beginning time */
+    gettimeofday(&start , NULL);
+
+    // usleep(50000);
     packetSize = llread(al.fileDescriptor, packetBuffer);
 
     if (packetSize < 0)
     {
         return -1;
     }
+
+    numBitsReceived += packetSize * 8;
 
     // if start control packet was received
     if (packetBuffer[0] == CTRL_START)
@@ -213,7 +230,7 @@ int receiveFile(char *port)
         return -1;
     }
 
-    FILE *fp = openFile(fileName, "w");
+    FILE *fp = openFile("pinguim1.gif", "w");
     if (fp == NULL)
         return -1;
 
@@ -222,13 +239,14 @@ int receiveFile(char *port)
     // starts received data packets (file data)
     while (1)
     {
-
+        // usleep(50000);
         packetSize = llread(al.fileDescriptor, packetBuffer);
-
         if (packetSize < 0)
         {
             return -1;
         }
+
+        numBitsReceived += packetSize * 8;
 
         // received data packet
         if (packetBuffer[0] == CTRL_DATA)
@@ -248,7 +266,7 @@ int receiveFile(char *port)
             expectedSequenceNumber = (expectedSequenceNumber + 1) % 256;
 
             int dataLength = packetSize - 4;
-            
+
             // writes to the file the content read from the serial port
             if (fwrite(data, sizeof(unsigned char), dataLength, fp) != dataLength)
             {
@@ -261,6 +279,23 @@ int receiveFile(char *port)
             break;
         }
     }
+
+    gettimeofday(&end, NULL);
+    double time_spent = (end.tv_sec - start.tv_sec) * 1e6;
+    time_spent = (time_spent +(end.tv_usec - start.tv_usec)) * 1e-6;
+
+
+
+    printf("numBitsReceived =  %d\n", numBitsReceived);
+    printf("time_spent =  %lf\n", time_spent);
+    double R =  numBitsReceived/time_spent;
+    double baudRate = 180000.0;
+    double S = R / baudRate;
+
+    printf("\n\n Baudrate = %lf", R);
+    printf("\n\nEstatitica da eficiencia S = %lf\n\n", S);
+
+
 
     if (getFileSize(fp) != fileSize)
     {
@@ -275,6 +310,7 @@ int receiveFile(char *port)
     {
         return -1;
     }
+
 
     if((fileSize != fileSizeEnd) || (strcmp(fileNameEnd, fileName) != 0)){
         printf("Information in start and end packets does not match");
@@ -304,6 +340,7 @@ int sendFile(char *port, char *fileName) {
         printf("Cannot find the file to transmit\n");
         return -1;
     }
+
 
     // fills appLayer fields
     al.status = TRANSMITTER;
@@ -347,14 +384,13 @@ int sendFile(char *port, char *fileName) {
 
                 packetSize = buildDataPacket(packetBuffer, sequenceNumber, data, length_read);
                 sequenceNumber = (sequenceNumber + 1) % 256;
-                
+
                 // sends the last data frame
                 if (llwrite(al.fileDescriptor, packetBuffer, packetSize) < 0)
                 {
                     closeFile(fp);
                     return -1;
                 }
-
                 break;
             }
             else
@@ -366,14 +402,14 @@ int sendFile(char *port, char *fileName) {
 
         packetSize = buildDataPacket(packetBuffer, sequenceNumber, data, length_read);
         sequenceNumber = (sequenceNumber + 1) % 256;
-    
+
         // sends a data frame
         if (llwrite(al.fileDescriptor, packetBuffer, packetSize) < 0)
         {
             closeFile(fp);
             return -1;
         }
-       
+
     }
 
     packetSize = buildControlPacket(CTRL_END, packetBuffer, fileSize, fileName);
