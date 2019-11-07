@@ -23,6 +23,18 @@ struct arguments {
     char file_path[MAX_LENGTH]; /**< file path string */    
 };
 
+/**
+ * Enum representing the different states when reading a server response from socket
+ */
+typedef enum {
+    READING_NUMBER_CODE, /**< reading the first 3 digit number code */
+    READING_MESSAGE, /**< when response has a single line, reads and ignores the rest of the message */
+    READING_NEW_LINE, /**< when response has multiple lines, and we are at the beginning of a new line */
+    READING_REST_OF_LINE, /**< when response has multiple lines, when line does not begin with a number, ignore it */
+    READING_RESPONSE_CODE, /**< reading the second 3 digit number code, that must be equal to the first one */
+    DONE /**< when reading is done */
+} readState;
+
 
 /**
  * Function that parses the command line arguments, retrieving a struct with all the individual fields
@@ -62,15 +74,17 @@ int createAndConnectSocket(char* address, int port);
  * @param commandLength The length of the command
  * @return int Number of bytes written if success; -1 otherwise
  */
-int sendCommand(int sockfd, char* command, int commandLength);
+int sendToSocket(int sockfd, char* command, int commandLength);
 
 
 /**
  * Function that allows the reading of a command through a socket
  * 
  * @param sockfd The socket descriptor
- * @param buffer Buffer that is going to store the command received
- * @param bufferLength The length of the buffer
- * @return int Number of bytes read if success; -1 otherwise
+ * @param buffer Buffer that is going to store the 3 digit number code received from the server
+ * @return int 0 if sucess; -1 otherwise
  */
-int receiveCommand(int sockfd, char* buffer, int bufferLength);
+int receiveFromSocket(int sockfd, char* buffer);
+
+
+// TODO: function to, after sending a command, to interpret the response from the server
