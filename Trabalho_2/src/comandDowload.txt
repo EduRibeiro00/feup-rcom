@@ -1,0 +1,4 @@
+ftp://[<user>:<password>@]<host>/<url-path>
+
+
+ftp://anonymous:qualquer@/ftp.up.pt/qualquercoisa

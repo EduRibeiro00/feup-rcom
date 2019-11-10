@@ -20,20 +20,15 @@ struct arguments {
     char user[MAX_LENGTH]; /**< user string */
     char password[MAX_LENGTH]; /**< password string */
     char host_name[MAX_LENGTH]; /**< host name string */
-    char file_path[MAX_LENGTH]; /**< file path string */    
+    char file_path[MAX_LENGTH]; /**< file path string */   
+    char file_name[MAX_LENGTH]; /**< file name string */ 
 };
 
-/**
- * Enum representing the different states when reading a server response from socket
- */
-typedef enum {
-    READING_NUMBER_CODE, /**< reading the first 3 digit number code */
-    READING_MESSAGE, /**< when response has a single line, reads and ignores the rest of the message */
-    READING_NEW_LINE, /**< when response has multiple lines, and we are at the beginning of a new line */
-    READING_REST_OF_LINE, /**< when response has multiple lines, when line does not begin with a number, ignore it */
-    READING_RESPONSE_CODE, /**< reading the second 3 digit number code, that must be equal to the first one */
-    DONE /**< when reading is done */
-} readState;
+
+struct ftp{
+    int control_socket_fd; /**< file descriptor to control socket */
+    int data_socket_fd; /**< file descriptor to data socket */
+};
 
 
 /**
@@ -74,7 +69,7 @@ int createAndConnectSocket(char* address, int port);
  * @param commandLength The length of the command
  * @return int Number of bytes written if success; -1 otherwise
  */
-int sendToSocket(int sockfd, char* command, int commandLength);
+int sendToControlSocket(struct ftp* ftp, char* cmdHeader, char* cmdBody);
 
 
 /**
@@ -84,7 +79,14 @@ int sendToSocket(int sockfd, char* command, int commandLength);
  * @param buffer Buffer that is going to store the 3 digit number code received from the server
  * @return int 0 if sucess; -1 otherwise
  */
-int receiveFromSocket(int sockfd, char* buffer);
+int receiveFromControlSocket(struct ftp *ftp, char* string, size_t size);
+
+int sendComandInterpretResponse(struct ftp* ftp, char* cmdHeader,  char* cmdBody, char* response, size_t responseLength);
 
 
-// TODO: function to, after sending a command, to interpret the response from the server
+int login(struct ftp* ftp, char* username, char* password);
+// TODO: function to, after sending a command, to interpret
+
+int getServerPortForFile(struct ftp *ftp);
+
+int changeWorkingDirectory(struct ftp* ftp, char* path);
