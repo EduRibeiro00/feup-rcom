@@ -90,3 +90,11 @@ int login(struct ftp* ftp, char* username, char* password);
 int getServerPortForFile(struct ftp *ftp);
 
 int changeWorkingDirectory(struct ftp* ftp, char* path);
+
+int downloadFile(struct ftp* ftp, char* fileName);
+
+FILE* openFile(char* fileName, char* mode);
+
+int closeFile(FILE* fp);
+
+int retr(struct ftp* ftp, char* fileName);

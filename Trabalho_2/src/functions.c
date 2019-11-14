@@ -1,6 +1,8 @@
 #include <string.h>
 #include <stdio.h>
 #include <ctype.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 #include "functions.h"
 
 /**
@@ -12,6 +14,8 @@
  */
 int parseArguments(struct arguments *args, char *commandLineArg)
 {
+
+    printf("lol1\n");
     printf("Parsing command line arguments...\n");
     //verifying FTP protocol
     char *token = strtok(commandLineArg, ":");
@@ -51,25 +55,24 @@ int parseArguments(struct arguments *args, char *commandLineArg)
         printf("-> Error parsing the host name\n");
         return -1;
     }
-    strcpy(args->file_path, token);
 
+    char filepathAndName[MAX_LENGTH];
+   
+    strcpy(filepathAndName, token);
 
-
-
-    char* token1 = strrchr(args->file_path, '/');
+    char* token1 = strrchr(filepathAndName, '/');
     if(token1 == NULL){
-        strcpy(args->file_name, args->file_path);
+        strcpy(args->file_name, filepathAndName);
         strcpy(args->file_path, "");
     }
     else{
         strcpy(args->file_name, token1 + 1);
-    }
-    printf("Parsed command line arguments.\n\n");
+        strncpy(args->file_path, filepathAndName, strlen(filepathAndName)- strlen(args->file_name) - 1);
+        args->file_path[strlen(filepathAndName)-strlen(args->file_name) - 1] = '\0';
 
-    
-    
-    
-    
+    }
+
+    printf("Parsed command line arguments.\n\n");
     return 0;
 }
 
@@ -268,8 +271,20 @@ int getServerPortForFile(struct ftp *ftp)
         printf("Error creating new socket\n");
         return -1;
     }
-
     return 0;
+}
+
+
+int retr(struct ftp* ftp, char* fileName){
+    
+    char response[MAX_LENGTH];
+
+    if(sendComandInterpretResponse(ftp, "RETR", fileName, response, MAX_LENGTH) < 0){
+        printf("Error sendimg Comand Retr\n\n");
+        return -1;
+    }
+
+	return 0;
 }
 
 int login(struct ftp *ftp, char *username, char *password)
@@ -310,7 +325,7 @@ int changeWorkingDirectory(struct ftp* ftp, char* path){
     
     char response[MAX_LENGTH];
 
-    if(sendComandInterpretResponse(ftp, "CWD", path, response, MAX_LENGTH)){
+    if(sendComandInterpretResponse(ftp, "CWD", path, response, MAX_LENGTH) < 0){
         printf("Error sendimg Comand CWD\n\n");
         return -1;
     }
@@ -318,3 +333,73 @@ int changeWorkingDirectory(struct ftp* ftp, char* path){
 	return 0;
 }
 
+
+int downloadFile(struct ftp* ftp, char * fileName){
+
+    FILE *fp = openFile(fileName, "w");
+    if (fp == NULL){
+        printf("Error opening or creating file\n");
+        return -1;
+    }
+
+    char buf[1024];
+    int bytes;
+
+    printf("Starting to download file with name %s\n", fileName);
+
+    while((bytes = read(ftp->data_socket_fd, buf, sizeof(buf)))){
+
+        if(bytes < 0){
+            printf("Error reading from data socket\n");
+            return -1;
+        }
+        
+        
+        if((bytes = fwrite(buf, bytes, 1, fp)) < 0){
+            printf("Error writing data to file\n");
+            return -1;
+        }
+
+    }
+
+    printf("Finished dowloading File\n");
+
+    if(closeFile(fp)<0){
+        printf("Error closing file\n");
+        return -1;
+    }
+
+    close(ftp->data_socket_fd);
+    
+    return 0;
+}
+
+/**
+ * Function that opens a file, from its name
+ * @param fileName Name of the file to be opened
+ * @param mode Mode in which to open the file
+ * @return file pointer to the file in question
+ */
+FILE* openFile(char* fileName, char* mode){
+
+
+    FILE* fp;
+    fp = fopen(fileName, mode);
+    
+    if (fp == NULL)
+    {
+        perror(fileName);
+        return NULL;
+    }
+    
+    return fp;
+}
+
+/**
+ * Function that closes a file, from its file pointer
+ * @param fp File pointer to the file to be closed
+ * @return 0 if successful, EOF if an error occurs
+ */
+int closeFile(FILE* fp){
+    return fclose(fp);
+}
