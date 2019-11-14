@@ -20,7 +20,6 @@ int parseArguments(struct arguments *args, char *commandLineArg) {
         printf("-> Error in the protocol name (should be 'ftp')\n");
         return -1;
     }
-
     // parsing user name
     token = strtok(NULL, ":");
     if (token == NULL || (strlen(token) < 3) || (token[0] != '/') || (token[1] != '/')) {
@@ -28,7 +27,6 @@ int parseArguments(struct arguments *args, char *commandLineArg) {
         return -1;
     }
     strcpy(args->user, &token[2]);
-
     // parsing password
     token = strtok(NULL, "@");
     if (token == NULL || (strlen(token) == 0)) {
@@ -36,7 +34,6 @@ int parseArguments(struct arguments *args, char *commandLineArg) {
         return -1;
     }
     strcpy(args->password, token);
-    
     // parsing hostname
     token = strtok(NULL, "/");
     if (token == NULL || (strlen(token) == 0)) {
@@ -44,18 +41,15 @@ int parseArguments(struct arguments *args, char *commandLineArg) {
         return -1;
     }
     strcpy(args->host_name, token);
-    
-    // parsing file path
+    // parsing file path and name
     token = strtok(NULL, "\0");
     if (token == NULL || (strlen(token) == 0)) {
-        printf("-> Error parsing the host name\n");
+        printf("-> Error parsing the file path\n");
         return -1;
     }
-
     char filepathAndName[MAX_LENGTH];
-   
     strcpy(filepathAndName, token);
-
+    // separate file path and file name
     char* token1 = strrchr(filepathAndName, '/');
     if(token1 == NULL){
         strcpy(args->file_name, filepathAndName);
@@ -65,13 +59,11 @@ int parseArguments(struct arguments *args, char *commandLineArg) {
         strcpy(args->file_name, token1 + 1);
         strncpy(args->file_path, filepathAndName, strlen(filepathAndName)- strlen(args->file_name) - 1);
         args->file_path[strlen(filepathAndName)-strlen(args->file_name) - 1] = '\0';
-
     }
-
     printf("Parsed command line arguments.\n\n");
     return 0;
-
 }
+
 
 /**
  * Function that, having the host name, retrieves the IP address
@@ -100,28 +92,24 @@ int getIPAddress(char *ipAddress, char *hostName) {
 int createAndConnectSocket(char *address, int port) {
     int sockfd;
     struct sockaddr_in server_addr;
-
     // server address handling
     bzero((char *)&server_addr, sizeof(server_addr));
     server_addr.sin_family = AF_INET;
     server_addr.sin_addr.s_addr = inet_addr(address);
     server_addr.sin_port = htons(port);
-    
     // open a TCP socket
     if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
         perror("socket()");
         return -1;
     }
-
     // connect to the server
     if (connect(sockfd, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0) {
         perror("connect()");
         return -1;
     }
-
     return sockfd;
-
 }
+
 
 /**
  * Function that allows a command to be sent through a socket
@@ -132,25 +120,19 @@ int createAndConnectSocket(char *address, int port) {
  * @return 0 if success; -1 otherwise
  */
 int sendToControlSocket(struct ftp *ftp, char *cmdHeader, char *cmdBody) {
-
     printf("Sending to control Socket > %s %s\n", cmdHeader, cmdBody);
-
     int bytes = write(ftp->control_socket_fd, cmdHeader, strlen(cmdHeader));
     if (bytes != strlen(cmdHeader))
         return -1;
-
     bytes = write(ftp->control_socket_fd, " ", 1);
     if (bytes != 1)
         return -1;
-
     bytes = write(ftp->control_socket_fd, cmdBody, strlen(cmdBody));
     if (bytes != strlen(cmdBody))
         return -1;
-
     bytes = write(ftp->control_socket_fd, "\n", 1);
     if (bytes != 1)
         return -1;
-
     return 0;
 }
 
@@ -163,18 +145,14 @@ int sendToControlSocket(struct ftp *ftp, char *cmdHeader, char *cmdBody) {
  * @return int 0 if success; -1 otherwise
  */
 int receiveFromControlSocket(struct ftp *ftp, char *string, size_t size) {
-
     printf("Receiving from control Socket \n");
     FILE *fp = fdopen(ftp->control_socket_fd, "r");
-
     do {
         memset(string, 0, size);
         string = fgets(string, size, fp);
         printf("%s", string);
     } while (!('1' <= string[0] && string[0] <= '5') || string[3] != ' ');
-
     return 0;
-
 }
 
 /**
@@ -188,19 +166,14 @@ int receiveFromControlSocket(struct ftp *ftp, char *string, size_t size) {
  * @return int Positive (depending on response) if success; -1 otherwise
  */
 int sendCommandInterpretResponse(struct ftp *ftp, char *cmdHeader, char *cmdBody, char *response, size_t responseLength) {
-
     if (sendToControlSocket(ftp, cmdHeader, cmdBody) < 0) {
         printf("Error Sending Command  %s %s\n", cmdHeader, cmdBody);
         return -1;
     }
-
     int code;
-
     while (1) {
-
         receiveFromControlSocket(ftp, response, responseLength);
         code = response[0] - '0';
-
         switch (code) {
             case 1:
                 // expecting another reply
@@ -224,14 +197,12 @@ int sendCommandInterpretResponse(struct ftp *ftp, char *cmdHeader, char *cmdBody
                 close(ftp->control_socket_fd);
                 exit(-1);
                 break;
-
             default:
                 break;
         }
-
     }
-
 }
+
 
 /**
  * Function that obtains a server port for the transfer of a file.
@@ -240,18 +211,14 @@ int sendCommandInterpretResponse(struct ftp *ftp, char *cmdHeader, char *cmdBody
  * @return int 0 if success; -1 otherwise
  */
 int getServerPortForFile(struct ftp *ftp) {
-
     char firstByte[4];
     char secondByte[4];
     memset(firstByte, 0, 4);
     memset(secondByte, 0, 4);
     char response[MAX_LENGTH];
-
     int rtr = sendCommandInterpretResponse(ftp, "pasv", "", response, MAX_LENGTH);
-
     int ipPart1, ipPart2, ipPart3, ipPart4;
     int port1, port2;
-
     if (rtr == 2) {
         // starting to process information
         if ((sscanf(response, "227 Entering Passive Mode (%d,%d,%d,%d,%d,%d)",
@@ -264,13 +231,10 @@ int getServerPortForFile(struct ftp *ftp) {
         printf("Error receiving pasv command response from server...\n\n");
         return -1;
     }
-
     char ip[MAX_LENGTH];
     sprintf(ip, "%d.%d.%d.%d", ipPart1, ipPart2, ipPart3, ipPart4);
     int port = port1 * 256 + port2;
-
     printf("Port number %d\n\n", port);
-
     if ((ftp->data_socket_fd = createAndConnectSocket(ip, port)) < 0) {
         printf("Error creating new socket\n");
         return -1;
@@ -279,17 +243,22 @@ int getServerPortForFile(struct ftp *ftp) {
 }
 
 
+/**
+ * Function that sends the "retr" command to the control socket, so the file starts being transmited in the file socket
+ * 
+ * @param ftp Struct containing the socket descriptors
+ * @param fileName The name of the file to be transfered
+ * @return int 0 if successful; -1 otherwise
+ */
 int retr(struct ftp* ftp, char* fileName){
-    
     char response[MAX_LENGTH];
-
-    if(sendComandInterpretResponse(ftp, "RETR", fileName, response, MAX_LENGTH) < 0){
-        printf("Error sendimg Comand Retr\n\n");
+    if(sendCommandInterpretResponse(ftp, "RETR", fileName, response, MAX_LENGTH) < 0){
+        printf("Error sending Command Retr\n\n");
         return -1;
     }
-
 	return 0;
 }
+
 
 /**
  * Function that sends the login information to the socket for authentication
@@ -300,11 +269,9 @@ int retr(struct ftp* ftp, char* fileName){
  * @return int 0 if success; -1 otherwise
  */
 int login(struct ftp *ftp, char *username, char *password) {
-
     printf("Sending Username...\n\n");
     char response[MAX_LENGTH];
     int rtr = sendCommandInterpretResponse(ftp, "user", username, response, MAX_LENGTH);
-
     if (rtr == 3) {
         printf("Sent Username...\n\n");
     }
@@ -312,10 +279,8 @@ int login(struct ftp *ftp, char *username, char *password) {
         printf("Error sending Username...\n\n");
         return -1;
     }
-
     printf("Sending Password...\n\n");
     rtr = sendCommandInterpretResponse(ftp, "pass", password, response, MAX_LENGTH);
-
     if (rtr == 2) {
         printf("Sent Password...\n\n");
     }
@@ -323,7 +288,6 @@ int login(struct ftp *ftp, char *username, char *password) {
         printf("Error sending Password...\n\n");
         return -1;
     }
-
     return 0;
 }
 
@@ -335,84 +299,90 @@ int login(struct ftp *ftp, char *username, char *password) {
  * @return int 0 if successful; -1 otherwise
  */
 int changeWorkingDirectory(struct ftp* ftp, char* path) {
-    
     char response[MAX_LENGTH];
-
-    if(sendComandInterpretResponse(ftp, "CWD", path, response, MAX_LENGTH) < 0){
+    if(sendCommandInterpretResponse(ftp, "CWD", path, response, MAX_LENGTH) < 0){
         printf("Error sendimg Comand CWD\n\n");
         return -1;
     }
-
 	return 0;
 }
 
 
+/**
+ * Function that downloads a file sent from the server through a socket, and saves it in a local file
+ * 
+ * @param ftp Struct containing the socket descriptors
+ * @param fileName The name of the file to be transfered
+ * @return int 0 if successful; -1 otherwise
+ */
 int downloadFile(struct ftp* ftp, char * fileName){
-
     FILE *fp = openFile(fileName, "w");
     if (fp == NULL){
         printf("Error opening or creating file\n");
         return -1;
     }
-
     char buf[1024];
     int bytes;
-
     printf("Starting to download file with name %s\n", fileName);
-
     while((bytes = read(ftp->data_socket_fd, buf, sizeof(buf)))){
-
         if(bytes < 0){
             printf("Error reading from data socket\n");
             return -1;
         }
-        
-        
         if((bytes = fwrite(buf, bytes, 1, fp)) < 0){
             printf("Error writing data to file\n");
             return -1;
         }
-
     }
-
     printf("Finished dowloading File\n");
-
-    if(closeFile(fp)<0){
+    if(closeFile(fp) < 0){
         printf("Error closing file\n");
         return -1;
     }
-
     close(ftp->data_socket_fd);
-    
     return 0;
 }
 
+
 /**
  * Function that opens a file, from its name
+ * 
  * @param fileName Name of the file to be opened
  * @param mode Mode in which to open the file
- * @return file pointer to the file in question
+ * @return File pointer to the file in question; null if error
  */
 FILE* openFile(char* fileName, char* mode){
-
-
     FILE* fp;
     fp = fopen(fileName, mode);
-    
-    if (fp == NULL)
-    {
+    if (fp == NULL) {
         perror(fileName);
         return NULL;
     }
-    
     return fp;
 }
 
 /**
  * Function that closes a file, from its file pointer
+ * 
  * @param fp File pointer to the file to be closed
  * @return 0 if successful, EOF if an error occurs
  */
 int closeFile(FILE* fp){
     return fclose(fp);
+}
+
+
+/**
+ * Function that ends the connection with the control socket
+ * 
+ * @param ftp Struct containing the socket descriptors
+ * @return int 0 if successful; -1 if error
+ */
+int disconnectFromSocket(struct ftp* ftp) {
+    char response[MAX_LENGTH];
+    if(sendCommandInterpretResponse(ftp, "QUIT", "", response, MAX_LENGTH) != 2){
+        printf("Error sending Command Quit\n\n");
+        return -1;
+    }
+	return 0;
 }

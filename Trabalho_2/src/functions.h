@@ -127,10 +127,50 @@ int getServerPortForFile(struct ftp *ftp);
  */
 int changeWorkingDirectory(struct ftp* ftp, char* path);
 
+
+/**
+ * Function that downloads a file sent from the server through a socket, and saves it in a local file
+ * 
+ * @param ftp Struct containing the socket descriptors
+ * @param fileName The name of the file to be transfered
+ * @return int 0 if successful; -1 otherwise
+ */
 int downloadFile(struct ftp* ftp, char* fileName);
 
+
+/**
+ * Function that sends the "retr" command to the control socket, so the file starts being transmited in the file socket
+ * 
+ * @param ftp Struct containing the socket descriptors
+ * @param fileName The name of the file to be transfered
+ * @return int 0 if successful; -1 otherwise
+ */
+int retr(struct ftp* ftp, char* fileName);
+
+
+/**
+ * Function that opens a file, from its name
+ * 
+ * @param fileName Name of the file to be opened
+ * @param mode Mode in which to open the file
+ * @return File pointer to the file in question; null if error
+ */
 FILE* openFile(char* fileName, char* mode);
 
+
+/**
+ * Function that closes a file, from its file pointer
+ * 
+ * @param fp File pointer to the file to be closed
+ * @return 0 if successful, EOF if an error occurs
+ */
 int closeFile(FILE* fp);
 
-int retr(struct ftp* ftp, char* fileName);
+
+/**
+ * Function that ends the connection with the control socket
+ * 
+ * @param ftp Struct containing the socket descriptors
+ * @return int 0 if successful; -1 if error
+ */
+int disconnectFromSocket(struct ftp* ftp);
