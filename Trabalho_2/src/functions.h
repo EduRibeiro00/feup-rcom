@@ -24,8 +24,10 @@ struct arguments {
     char file_name[MAX_LENGTH]; /**< file name string */ 
 };
 
-
-struct ftp{
+/**
+ * Struct that contains the control and data file descriptors for the FTP
+ */
+struct ftp {
     int control_socket_fd; /**< file descriptor to control socket */
     int data_socket_fd; /**< file descriptor to data socket */
 };
@@ -44,11 +46,11 @@ int parseArguments(struct arguments* args, char* commandLineArg);
 /**
  * Function that, having the host name, retrieves the IP address
  * 
- * @param idAdress Variable that is going to point to the IP Adress
+ * @param idAdress Variable that is going to point to the IP Address
  * @param hostName The host's name
  * @return int 0 if success; -1 otherwise
  */
-int getIPAdress(char* ipAdress, char* hostName);
+int getIPAddress(char* ipAddress, char* hostName);
 
 
 /**
@@ -64,9 +66,9 @@ int createAndConnectSocket(char* address, int port);
 /**
  * Function that allows a command to be sent through a socket
  * 
- * @param sockfd The socket descriptor
- * @param command The command to be sent
- * @param commandLength The length of the command
+ * @param ftp Struct with the socket descriptors
+ * @param cmdHeader Header of the command to be sent
+ * @param cmdBody Body of the command to be sent
  * @return int Number of bytes written if success; -1 otherwise
  */
 int sendToControlSocket(struct ftp* ftp, char* cmdHeader, char* cmdBody);
@@ -75,20 +77,57 @@ int sendToControlSocket(struct ftp* ftp, char* cmdHeader, char* cmdBody);
 /**
  * Function that allows the reading of a command through a socket
  * 
- * @param sockfd The socket descriptor
- * @param buffer Buffer that is going to store the 3 digit number code received from the server
- * @return int 0 if sucess; -1 otherwise
+ * @param ftp Struct with the socket descriptors
+ * @param string Buffer that is going to store the number code received from the server
+ * @param size Number of digits to be received
+ * @return int 0 if success; -1 otherwise
  */
 int receiveFromControlSocket(struct ftp *ftp, char* string, size_t size);
 
-int sendComandInterpretResponse(struct ftp* ftp, char* cmdHeader,  char* cmdBody, char* response, size_t responseLength);
+
+/**
+ * Function that sends a command to the control socket and interprets the response received
+ * 
+ * @param ftp Struct with the socket descriptors
+ * @param cmdHeader Header of the command to be sent
+ * @param cmdBody Body of the command to be sent
+ * @param response Buffer that is going to store the number code received from the server
+ * @param responseLength Number of digits to be received on the response
+ * @return int Positive (depending on response) if success; -1 otherwise
+ */
+int sendCommandInterpretResponse(struct ftp* ftp, char* cmdHeader,  char* cmdBody, char* response, size_t responseLength);
 
 
+/**
+ * Function that sends the login information to the socket for authentication
+ * 
+ * @param ftp Struct that contains the socket descriptors
+ * @param username User name to be sent to the socket
+ * @param password Password to be sent to the socket
+ * @return int 0 if success; -1 otherwise
+ */
 int login(struct ftp* ftp, char* username, char* password);
+
+
 // TODO: function to, after sending a command, to interpret
 
+
+/**
+ * Function that obtains a server port for the transfer of a file.
+ * 
+ * @param ftp Struct with the socket descriptors
+ * @return int 0 if success; -1 otherwise
+ */
 int getServerPortForFile(struct ftp *ftp);
 
+
+/**
+ * Function to change the working directory of the FTP, using the CWD command
+ * 
+ * @param ftp Struct containing the socket descriptors
+ * @param path Path of the new working directory to be changed to
+ * @return int 0 if successful; -1 otherwise
+ */
 int changeWorkingDirectory(struct ftp* ftp, char* path);
 
 int downloadFile(struct ftp* ftp, char* fileName);
