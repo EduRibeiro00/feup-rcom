@@ -109,9 +109,6 @@ int sendCommandInterpretResponse(struct ftp* ftp, char* cmdHeader,  char* cmdBod
 int login(struct ftp* ftp, char* username, char* password);
 
 
-// TODO: function to, after sending a command, to interpret
-
-
 /**
  * Function that obtains a server port for the transfer of a file.
  * 
