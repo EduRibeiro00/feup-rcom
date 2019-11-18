@@ -5,7 +5,7 @@
 
 int main(int argc, char *argv[]) {
     if (argc != 2) {
-        printf("Usage: ./%s %s", argv[0], "ftp:// [<user>:<password>@]<host>/<url-path>");
+        printf("Usage: %s %s\n", argv[0], "ftp://[<user>:<password>@]<host>/<url-path>");
         return -1;
     }
     // parse command line arguments
@@ -18,6 +18,7 @@ int main(int argc, char *argv[]) {
     printf("Host name: %s\n", args.host_name);
     printf("File path: %s\n", args.file_path);
     printf("File name: %s\n", args.file_name);
+
     struct ftp ftp;
     char command[MAX_LENGTH];           // buffer to send commands
     char responseBuffer[MAX_LENGTH];    // buffer to read commands

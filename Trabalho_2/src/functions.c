@@ -13,6 +13,7 @@
  * @return int 0 if success; -1 otherwise
  */
 int parseArguments(struct arguments *args, char *commandLineArg) {
+
     printf("Parsing command line arguments...\n");
     // verifying FTP protocol
     char *token = strtok(commandLineArg, ":");
@@ -20,50 +21,67 @@ int parseArguments(struct arguments *args, char *commandLineArg) {
         printf("-> Error in the protocol name (should be 'ftp')\n");
         return -1;
     }
+
+    token = strtok(NULL, "\0");
+    char rest_of_string[MAX_LENGTH];
+    strcpy(rest_of_string, token);
+
     // parsing user name
-    token = strtok(NULL, ":");
+    char aux[MAX_LENGTH];
+    strcpy(aux, rest_of_string);
+    token = strtok(aux, ":");
+
     if (token == NULL || (strlen(token) < 3) || (token[0] != '/') || (token[1] != '/')) {
         printf("-> Error parsing the user name\n");
         return -1;
     }
-    strcpy(args->user, &token[2]);
-    // parsing password
-    token = strtok(NULL, "@");
-    if (token == NULL || (strlen(token) == 0)) {
-        printf("-> Error parsing the password\n");
-        return -1;
+    else if (strcmp(token, rest_of_string) == 0) {
+        strcpy(args->user, "anonymous");
+        strcpy(args->password, "");
+        
+        strcpy(rest_of_string, &rest_of_string[2]);
     }
-    strcpy(args->password, token);
+    else {
+        strcpy(args->user, &token[2]);
+        // parsing password
+        token = strtok(NULL, "@");
+        if (token == NULL || (strlen(token) == 0)) {
+            printf("-> Error parsing the password\n");
+            return -1;
+        }
+        strcpy(args->password, token);
+
+        token = strtok(NULL, "\0");
+        strcpy(rest_of_string, token);
+    }
+
     // parsing hostname
-    token = strtok(NULL, "/");
-    if (token == NULL || (strlen(token) == 0)) {
-        printf("-> Error parsing the host name\n");
+    token = strtok(rest_of_string, "/");    
+    if (token == NULL) {
+        printf("-> Error parsing the hostname\n");
         return -1;
     }
     strcpy(args->host_name, token);
-    // parsing file path and name
-    token = strtok(NULL, "\0");
-    if (token == NULL || (strlen(token) == 0)) {
+
+    // parsing path
+    token = strtok(NULL, "/");
+    if (token == NULL) {
         printf("-> Error parsing the file path\n");
         return -1;
     }
-    char filepathAndName[MAX_LENGTH];
-    strcpy(filepathAndName, token);
-    // separate file path and file name
-    char* token1 = strrchr(filepathAndName, '/');
-    if(token1 == NULL){
-        strcpy(args->file_name, filepathAndName);
-        strcpy(args->file_path, "");
-    }
-    else {
-        strcpy(args->file_name, token1 + 1);
-        strncpy(args->file_path, filepathAndName, strlen(filepathAndName)- strlen(args->file_name) - 1);
-        args->file_path[strlen(filepathAndName)-strlen(args->file_name) - 1] = '\0';
-    }
-    printf("Parsed command line arguments.\n\n");
-    return 0;
-}
+    strcpy(args->file_path, token);
 
+    // parsing name
+    token = strtok(NULL, "/");
+    if (token != NULL) {
+        strcpy(args->file_name, token);
+    }
+
+    printf("Parsed command line arguments.\n\n");
+
+    return 0;
+
+}
 
 /**
  * Function that, having the host name, retrieves the IP address
