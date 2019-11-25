@@ -15,6 +15,7 @@
 int parseArguments(struct arguments *args, char *commandLineArg) {
 
     printf("Parsing command line arguments...\n");
+    
     // verifying FTP protocol
     char *token = strtok(commandLineArg, ":");
     if ((token == NULL) || (strcmp(token, "ftp") != 0)) {
@@ -64,17 +65,23 @@ int parseArguments(struct arguments *args, char *commandLineArg) {
     strcpy(args->host_name, token);
 
     // parsing path
-    token = strtok(NULL, "/");
+    token = strtok(NULL, "\0");
     if (token == NULL) {
         printf("-> Error parsing the file path\n");
         return -1;
     }
-    strcpy(args->file_path, token);
+    char* last = strrchr(token, '/');
+    if (last != NULL) {
+        memset(args->file_path, 0, sizeof(args->file_path));
+        strncpy(args->file_path, token, last - token);
+    }
+    else {
+        strcpy(args->file_path, token);
+    }
 
     // parsing name
-    token = strtok(NULL, "/");
-    if (token != NULL) {
-        strcpy(args->file_name, token);
+    if (last != NULL) {
+        strcpy(args->file_name, last + 1);
     }
 
     printf("Parsed command line arguments.\n\n");
