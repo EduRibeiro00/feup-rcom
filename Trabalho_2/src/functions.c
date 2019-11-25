@@ -76,7 +76,8 @@ int parseArguments(struct arguments *args, char *commandLineArg) {
         strncpy(args->file_path, token, last - token);
     }
     else {
-        strcpy(args->file_path, token);
+        strcpy(args->file_path, "");
+        strcpy(args->file_name, token);
     }
 
     // parsing name
