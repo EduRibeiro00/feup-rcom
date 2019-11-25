@@ -1,0 +1,532 @@
+No.     Time           Source                Destination           Protocol Length Info
+      1 0.000000000    Cisco_3a:fa:84        CDP/VTP/DTP/PAgP/UDLD CDP      435    Device ID: tux-sw3  Port ID: FastEthernet0/2  
+
+Frame 1: 435 bytes on wire (3480 bits), 435 bytes captured (3480 bits) on interface 0
+IEEE 802.3 Ethernet 
+Logical-Link Control
+Cisco Discovery Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+      2 1.157399759    Cisco_3a:fa:84        Spanning-tree-(for-bridges)_00 STP      60     Conf. Root = 32768/31/fc:fb:fb:3a:fa:80  Cost = 0  Port = 0x8004
+
+Frame 2: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface 0
+IEEE 802.3 Ethernet 
+Logical-Link Control
+Spanning Tree Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+      3 3.080227873    172.16.31.1           172.16.30.1           ICMP     98     Echo (ping) request  id=0x067d, seq=1/256, ttl=64 (reply in 5)
+
+Frame 3: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface 0
+Ethernet II, Src: HewlettP_61:30:63 (00:21:5a:61:30:63), Dst: Cisco_d6:aa:b9 (68:ef:bd:d6:aa:b9)
+    Destination: Cisco_d6:aa:b9 (68:ef:bd:d6:aa:b9)
+        Address: Cisco_d6:aa:b9 (68:ef:bd:d6:aa:b9)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Source: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        Address: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Type: IPv4 (0x0800)
+Internet Protocol Version 4, Src: 172.16.31.1, Dst: 172.16.30.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+      4 3.080621420    172.16.31.254         172.16.31.1           ICMP     70     Redirect             (Redirect for host)
+
+Frame 4: 70 bytes on wire (560 bits), 70 bytes captured (560 bits) on interface 0
+Ethernet II, Src: Cisco_d6:aa:b9 (68:ef:bd:d6:aa:b9), Dst: HewlettP_61:30:63 (00:21:5a:61:30:63)
+    Destination: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        Address: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Source: Cisco_d6:aa:b9 (68:ef:bd:d6:aa:b9)
+        Address: Cisco_d6:aa:b9 (68:ef:bd:d6:aa:b9)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Type: IPv4 (0x0800)
+Internet Protocol Version 4, Src: 172.16.31.254, Dst: 172.16.31.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+      5 3.080925293    172.16.30.1           172.16.31.1           ICMP     98     Echo (ping) reply    id=0x067d, seq=1/256, ttl=63 (request in 3)
+
+Frame 5: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface 0
+Ethernet II, Src: 3Com_21:83:0e (00:01:02:21:83:0e), Dst: HewlettP_61:30:63 (00:21:5a:61:30:63)
+    Destination: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        Address: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Source: 3Com_21:83:0e (00:01:02:21:83:0e)
+        Address: 3Com_21:83:0e (00:01:02:21:83:0e)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Type: IPv4 (0x0800)
+Internet Protocol Version 4, Src: 172.16.30.1, Dst: 172.16.31.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+      6 3.162248388    Cisco_3a:fa:84        Spanning-tree-(for-bridges)_00 STP      60     Conf. Root = 32768/31/fc:fb:fb:3a:fa:80  Cost = 0  Port = 0x8004
+
+Frame 6: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface 0
+IEEE 802.3 Ethernet 
+Logical-Link Control
+Spanning Tree Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+      7 4.110305835    172.16.31.1           172.16.30.1           ICMP     98     Echo (ping) request  id=0x067d, seq=2/512, ttl=64 (reply in 8)
+
+Frame 7: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface 0
+Ethernet II, Src: HewlettP_61:30:63 (00:21:5a:61:30:63), Dst: 3Com_21:83:0e (00:01:02:21:83:0e)
+    Destination: 3Com_21:83:0e (00:01:02:21:83:0e)
+        Address: 3Com_21:83:0e (00:01:02:21:83:0e)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Source: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        Address: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Type: IPv4 (0x0800)
+Internet Protocol Version 4, Src: 172.16.31.1, Dst: 172.16.30.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+      8 4.110690791    172.16.30.1           172.16.31.1           ICMP     98     Echo (ping) reply    id=0x067d, seq=2/512, ttl=63 (request in 7)
+
+Frame 8: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface 0
+Ethernet II, Src: 3Com_21:83:0e (00:01:02:21:83:0e), Dst: HewlettP_61:30:63 (00:21:5a:61:30:63)
+    Destination: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        Address: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Source: 3Com_21:83:0e (00:01:02:21:83:0e)
+        Address: 3Com_21:83:0e (00:01:02:21:83:0e)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Type: IPv4 (0x0800)
+Internet Protocol Version 4, Src: 172.16.30.1, Dst: 172.16.31.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+      9 4.932419004    Cisco_3a:fa:84        Cisco_3a:fa:84        LOOP     60     Reply
+
+Frame 9: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface 0
+Ethernet II, Src: Cisco_3a:fa:84 (fc:fb:fb:3a:fa:84), Dst: Cisco_3a:fa:84 (fc:fb:fb:3a:fa:84)
+    Destination: Cisco_3a:fa:84 (fc:fb:fb:3a:fa:84)
+        Address: Cisco_3a:fa:84 (fc:fb:fb:3a:fa:84)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Source: Cisco_3a:fa:84 (fc:fb:fb:3a:fa:84)
+        Address: Cisco_3a:fa:84 (fc:fb:fb:3a:fa:84)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Type: Loopback (0x9000)
+Configuration Test Protocol (loopback)
+Data (40 bytes)
+
+0000  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00   ................
+0010  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00   ................
+0020  00 00 00 00 00 00 00 00                           ........
+
+No.     Time           Source                Destination           Protocol Length Info
+     10 5.134299217    172.16.31.1           172.16.30.1           ICMP     98     Echo (ping) request  id=0x067d, seq=3/768, ttl=64 (reply in 11)
+
+Frame 10: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface 0
+Ethernet II, Src: HewlettP_61:30:63 (00:21:5a:61:30:63), Dst: 3Com_21:83:0e (00:01:02:21:83:0e)
+    Destination: 3Com_21:83:0e (00:01:02:21:83:0e)
+        Address: 3Com_21:83:0e (00:01:02:21:83:0e)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Source: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        Address: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Type: IPv4 (0x0800)
+Internet Protocol Version 4, Src: 172.16.31.1, Dst: 172.16.30.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     11 5.134605254    172.16.30.1           172.16.31.1           ICMP     98     Echo (ping) reply    id=0x067d, seq=3/768, ttl=63 (request in 10)
+
+Frame 11: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface 0
+Ethernet II, Src: 3Com_21:83:0e (00:01:02:21:83:0e), Dst: HewlettP_61:30:63 (00:21:5a:61:30:63)
+    Destination: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        Address: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Source: 3Com_21:83:0e (00:01:02:21:83:0e)
+        Address: 3Com_21:83:0e (00:01:02:21:83:0e)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Type: IPv4 (0x0800)
+Internet Protocol Version 4, Src: 172.16.30.1, Dst: 172.16.31.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     12 5.167123346    Cisco_3a:fa:84        Spanning-tree-(for-bridges)_00 STP      60     Conf. Root = 32768/31/fc:fb:fb:3a:fa:80  Cost = 0  Port = 0x8004
+
+Frame 12: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface 0
+IEEE 802.3 Ethernet 
+Logical-Link Control
+Spanning Tree Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     13 6.158300211    172.16.31.1           172.16.30.1           ICMP     98     Echo (ping) request  id=0x067d, seq=4/1024, ttl=64 (reply in 14)
+
+Frame 13: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface 0
+Ethernet II, Src: HewlettP_61:30:63 (00:21:5a:61:30:63), Dst: 3Com_21:83:0e (00:01:02:21:83:0e)
+    Destination: 3Com_21:83:0e (00:01:02:21:83:0e)
+        Address: 3Com_21:83:0e (00:01:02:21:83:0e)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Source: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        Address: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Type: IPv4 (0x0800)
+Internet Protocol Version 4, Src: 172.16.31.1, Dst: 172.16.30.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     14 6.158685587    172.16.30.1           172.16.31.1           ICMP     98     Echo (ping) reply    id=0x067d, seq=4/1024, ttl=63 (request in 13)
+
+Frame 14: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface 0
+Ethernet II, Src: 3Com_21:83:0e (00:01:02:21:83:0e), Dst: HewlettP_61:30:63 (00:21:5a:61:30:63)
+    Destination: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        Address: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Source: 3Com_21:83:0e (00:01:02:21:83:0e)
+        Address: 3Com_21:83:0e (00:01:02:21:83:0e)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Type: IPv4 (0x0800)
+Internet Protocol Version 4, Src: 172.16.30.1, Dst: 172.16.31.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     15 7.172030710    Cisco_3a:fa:84        Spanning-tree-(for-bridges)_00 STP      60     Conf. Root = 32768/31/fc:fb:fb:3a:fa:80  Cost = 0  Port = 0x8004
+
+Frame 15: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface 0
+IEEE 802.3 Ethernet 
+Logical-Link Control
+Spanning Tree Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     16 7.182302253    172.16.31.1           172.16.30.1           ICMP     98     Echo (ping) request  id=0x067d, seq=5/1280, ttl=64 (reply in 17)
+
+Frame 16: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface 0
+Ethernet II, Src: HewlettP_61:30:63 (00:21:5a:61:30:63), Dst: 3Com_21:83:0e (00:01:02:21:83:0e)
+    Destination: 3Com_21:83:0e (00:01:02:21:83:0e)
+        Address: 3Com_21:83:0e (00:01:02:21:83:0e)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Source: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        Address: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Type: IPv4 (0x0800)
+Internet Protocol Version 4, Src: 172.16.31.1, Dst: 172.16.30.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     17 7.182587269    172.16.30.1           172.16.31.1           ICMP     98     Echo (ping) reply    id=0x067d, seq=5/1280, ttl=63 (request in 16)
+
+Frame 17: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface 0
+Ethernet II, Src: 3Com_21:83:0e (00:01:02:21:83:0e), Dst: HewlettP_61:30:63 (00:21:5a:61:30:63)
+    Destination: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        Address: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Source: 3Com_21:83:0e (00:01:02:21:83:0e)
+        Address: 3Com_21:83:0e (00:01:02:21:83:0e)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Type: IPv4 (0x0800)
+Internet Protocol Version 4, Src: 172.16.30.1, Dst: 172.16.31.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     18 8.127799305    3Com_21:83:0e         HewlettP_61:30:63     ARP      60     Who has 172.16.31.1? Tell 172.16.31.253
+
+Frame 18: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface 0
+Ethernet II, Src: 3Com_21:83:0e (00:01:02:21:83:0e), Dst: HewlettP_61:30:63 (00:21:5a:61:30:63)
+    Destination: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        Address: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Source: 3Com_21:83:0e (00:01:02:21:83:0e)
+        Address: 3Com_21:83:0e (00:01:02:21:83:0e)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Type: ARP (0x0806)
+    Padding: 000000000000000000000000000000000000
+Address Resolution Protocol (request)
+
+No.     Time           Source                Destination           Protocol Length Info
+     19 8.127818022    HewlettP_61:30:63     3Com_21:83:0e         ARP      42     172.16.31.1 is at 00:21:5a:61:30:63
+
+Frame 19: 42 bytes on wire (336 bits), 42 bytes captured (336 bits) on interface 0
+Ethernet II, Src: HewlettP_61:30:63 (00:21:5a:61:30:63), Dst: 3Com_21:83:0e (00:01:02:21:83:0e)
+    Destination: 3Com_21:83:0e (00:01:02:21:83:0e)
+        Address: 3Com_21:83:0e (00:01:02:21:83:0e)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Source: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        Address: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Type: ARP (0x0806)
+Address Resolution Protocol (reply)
+
+No.     Time           Source                Destination           Protocol Length Info
+     20 8.174259229    HewlettP_61:30:63     Cisco_d6:aa:b9        ARP      42     Who has 172.16.31.254? Tell 172.16.31.1
+
+Frame 20: 42 bytes on wire (336 bits), 42 bytes captured (336 bits) on interface 0
+Ethernet II, Src: HewlettP_61:30:63 (00:21:5a:61:30:63), Dst: Cisco_d6:aa:b9 (68:ef:bd:d6:aa:b9)
+    Destination: Cisco_d6:aa:b9 (68:ef:bd:d6:aa:b9)
+        Address: Cisco_d6:aa:b9 (68:ef:bd:d6:aa:b9)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Source: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        Address: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Type: ARP (0x0806)
+Address Resolution Protocol (request)
+
+No.     Time           Source                Destination           Protocol Length Info
+     21 8.174568269    Cisco_d6:aa:b9        HewlettP_61:30:63     ARP      60     172.16.31.254 is at 68:ef:bd:d6:aa:b9
+
+Frame 21: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface 0
+Ethernet II, Src: Cisco_d6:aa:b9 (68:ef:bd:d6:aa:b9), Dst: HewlettP_61:30:63 (00:21:5a:61:30:63)
+    Destination: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        Address: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Source: Cisco_d6:aa:b9 (68:ef:bd:d6:aa:b9)
+        Address: Cisco_d6:aa:b9 (68:ef:bd:d6:aa:b9)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Type: ARP (0x0806)
+    Padding: 000000000000000000000000000000000000
+Address Resolution Protocol (reply)
+
+No.     Time           Source                Destination           Protocol Length Info
+     22 8.206291026    172.16.31.1           172.16.30.1           ICMP     98     Echo (ping) request  id=0x067d, seq=6/1536, ttl=64 (reply in 23)
+
+Frame 22: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface 0
+Ethernet II, Src: HewlettP_61:30:63 (00:21:5a:61:30:63), Dst: 3Com_21:83:0e (00:01:02:21:83:0e)
+    Destination: 3Com_21:83:0e (00:01:02:21:83:0e)
+        Address: 3Com_21:83:0e (00:01:02:21:83:0e)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Source: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        Address: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Type: IPv4 (0x0800)
+Internet Protocol Version 4, Src: 172.16.31.1, Dst: 172.16.30.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     23 8.206677938    172.16.30.1           172.16.31.1           ICMP     98     Echo (ping) reply    id=0x067d, seq=6/1536, ttl=63 (request in 22)
+
+Frame 23: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface 0
+Ethernet II, Src: 3Com_21:83:0e (00:01:02:21:83:0e), Dst: HewlettP_61:30:63 (00:21:5a:61:30:63)
+    Destination: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        Address: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Source: 3Com_21:83:0e (00:01:02:21:83:0e)
+        Address: 3Com_21:83:0e (00:01:02:21:83:0e)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Type: IPv4 (0x0800)
+Internet Protocol Version 4, Src: 172.16.30.1, Dst: 172.16.31.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     24 9.176945547    Cisco_3a:fa:84        Spanning-tree-(for-bridges)_00 STP      60     Conf. Root = 32768/31/fc:fb:fb:3a:fa:80  Cost = 0  Port = 0x8004
+
+Frame 24: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface 0
+IEEE 802.3 Ethernet 
+Logical-Link Control
+Spanning Tree Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     25 9.198266858    HewlettP_61:30:63     3Com_21:83:0e         ARP      42     Who has 172.16.31.253? Tell 172.16.31.1
+
+Frame 25: 42 bytes on wire (336 bits), 42 bytes captured (336 bits) on interface 0
+Ethernet II, Src: HewlettP_61:30:63 (00:21:5a:61:30:63), Dst: 3Com_21:83:0e (00:01:02:21:83:0e)
+    Destination: 3Com_21:83:0e (00:01:02:21:83:0e)
+        Address: 3Com_21:83:0e (00:01:02:21:83:0e)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Source: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        Address: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Type: ARP (0x0806)
+Address Resolution Protocol (request)
+
+No.     Time           Source                Destination           Protocol Length Info
+     26 9.198356951    3Com_21:83:0e         HewlettP_61:30:63     ARP      60     172.16.31.253 is at 00:01:02:21:83:0e
+
+Frame 26: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface 0
+Ethernet II, Src: 3Com_21:83:0e (00:01:02:21:83:0e), Dst: HewlettP_61:30:63 (00:21:5a:61:30:63)
+    Destination: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        Address: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Source: 3Com_21:83:0e (00:01:02:21:83:0e)
+        Address: 3Com_21:83:0e (00:01:02:21:83:0e)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Type: ARP (0x0806)
+    Padding: 000000000000000000000000000000000000
+Address Resolution Protocol (reply)
+
+No.     Time           Source                Destination           Protocol Length Info
+     27 9.230292439    172.16.31.1           172.16.30.1           ICMP     98     Echo (ping) request  id=0x067d, seq=7/1792, ttl=64 (reply in 28)
+
+Frame 27: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface 0
+Ethernet II, Src: HewlettP_61:30:63 (00:21:5a:61:30:63), Dst: 3Com_21:83:0e (00:01:02:21:83:0e)
+    Destination: 3Com_21:83:0e (00:01:02:21:83:0e)
+        Address: 3Com_21:83:0e (00:01:02:21:83:0e)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Source: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        Address: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Type: IPv4 (0x0800)
+Internet Protocol Version 4, Src: 172.16.31.1, Dst: 172.16.30.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     28 9.230599106    172.16.30.1           172.16.31.1           ICMP     98     Echo (ping) reply    id=0x067d, seq=7/1792, ttl=63 (request in 27)
+
+Frame 28: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface 0
+Ethernet II, Src: 3Com_21:83:0e (00:01:02:21:83:0e), Dst: HewlettP_61:30:63 (00:21:5a:61:30:63)
+    Destination: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        Address: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Source: 3Com_21:83:0e (00:01:02:21:83:0e)
+        Address: 3Com_21:83:0e (00:01:02:21:83:0e)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Type: IPv4 (0x0800)
+Internet Protocol Version 4, Src: 172.16.30.1, Dst: 172.16.31.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     29 10.254311033   172.16.31.1           172.16.30.1           ICMP     98     Echo (ping) request  id=0x067d, seq=8/2048, ttl=64 (reply in 30)
+
+Frame 29: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface 0
+Ethernet II, Src: HewlettP_61:30:63 (00:21:5a:61:30:63), Dst: 3Com_21:83:0e (00:01:02:21:83:0e)
+    Destination: 3Com_21:83:0e (00:01:02:21:83:0e)
+        Address: 3Com_21:83:0e (00:01:02:21:83:0e)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Source: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        Address: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Type: IPv4 (0x0800)
+Internet Protocol Version 4, Src: 172.16.31.1, Dst: 172.16.30.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     30 10.254671337   172.16.30.1           172.16.31.1           ICMP     98     Echo (ping) reply    id=0x067d, seq=8/2048, ttl=63 (request in 29)
+
+Frame 30: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface 0
+Ethernet II, Src: 3Com_21:83:0e (00:01:02:21:83:0e), Dst: HewlettP_61:30:63 (00:21:5a:61:30:63)
+    Destination: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        Address: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Source: 3Com_21:83:0e (00:01:02:21:83:0e)
+        Address: 3Com_21:83:0e (00:01:02:21:83:0e)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Type: IPv4 (0x0800)
+Internet Protocol Version 4, Src: 172.16.30.1, Dst: 172.16.31.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     31 11.181811286   Cisco_3a:fa:84        Spanning-tree-(for-bridges)_00 STP      60     Conf. Root = 32768/31/fc:fb:fb:3a:fa:80  Cost = 0  Port = 0x8004
+
+Frame 31: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface 0
+IEEE 802.3 Ethernet 
+Logical-Link Control
+Spanning Tree Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     32 11.278337869   172.16.31.1           172.16.30.1           ICMP     98     Echo (ping) request  id=0x067d, seq=9/2304, ttl=64 (reply in 33)
+
+Frame 32: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface 0
+Ethernet II, Src: HewlettP_61:30:63 (00:21:5a:61:30:63), Dst: 3Com_21:83:0e (00:01:02:21:83:0e)
+    Destination: 3Com_21:83:0e (00:01:02:21:83:0e)
+        Address: 3Com_21:83:0e (00:01:02:21:83:0e)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Source: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        Address: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Type: IPv4 (0x0800)
+Internet Protocol Version 4, Src: 172.16.31.1, Dst: 172.16.30.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     33 11.278580492   172.16.30.1           172.16.31.1           ICMP     98     Echo (ping) reply    id=0x067d, seq=9/2304, ttl=63 (request in 32)
+
+Frame 33: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface 0
+Ethernet II, Src: 3Com_21:83:0e (00:01:02:21:83:0e), Dst: HewlettP_61:30:63 (00:21:5a:61:30:63)
+    Destination: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        Address: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Source: 3Com_21:83:0e (00:01:02:21:83:0e)
+        Address: 3Com_21:83:0e (00:01:02:21:83:0e)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Type: IPv4 (0x0800)
+Internet Protocol Version 4, Src: 172.16.30.1, Dst: 172.16.31.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     34 12.302303804   172.16.31.1           172.16.30.1           ICMP     98     Echo (ping) request  id=0x067d, seq=10/2560, ttl=64 (reply in 35)
+
+Frame 34: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface 0
+Ethernet II, Src: HewlettP_61:30:63 (00:21:5a:61:30:63), Dst: 3Com_21:83:0e (00:01:02:21:83:0e)
+    Destination: 3Com_21:83:0e (00:01:02:21:83:0e)
+        Address: 3Com_21:83:0e (00:01:02:21:83:0e)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Source: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        Address: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Type: IPv4 (0x0800)
+Internet Protocol Version 4, Src: 172.16.31.1, Dst: 172.16.30.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     35 12.302698398   172.16.30.1           172.16.31.1           ICMP     98     Echo (ping) reply    id=0x067d, seq=10/2560, ttl=63 (request in 34)
+
+Frame 35: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface 0
+Ethernet II, Src: 3Com_21:83:0e (00:01:02:21:83:0e), Dst: HewlettP_61:30:63 (00:21:5a:61:30:63)
+    Destination: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        Address: HewlettP_61:30:63 (00:21:5a:61:30:63)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Source: 3Com_21:83:0e (00:01:02:21:83:0e)
+        Address: 3Com_21:83:0e (00:01:02:21:83:0e)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Type: IPv4 (0x0800)
+Internet Protocol Version 4, Src: 172.16.30.1, Dst: 172.16.31.1
+Internet Control Message Protocol

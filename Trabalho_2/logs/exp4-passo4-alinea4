@@ -1,0 +1,514 @@
+No.     Time           Source                Destination           Protocol Length Info
+      1 0.000000000    Cisco_3a:fa:84        Spanning-tree-(for-bridges)_00 STP      60     Conf. Root = 32768/31/fc:fb:fb:3a:fa:80  Cost = 0  Port = 0x8004
+
+Frame 1: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface 0
+IEEE 802.3 Ethernet 
+Logical-Link Control
+Spanning Tree Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+      2 1.564657759    172.16.31.1           172.16.31.255         NBNS     92     Name query NB WORKGROUP<20>
+
+Frame 2: 92 bytes on wire (736 bits), 92 bytes captured (736 bits) on interface 0
+Ethernet II, Src: HewlettP_61:30:63 (00:21:5a:61:30:63), Dst: Broadcast (ff:ff:ff:ff:ff:ff)
+Internet Protocol Version 4, Src: 172.16.31.1, Dst: 172.16.31.255
+User Datagram Protocol, Src Port: 53980, Dst Port: 137
+NetBIOS Name Service
+
+No.     Time           Source                Destination           Protocol Length Info
+      3 2.004856451    Cisco_3a:fa:84        Spanning-tree-(for-bridges)_00 STP      60     Conf. Root = 32768/31/fc:fb:fb:3a:fa:80  Cost = 0  Port = 0x8004
+
+Frame 3: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface 0
+IEEE 802.3 Ethernet 
+Logical-Link Control
+Spanning Tree Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+      4 2.566940543    172.16.31.1           172.16.31.255         NBNS     92     Name query NB WORKGROUP<1d>
+
+Frame 4: 92 bytes on wire (736 bits), 92 bytes captured (736 bits) on interface 0
+Ethernet II, Src: HewlettP_61:30:63 (00:21:5a:61:30:63), Dst: Broadcast (ff:ff:ff:ff:ff:ff)
+Internet Protocol Version 4, Src: 172.16.31.1, Dst: 172.16.31.255
+User Datagram Protocol, Src Port: 33920, Dst Port: 137
+NetBIOS Name Service
+
+No.     Time           Source                Destination           Protocol Length Info
+      5 2.787940298    fe80::221:5aff:fe61:3063 ff02::fb              MDNS     180    Standard query 0x0000 PTR _ftp._tcp.local, "QM" question PTR _nfs._tcp.local, "QM" question PTR _afpovertcp._tcp.local, "QM" question PTR _smb._tcp.local, "QM" question PTR _sftp-ssh._tcp.local, "QM" question PTR _webdavs._tcp.local, "QM" question PTR _webdav._tcp.local, "QM" question
+
+Frame 5: 180 bytes on wire (1440 bits), 180 bytes captured (1440 bits) on interface 0
+Ethernet II, Src: HewlettP_61:30:63 (00:21:5a:61:30:63), Dst: IPv6mcast_fb (33:33:00:00:00:fb)
+Internet Protocol Version 6, Src: fe80::221:5aff:fe61:3063, Dst: ff02::fb
+User Datagram Protocol, Src Port: 5353, Dst Port: 5353
+Multicast Domain Name System (query)
+
+No.     Time           Source                Destination           Protocol Length Info
+      6 2.788027947    172.16.31.1           224.0.0.251           MDNS     160    Standard query 0x0000 PTR _ftp._tcp.local, "QM" question PTR _nfs._tcp.local, "QM" question PTR _afpovertcp._tcp.local, "QM" question PTR _smb._tcp.local, "QM" question PTR _sftp-ssh._tcp.local, "QM" question PTR _webdavs._tcp.local, "QM" question PTR _webdav._tcp.local, "QM" question
+
+Frame 6: 160 bytes on wire (1280 bits), 160 bytes captured (1280 bits) on interface 0
+Ethernet II, Src: HewlettP_61:30:63 (00:21:5a:61:30:63), Dst: IPv4mcast_fb (01:00:5e:00:00:fb)
+Internet Protocol Version 4, Src: 172.16.31.1, Dst: 224.0.0.251
+User Datagram Protocol, Src Port: 5353, Dst Port: 5353
+Multicast Domain Name System (query)
+
+No.     Time           Source                Destination           Protocol Length Info
+      7 2.857215476    Cisco_3a:fa:84        Cisco_3a:fa:84        LOOP     60     Reply
+
+Frame 7: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface 0
+Ethernet II, Src: Cisco_3a:fa:84 (fc:fb:fb:3a:fa:84), Dst: Cisco_3a:fa:84 (fc:fb:fb:3a:fa:84)
+Configuration Test Protocol (loopback)
+Data (40 bytes)
+
+0000  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00   ................
+0010  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00   ................
+0020  00 00 00 00 00 00 00 00                           ........
+
+No.     Time           Source                Destination           Protocol Length Info
+      8 3.235193086    172.16.31.1           172.16.30.1           ICMP     98     Echo (ping) request  id=0x01fe, seq=1/256, ttl=64 (reply in 10)
+
+Frame 8: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface 0
+Ethernet II, Src: HewlettP_61:30:63 (00:21:5a:61:30:63), Dst: Cisco_d6:aa:b9 (68:ef:bd:d6:aa:b9)
+Internet Protocol Version 4, Src: 172.16.31.1, Dst: 172.16.30.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+      9 3.235506596    172.16.31.254         172.16.31.1           ICMP     70     Redirect             (Redirect for host)
+
+Frame 9: 70 bytes on wire (560 bits), 70 bytes captured (560 bits) on interface 0
+Ethernet II, Src: Cisco_d6:aa:b9 (68:ef:bd:d6:aa:b9), Dst: HewlettP_61:30:63 (00:21:5a:61:30:63)
+Internet Protocol Version 4, Src: 172.16.31.254, Dst: 172.16.31.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     10 3.235775759    172.16.30.1           172.16.31.1           ICMP     98     Echo (ping) reply    id=0x01fe, seq=1/256, ttl=63 (request in 8)
+
+Frame 10: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface 0
+Ethernet II, Src: 3Com_21:83:0e (00:01:02:21:83:0e), Dst: HewlettP_61:30:63 (00:21:5a:61:30:63)
+Internet Protocol Version 4, Src: 172.16.30.1, Dst: 172.16.31.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     11 3.568225596    172.16.31.1           172.16.31.255         NBNS     92     Name query NB WORKGROUP<1b>
+
+Frame 11: 92 bytes on wire (736 bits), 92 bytes captured (736 bits) on interface 0
+Ethernet II, Src: HewlettP_61:30:63 (00:21:5a:61:30:63), Dst: Broadcast (ff:ff:ff:ff:ff:ff)
+Internet Protocol Version 4, Src: 172.16.31.1, Dst: 172.16.31.255
+User Datagram Protocol, Src Port: 44040, Dst Port: 137
+NetBIOS Name Service
+
+No.     Time           Source                Destination           Protocol Length Info
+     12 3.788989503    fe80::221:5aff:fe61:3063 ff02::fb              MDNS     180    Standard query 0x0000 PTR _ftp._tcp.local, "QM" question PTR _nfs._tcp.local, "QM" question PTR _afpovertcp._tcp.local, "QM" question PTR _smb._tcp.local, "QM" question PTR _sftp-ssh._tcp.local, "QM" question PTR _webdavs._tcp.local, "QM" question PTR _webdav._tcp.local, "QM" question
+
+Frame 12: 180 bytes on wire (1440 bits), 180 bytes captured (1440 bits) on interface 0
+Ethernet II, Src: HewlettP_61:30:63 (00:21:5a:61:30:63), Dst: IPv6mcast_fb (33:33:00:00:00:fb)
+Internet Protocol Version 6, Src: fe80::221:5aff:fe61:3063, Dst: ff02::fb
+User Datagram Protocol, Src Port: 5353, Dst Port: 5353
+Multicast Domain Name System (query)
+
+No.     Time           Source                Destination           Protocol Length Info
+     13 3.789072961    172.16.31.1           224.0.0.251           MDNS     160    Standard query 0x0000 PTR _ftp._tcp.local, "QM" question PTR _nfs._tcp.local, "QM" question PTR _afpovertcp._tcp.local, "QM" question PTR _smb._tcp.local, "QM" question PTR _sftp-ssh._tcp.local, "QM" question PTR _webdavs._tcp.local, "QM" question PTR _webdav._tcp.local, "QM" question
+
+Frame 13: 160 bytes on wire (1280 bits), 160 bytes captured (1280 bits) on interface 0
+Ethernet II, Src: HewlettP_61:30:63 (00:21:5a:61:30:63), Dst: IPv4mcast_fb (01:00:5e:00:00:fb)
+Internet Protocol Version 4, Src: 172.16.31.1, Dst: 224.0.0.251
+User Datagram Protocol, Src Port: 5353, Dst Port: 5353
+Multicast Domain Name System (query)
+
+No.     Time           Source                Destination           Protocol Length Info
+     14 4.009445066    Cisco_3a:fa:84        Spanning-tree-(for-bridges)_00 STP      60     Conf. Root = 32768/31/fc:fb:fb:3a:fa:80  Cost = 0  Port = 0x8004
+
+Frame 14: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface 0
+IEEE 802.3 Ethernet 
+Logical-Link Control
+Spanning Tree Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     15 4.264483255    172.16.31.1           172.16.30.1           ICMP     98     Echo (ping) request  id=0x01fe, seq=2/512, ttl=64 (reply in 17)
+
+Frame 15: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface 0
+Ethernet II, Src: HewlettP_61:30:63 (00:21:5a:61:30:63), Dst: Cisco_d6:aa:b9 (68:ef:bd:d6:aa:b9)
+Internet Protocol Version 4, Src: 172.16.31.1, Dst: 172.16.30.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     16 4.264785102    172.16.31.254         172.16.31.1           ICMP     70     Redirect             (Redirect for host)
+
+Frame 16: 70 bytes on wire (560 bits), 70 bytes captured (560 bits) on interface 0
+Ethernet II, Src: Cisco_d6:aa:b9 (68:ef:bd:d6:aa:b9), Dst: HewlettP_61:30:63 (00:21:5a:61:30:63)
+Internet Protocol Version 4, Src: 172.16.31.254, Dst: 172.16.31.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     17 4.265152739    172.16.30.1           172.16.31.1           ICMP     98     Echo (ping) reply    id=0x01fe, seq=2/512, ttl=63 (request in 15)
+
+Frame 17: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface 0
+Ethernet II, Src: 3Com_21:83:0e (00:01:02:21:83:0e), Dst: HewlettP_61:30:63 (00:21:5a:61:30:63)
+Internet Protocol Version 4, Src: 172.16.30.1, Dst: 172.16.31.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     18 4.568725860    172.16.31.1           172.16.1.1            DNS      85     Standard query 0x5bdb A WORKGROUP.netlab.fe.up.pt
+
+Frame 18: 85 bytes on wire (680 bits), 85 bytes captured (680 bits) on interface 0
+Ethernet II, Src: HewlettP_61:30:63 (00:21:5a:61:30:63), Dst: Cisco_d6:aa:b9 (68:ef:bd:d6:aa:b9)
+Internet Protocol Version 4, Src: 172.16.31.1, Dst: 172.16.1.1
+User Datagram Protocol, Src Port: 53179, Dst Port: 53
+Domain Name System (query)
+
+No.     Time           Source                Destination           Protocol Length Info
+     19 4.568736616    172.16.31.1           172.16.1.1            DNS      85     Standard query 0xd1e5 AAAA WORKGROUP.netlab.fe.up.pt
+
+Frame 19: 85 bytes on wire (680 bits), 85 bytes captured (680 bits) on interface 0
+Ethernet II, Src: HewlettP_61:30:63 (00:21:5a:61:30:63), Dst: Cisco_d6:aa:b9 (68:ef:bd:d6:aa:b9)
+Internet Protocol Version 4, Src: 172.16.31.1, Dst: 172.16.1.1
+User Datagram Protocol, Src Port: 53179, Dst Port: 53
+Domain Name System (query)
+
+No.     Time           Source                Destination           Protocol Length Info
+     20 5.288502827    172.16.31.1           172.16.30.1           ICMP     98     Echo (ping) request  id=0x01fe, seq=3/768, ttl=64 (reply in 22)
+
+Frame 20: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface 0
+Ethernet II, Src: HewlettP_61:30:63 (00:21:5a:61:30:63), Dst: Cisco_d6:aa:b9 (68:ef:bd:d6:aa:b9)
+Internet Protocol Version 4, Src: 172.16.31.1, Dst: 172.16.30.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     21 5.288808585    172.16.31.254         172.16.31.1           ICMP     70     Redirect             (Redirect for host)
+
+Frame 21: 70 bytes on wire (560 bits), 70 bytes captured (560 bits) on interface 0
+Ethernet II, Src: Cisco_d6:aa:b9 (68:ef:bd:d6:aa:b9), Dst: HewlettP_61:30:63 (00:21:5a:61:30:63)
+Internet Protocol Version 4, Src: 172.16.31.254, Dst: 172.16.31.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     22 5.289170635    172.16.30.1           172.16.31.1           ICMP     98     Echo (ping) reply    id=0x01fe, seq=3/768, ttl=63 (request in 20)
+
+Frame 22: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface 0
+Ethernet II, Src: 3Com_21:83:0e (00:01:02:21:83:0e), Dst: HewlettP_61:30:63 (00:21:5a:61:30:63)
+Internet Protocol Version 4, Src: 172.16.30.1, Dst: 172.16.31.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     23 5.790727468    fe80::221:5aff:fe61:3063 ff02::fb              MDNS     180    Standard query 0x0000 PTR _ftp._tcp.local, "QM" question PTR _nfs._tcp.local, "QM" question PTR _afpovertcp._tcp.local, "QM" question PTR _smb._tcp.local, "QM" question PTR _sftp-ssh._tcp.local, "QM" question PTR _webdavs._tcp.local, "QM" question PTR _webdav._tcp.local, "QM" question
+
+Frame 23: 180 bytes on wire (1440 bits), 180 bytes captured (1440 bits) on interface 0
+Ethernet II, Src: HewlettP_61:30:63 (00:21:5a:61:30:63), Dst: IPv6mcast_fb (33:33:00:00:00:fb)
+Internet Protocol Version 6, Src: fe80::221:5aff:fe61:3063, Dst: ff02::fb
+User Datagram Protocol, Src Port: 5353, Dst Port: 5353
+Multicast Domain Name System (query)
+
+No.     Time           Source                Destination           Protocol Length Info
+     24 5.790814209    172.16.31.1           224.0.0.251           MDNS     160    Standard query 0x0000 PTR _ftp._tcp.local, "QM" question PTR _nfs._tcp.local, "QM" question PTR _afpovertcp._tcp.local, "QM" question PTR _smb._tcp.local, "QM" question PTR _sftp-ssh._tcp.local, "QM" question PTR _webdavs._tcp.local, "QM" question PTR _webdav._tcp.local, "QM" question
+
+Frame 24: 160 bytes on wire (1280 bits), 160 bytes captured (1280 bits) on interface 0
+Ethernet II, Src: HewlettP_61:30:63 (00:21:5a:61:30:63), Dst: IPv4mcast_fb (01:00:5e:00:00:fb)
+Internet Protocol Version 4, Src: 172.16.31.1, Dst: 224.0.0.251
+User Datagram Protocol, Src Port: 5353, Dst Port: 5353
+Multicast Domain Name System (query)
+
+No.     Time           Source                Destination           Protocol Length Info
+     25 6.014644919    Cisco_3a:fa:84        Spanning-tree-(for-bridges)_00 STP      60     Conf. Root = 32768/31/fc:fb:fb:3a:fa:80  Cost = 0  Port = 0x8004
+
+Frame 25: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface 0
+IEEE 802.3 Ethernet 
+Logical-Link Control
+Spanning Tree Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     26 6.312500190    172.16.31.1           172.16.30.1           ICMP     98     Echo (ping) request  id=0x01fe, seq=4/1024, ttl=64 (reply in 28)
+
+Frame 26: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface 0
+Ethernet II, Src: HewlettP_61:30:63 (00:21:5a:61:30:63), Dst: Cisco_d6:aa:b9 (68:ef:bd:d6:aa:b9)
+Internet Protocol Version 4, Src: 172.16.31.1, Dst: 172.16.30.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     27 6.312794424    172.16.31.254         172.16.31.1           ICMP     70     Redirect             (Redirect for host)
+
+Frame 27: 70 bytes on wire (560 bits), 70 bytes captured (560 bits) on interface 0
+Ethernet II, Src: Cisco_d6:aa:b9 (68:ef:bd:d6:aa:b9), Dst: HewlettP_61:30:63 (00:21:5a:61:30:63)
+Internet Protocol Version 4, Src: 172.16.31.254, Dst: 172.16.31.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     28 6.313073225    172.16.30.1           172.16.31.1           ICMP     98     Echo (ping) reply    id=0x01fe, seq=4/1024, ttl=63 (request in 26)
+
+Frame 28: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface 0
+Ethernet II, Src: 3Com_21:83:0e (00:01:02:21:83:0e), Dst: HewlettP_61:30:63 (00:21:5a:61:30:63)
+Internet Protocol Version 4, Src: 172.16.30.1, Dst: 172.16.31.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     29 7.336504257    172.16.31.1           172.16.30.1           ICMP     98     Echo (ping) request  id=0x01fe, seq=5/1280, ttl=64 (reply in 31)
+
+Frame 29: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface 0
+Ethernet II, Src: HewlettP_61:30:63 (00:21:5a:61:30:63), Dst: Cisco_d6:aa:b9 (68:ef:bd:d6:aa:b9)
+Internet Protocol Version 4, Src: 172.16.31.1, Dst: 172.16.30.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     30 7.336807431    172.16.31.254         172.16.31.1           ICMP     70     Redirect             (Redirect for host)
+
+Frame 30: 70 bytes on wire (560 bits), 70 bytes captured (560 bits) on interface 0
+Ethernet II, Src: Cisco_d6:aa:b9 (68:ef:bd:d6:aa:b9), Dst: HewlettP_61:30:63 (00:21:5a:61:30:63)
+Internet Protocol Version 4, Src: 172.16.31.254, Dst: 172.16.31.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     31 7.337184706    172.16.30.1           172.16.31.1           ICMP     98     Echo (ping) reply    id=0x01fe, seq=5/1280, ttl=63 (request in 29)
+
+Frame 31: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface 0
+Ethernet II, Src: 3Com_21:83:0e (00:01:02:21:83:0e), Dst: HewlettP_61:30:63 (00:21:5a:61:30:63)
+Internet Protocol Version 4, Src: 172.16.30.1, Dst: 172.16.31.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     32 8.019539642    Cisco_3a:fa:84        Spanning-tree-(for-bridges)_00 STP      60     Conf. Root = 32768/31/fc:fb:fb:3a:fa:80  Cost = 0  Port = 0x8004
+
+Frame 32: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface 0
+IEEE 802.3 Ethernet 
+Logical-Link Control
+Spanning Tree Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     33 8.282954412    3Com_21:83:0e         HewlettP_61:30:63     ARP      60     Who has 172.16.31.1? Tell 172.16.31.253
+
+Frame 33: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface 0
+Ethernet II, Src: 3Com_21:83:0e (00:01:02:21:83:0e), Dst: HewlettP_61:30:63 (00:21:5a:61:30:63)
+Address Resolution Protocol (request)
+
+No.     Time           Source                Destination           Protocol Length Info
+     34 8.282966773    HewlettP_61:30:63     3Com_21:83:0e         ARP      42     172.16.31.1 is at 00:21:5a:61:30:63
+
+Frame 34: 42 bytes on wire (336 bits), 42 bytes captured (336 bits) on interface 0
+Ethernet II, Src: HewlettP_61:30:63 (00:21:5a:61:30:63), Dst: 3Com_21:83:0e (00:01:02:21:83:0e)
+Address Resolution Protocol (reply)
+
+No.     Time           Source                Destination           Protocol Length Info
+     35 8.328463537    HewlettP_61:30:63     Cisco_d6:aa:b9        ARP      42     Who has 172.16.31.254? Tell 172.16.31.1
+
+Frame 35: 42 bytes on wire (336 bits), 42 bytes captured (336 bits) on interface 0
+Ethernet II, Src: HewlettP_61:30:63 (00:21:5a:61:30:63), Dst: Cisco_d6:aa:b9 (68:ef:bd:d6:aa:b9)
+Address Resolution Protocol (request)
+
+No.     Time           Source                Destination           Protocol Length Info
+     36 8.328767061    Cisco_d6:aa:b9        HewlettP_61:30:63     ARP      60     172.16.31.254 is at 68:ef:bd:d6:aa:b9
+
+Frame 36: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface 0
+Ethernet II, Src: Cisco_d6:aa:b9 (68:ef:bd:d6:aa:b9), Dst: HewlettP_61:30:63 (00:21:5a:61:30:63)
+Address Resolution Protocol (reply)
+
+No.     Time           Source                Destination           Protocol Length Info
+     37 8.360484160    172.16.31.1           172.16.30.1           ICMP     98     Echo (ping) request  id=0x01fe, seq=6/1536, ttl=64 (reply in 39)
+
+Frame 37: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface 0
+Ethernet II, Src: HewlettP_61:30:63 (00:21:5a:61:30:63), Dst: Cisco_d6:aa:b9 (68:ef:bd:d6:aa:b9)
+Internet Protocol Version 4, Src: 172.16.31.1, Dst: 172.16.30.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     38 8.360771131    172.16.31.254         172.16.31.1           ICMP     70     Redirect             (Redirect for host)
+
+Frame 38: 70 bytes on wire (560 bits), 70 bytes captured (560 bits) on interface 0
+Ethernet II, Src: Cisco_d6:aa:b9 (68:ef:bd:d6:aa:b9), Dst: HewlettP_61:30:63 (00:21:5a:61:30:63)
+Internet Protocol Version 4, Src: 172.16.31.254, Dst: 172.16.31.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     39 8.361138977    172.16.30.1           172.16.31.1           ICMP     98     Echo (ping) reply    id=0x01fe, seq=6/1536, ttl=63 (request in 37)
+
+Frame 39: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface 0
+Ethernet II, Src: 3Com_21:83:0e (00:01:02:21:83:0e), Dst: HewlettP_61:30:63 (00:21:5a:61:30:63)
+Internet Protocol Version 4, Src: 172.16.30.1, Dst: 172.16.31.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     40 9.384502964    172.16.31.1           172.16.30.1           ICMP     98     Echo (ping) request  id=0x01fe, seq=7/1792, ttl=64 (reply in 42)
+
+Frame 40: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface 0
+Ethernet II, Src: HewlettP_61:30:63 (00:21:5a:61:30:63), Dst: Cisco_d6:aa:b9 (68:ef:bd:d6:aa:b9)
+Internet Protocol Version 4, Src: 172.16.31.1, Dst: 172.16.30.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     41 9.384822061    172.16.31.254         172.16.31.1           ICMP     70     Redirect             (Redirect for host)
+
+Frame 41: 70 bytes on wire (560 bits), 70 bytes captured (560 bits) on interface 0
+Ethernet II, Src: Cisco_d6:aa:b9 (68:ef:bd:d6:aa:b9), Dst: HewlettP_61:30:63 (00:21:5a:61:30:63)
+Internet Protocol Version 4, Src: 172.16.31.254, Dst: 172.16.31.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     42 9.385210091    172.16.30.1           172.16.31.1           ICMP     98     Echo (ping) reply    id=0x01fe, seq=7/1792, ttl=63 (request in 40)
+
+Frame 42: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface 0
+Ethernet II, Src: 3Com_21:83:0e (00:01:02:21:83:0e), Dst: HewlettP_61:30:63 (00:21:5a:61:30:63)
+Internet Protocol Version 4, Src: 172.16.30.1, Dst: 172.16.31.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     43 9.572514536    172.16.31.1           193.136.28.10         DNS      85     Standard query 0x5bdb A WORKGROUP.netlab.fe.up.pt
+
+Frame 43: 85 bytes on wire (680 bits), 85 bytes captured (680 bits) on interface 0
+Ethernet II, Src: HewlettP_61:30:63 (00:21:5a:61:30:63), Dst: Cisco_d6:aa:b9 (68:ef:bd:d6:aa:b9)
+Internet Protocol Version 4, Src: 172.16.31.1, Dst: 193.136.28.10
+User Datagram Protocol, Src Port: 46215, Dst Port: 53
+Domain Name System (query)
+
+No.     Time           Source                Destination           Protocol Length Info
+     44 9.572526408    172.16.31.1           193.136.28.10         DNS      85     Standard query 0xd1e5 AAAA WORKGROUP.netlab.fe.up.pt
+
+Frame 44: 85 bytes on wire (680 bits), 85 bytes captured (680 bits) on interface 0
+Ethernet II, Src: HewlettP_61:30:63 (00:21:5a:61:30:63), Dst: Cisco_d6:aa:b9 (68:ef:bd:d6:aa:b9)
+Internet Protocol Version 4, Src: 172.16.31.1, Dst: 193.136.28.10
+User Datagram Protocol, Src Port: 46215, Dst Port: 53
+Domain Name System (query)
+
+No.     Time           Source                Destination           Protocol Length Info
+     45 9.572834472    172.16.31.254         172.16.31.1           ICMP     70     Destination unreachable (Host unreachable)
+
+Frame 45: 70 bytes on wire (560 bits), 70 bytes captured (560 bits) on interface 0
+Ethernet II, Src: Cisco_d6:aa:b9 (68:ef:bd:d6:aa:b9), Dst: HewlettP_61:30:63 (00:21:5a:61:30:63)
+Internet Protocol Version 4, Src: 172.16.31.254, Dst: 172.16.31.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     46 9.792927427    fe80::221:5aff:fe61:3063 ff02::fb              MDNS     180    Standard query 0x0000 PTR _ftp._tcp.local, "QM" question PTR _nfs._tcp.local, "QM" question PTR _afpovertcp._tcp.local, "QM" question PTR _smb._tcp.local, "QM" question PTR _sftp-ssh._tcp.local, "QM" question PTR _webdavs._tcp.local, "QM" question PTR _webdav._tcp.local, "QM" question
+
+Frame 46: 180 bytes on wire (1440 bits), 180 bytes captured (1440 bits) on interface 0
+Ethernet II, Src: HewlettP_61:30:63 (00:21:5a:61:30:63), Dst: IPv6mcast_fb (33:33:00:00:00:fb)
+Internet Protocol Version 6, Src: fe80::221:5aff:fe61:3063, Dst: ff02::fb
+User Datagram Protocol, Src Port: 5353, Dst Port: 5353
+Multicast Domain Name System (query)
+
+No.     Time           Source                Destination           Protocol Length Info
+     47 9.793014797    172.16.31.1           224.0.0.251           MDNS     160    Standard query 0x0000 PTR _ftp._tcp.local, "QM" question PTR _nfs._tcp.local, "QM" question PTR _afpovertcp._tcp.local, "QM" question PTR _smb._tcp.local, "QM" question PTR _sftp-ssh._tcp.local, "QM" question PTR _webdavs._tcp.local, "QM" question PTR _webdav._tcp.local, "QM" question
+
+Frame 47: 160 bytes on wire (1280 bits), 160 bytes captured (1280 bits) on interface 0
+Ethernet II, Src: HewlettP_61:30:63 (00:21:5a:61:30:63), Dst: IPv4mcast_fb (01:00:5e:00:00:fb)
+Internet Protocol Version 4, Src: 172.16.31.1, Dst: 224.0.0.251
+User Datagram Protocol, Src Port: 5353, Dst Port: 5353
+Multicast Domain Name System (query)
+
+No.     Time           Source                Destination           Protocol Length Info
+     48 10.024400214   Cisco_3a:fa:84        Spanning-tree-(for-bridges)_00 STP      60     Conf. Root = 32768/31/fc:fb:fb:3a:fa:80  Cost = 0  Port = 0x8004
+
+Frame 48: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface 0
+IEEE 802.3 Ethernet 
+Logical-Link Control
+Spanning Tree Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     49 10.385693105   172.16.31.1           172.16.30.1           ICMP     98     Echo (ping) request  id=0x01fe, seq=8/2048, ttl=64 (reply in 51)
+
+Frame 49: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface 0
+Ethernet II, Src: HewlettP_61:30:63 (00:21:5a:61:30:63), Dst: Cisco_d6:aa:b9 (68:ef:bd:d6:aa:b9)
+Internet Protocol Version 4, Src: 172.16.31.1, Dst: 172.16.30.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     50 10.385983847   172.16.31.254         172.16.31.1           ICMP     70     Redirect             (Redirect for host)
+
+Frame 50: 70 bytes on wire (560 bits), 70 bytes captured (560 bits) on interface 0
+Ethernet II, Src: Cisco_d6:aa:b9 (68:ef:bd:d6:aa:b9), Dst: HewlettP_61:30:63 (00:21:5a:61:30:63)
+Internet Protocol Version 4, Src: 172.16.31.254, Dst: 172.16.31.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     51 10.386239112   172.16.30.1           172.16.31.1           ICMP     98     Echo (ping) reply    id=0x01fe, seq=8/2048, ttl=63 (request in 49)
+
+Frame 51: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface 0
+Ethernet II, Src: 3Com_21:83:0e (00:01:02:21:83:0e), Dst: HewlettP_61:30:63 (00:21:5a:61:30:63)
+Internet Protocol Version 4, Src: 172.16.30.1, Dst: 172.16.31.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     52 11.400499136   172.16.31.1           172.16.30.1           ICMP     98     Echo (ping) request  id=0x01fe, seq=9/2304, ttl=64 (reply in 54)
+
+Frame 52: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface 0
+Ethernet II, Src: HewlettP_61:30:63 (00:21:5a:61:30:63), Dst: Cisco_d6:aa:b9 (68:ef:bd:d6:aa:b9)
+Internet Protocol Version 4, Src: 172.16.31.1, Dst: 172.16.30.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     53 11.400810272   172.16.31.254         172.16.31.1           ICMP     70     Redirect             (Redirect for host)
+
+Frame 53: 70 bytes on wire (560 bits), 70 bytes captured (560 bits) on interface 0
+Ethernet II, Src: Cisco_d6:aa:b9 (68:ef:bd:d6:aa:b9), Dst: HewlettP_61:30:63 (00:21:5a:61:30:63)
+Internet Protocol Version 4, Src: 172.16.31.254, Dst: 172.16.31.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     54 11.401169877   172.16.30.1           172.16.31.1           ICMP     98     Echo (ping) reply    id=0x01fe, seq=9/2304, ttl=63 (request in 52)
+
+Frame 54: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface 0
+Ethernet II, Src: 3Com_21:83:0e (00:01:02:21:83:0e), Dst: HewlettP_61:30:63 (00:21:5a:61:30:63)
+Internet Protocol Version 4, Src: 172.16.30.1, Dst: 172.16.31.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     55 12.029402629   Cisco_3a:fa:84        Spanning-tree-(for-bridges)_00 STP      60     Conf. Root = 32768/31/fc:fb:fb:3a:fa:80  Cost = 0  Port = 0x8004
+
+Frame 55: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface 0
+IEEE 802.3 Ethernet 
+Logical-Link Control
+Spanning Tree Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     56 12.424481134   172.16.31.1           172.16.30.1           ICMP     98     Echo (ping) request  id=0x01fe, seq=10/2560, ttl=64 (reply in 58)
+
+Frame 56: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface 0
+Ethernet II, Src: HewlettP_61:30:63 (00:21:5a:61:30:63), Dst: Cisco_d6:aa:b9 (68:ef:bd:d6:aa:b9)
+Internet Protocol Version 4, Src: 172.16.31.1, Dst: 172.16.30.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     57 12.424771388   172.16.31.254         172.16.31.1           ICMP     70     Redirect             (Redirect for host)
+
+Frame 57: 70 bytes on wire (560 bits), 70 bytes captured (560 bits) on interface 0
+Ethernet II, Src: Cisco_d6:aa:b9 (68:ef:bd:d6:aa:b9), Dst: HewlettP_61:30:63 (00:21:5a:61:30:63)
+Internet Protocol Version 4, Src: 172.16.31.254, Dst: 172.16.31.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     58 12.424990196   172.16.30.1           172.16.31.1           ICMP     98     Echo (ping) reply    id=0x01fe, seq=10/2560, ttl=63 (request in 56)
+
+Frame 58: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface 0
+Ethernet II, Src: 3Com_21:83:0e (00:01:02:21:83:0e), Dst: HewlettP_61:30:63 (00:21:5a:61:30:63)
+Internet Protocol Version 4, Src: 172.16.30.1, Dst: 172.16.31.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     59 12.851198447   Cisco_3a:fa:84        Cisco_3a:fa:84        LOOP     60     Reply
+
+Frame 59: 60 bytes on wire (480 bits), 60 bytes captured (480 bits) on interface 0
+Ethernet II, Src: Cisco_3a:fa:84 (fc:fb:fb:3a:fa:84), Dst: Cisco_3a:fa:84 (fc:fb:fb:3a:fa:84)
+Configuration Test Protocol (loopback)
+Data (40 bytes)
+
+0000  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00   ................
+0010  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00   ................
+0020  00 00 00 00 00 00 00 00                           ........
+
+No.     Time           Source                Destination           Protocol Length Info
+     60 13.448485620   172.16.31.1           172.16.30.1           ICMP     98     Echo (ping) request  id=0x01fe, seq=11/2816, ttl=64 (reply in 62)
+
+Frame 60: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface 0
+Ethernet II, Src: HewlettP_61:30:63 (00:21:5a:61:30:63), Dst: Cisco_d6:aa:b9 (68:ef:bd:d6:aa:b9)
+Internet Protocol Version 4, Src: 172.16.31.1, Dst: 172.16.30.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     61 13.448779227   172.16.31.254         172.16.31.1           ICMP     70     Redirect             (Redirect for host)
+
+Frame 61: 70 bytes on wire (560 bits), 70 bytes captured (560 bits) on interface 0
+Ethernet II, Src: Cisco_d6:aa:b9 (68:ef:bd:d6:aa:b9), Dst: HewlettP_61:30:63 (00:21:5a:61:30:63)
+Internet Protocol Version 4, Src: 172.16.31.254, Dst: 172.16.31.1
+Internet Control Message Protocol
+
+No.     Time           Source                Destination           Protocol Length Info
+     62 13.449159993   172.16.30.1           172.16.31.1           ICMP     98     Echo (ping) reply    id=0x01fe, seq=11/2816, ttl=63 (request in 60)
+
+Frame 62: 98 bytes on wire (784 bits), 98 bytes captured (784 bits) on interface 0
+Ethernet II, Src: 3Com_21:83:0e (00:01:02:21:83:0e), Dst: HewlettP_61:30:63 (00:21:5a:61:30:63)
+Internet Protocol Version 4, Src: 172.16.30.1, Dst: 172.16.31.1
+Internet Control Message Protocol
