@@ -37,12 +37,17 @@ int parseArguments(struct arguments *args, char *commandLineArg) {
         return -1;
     }
     else if (strcmp(token, rest_of_string) == 0) {
+        memset(args->user, 0, sizeof(args->user));
         strcpy(args->user, "anonymous");
+        memset(args->password, 0, sizeof(args->password));
         strcpy(args->password, "");
-        
-        strcpy(rest_of_string, &rest_of_string[2]);
+
+        char aux2[MAX_LENGTH];
+        strcpy(aux2, &rest_of_string[2]);
+        strcpy(rest_of_string, aux2);
     }
     else {
+        memset(args->user, 0, sizeof(args->user));
         strcpy(args->user, &token[2]);
         // parsing password
         token = strtok(NULL, "@");
@@ -50,6 +55,7 @@ int parseArguments(struct arguments *args, char *commandLineArg) {
             printf("-> Error parsing the password\n");
             return -1;
         }
+        memset(args->password, 0, sizeof(args->password));
         strcpy(args->password, token);
 
         token = strtok(NULL, "\0");
@@ -62,9 +68,10 @@ int parseArguments(struct arguments *args, char *commandLineArg) {
         printf("-> Error parsing the hostname\n");
         return -1;
     }
+    memset(args->host_name, 0, sizeof(args->host_name));
     strcpy(args->host_name, token);
 
-    // parsing path
+    // parsing path and name
     token = strtok(NULL, "\0");
     if (token == NULL) {
         printf("-> Error parsing the file path\n");
@@ -74,15 +81,14 @@ int parseArguments(struct arguments *args, char *commandLineArg) {
     if (last != NULL) {
         memset(args->file_path, 0, sizeof(args->file_path));
         strncpy(args->file_path, token, last - token);
+        memset(args->file_name, 0, sizeof(args->file_name));
+        strcpy(args->file_name, last + 1);
     }
     else {
+        memset(args->file_path, 0, sizeof(args->file_path));
         strcpy(args->file_path, "");
+        memset(args->file_name, 0, sizeof(args->file_name));
         strcpy(args->file_name, token);
-    }
-
-    // parsing name
-    if (last != NULL) {
-        strcpy(args->file_name, last + 1);
     }
 
     printf("Parsed command line arguments.\n\n");
