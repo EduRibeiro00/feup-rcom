@@ -3,6 +3,7 @@
 #include <ctype.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <stdbool.h>
 #include "functions.h"
 
 /**
@@ -195,9 +196,10 @@ int receiveFromControlSocket(struct ftp *ftp, char *string, size_t size) {
  * @param cmdBody Body of the command to be sent
  * @param response Buffer that is going to store the number code received from the server
  * @param responseLength Number of digits to be received on the response
+ * @param readingFile Indicates if the file is about to be read from the data socket
  * @return int Positive (depending on response) if success; -1 otherwise
  */
-int sendCommandInterpretResponse(struct ftp *ftp, char *cmdHeader, char *cmdBody, char *response, size_t responseLength) {
+int sendCommandInterpretResponse(struct ftp *ftp, char *cmdHeader, char *cmdBody, char *response, size_t responseLength, bool readingFile) {
     if (sendToControlSocket(ftp, cmdHeader, cmdBody) < 0) {
         printf("Error Sending Command  %s %s\n", cmdHeader, cmdBody);
         return -1;
@@ -209,7 +211,8 @@ int sendCommandInterpretResponse(struct ftp *ftp, char *cmdHeader, char *cmdBody
         switch (code) {
             case 1:
                 // expecting another reply
-                break;
+                if (readingFile) return 2;
+                else break;
             case 2:
                 // request action success
                 return 2;
@@ -248,7 +251,7 @@ int getServerPortForFile(struct ftp *ftp) {
     memset(firstByte, 0, 4);
     memset(secondByte, 0, 4);
     char response[MAX_LENGTH];
-    int rtr = sendCommandInterpretResponse(ftp, "pasv", "", response, MAX_LENGTH);
+    int rtr = sendCommandInterpretResponse(ftp, "pasv", "", response, MAX_LENGTH, false);
     int ipPart1, ipPart2, ipPart3, ipPart4;
     int port1, port2;
     if (rtr == 2) {
@@ -284,7 +287,7 @@ int getServerPortForFile(struct ftp *ftp) {
  */
 int retr(struct ftp* ftp, char* fileName){
     char response[MAX_LENGTH];
-    if(sendCommandInterpretResponse(ftp, "RETR", fileName, response, MAX_LENGTH) < 0){
+    if(sendCommandInterpretResponse(ftp, "RETR", fileName, response, MAX_LENGTH, true) < 0){
         printf("Error sending Command Retr\n\n");
         return -1;
     }
@@ -303,7 +306,7 @@ int retr(struct ftp* ftp, char* fileName){
 int login(struct ftp *ftp, char *username, char *password) {
     printf("Sending Username...\n\n");
     char response[MAX_LENGTH];
-    int rtr = sendCommandInterpretResponse(ftp, "user", username, response, MAX_LENGTH);
+    int rtr = sendCommandInterpretResponse(ftp, "user", username, response, MAX_LENGTH, false);
     if (rtr == 3) {
         printf("Sent Username...\n\n");
     }
@@ -312,7 +315,7 @@ int login(struct ftp *ftp, char *username, char *password) {
         return -1;
     }
     printf("Sending Password...\n\n");
-    rtr = sendCommandInterpretResponse(ftp, "pass", password, response, MAX_LENGTH);
+    rtr = sendCommandInterpretResponse(ftp, "pass", password, response, MAX_LENGTH, false);
     if (rtr == 2) {
         printf("Sent Password...\n\n");
     }
@@ -332,7 +335,7 @@ int login(struct ftp *ftp, char *username, char *password) {
  */
 int changeWorkingDirectory(struct ftp* ftp, char* path) {
     char response[MAX_LENGTH];
-    if(sendCommandInterpretResponse(ftp, "CWD", path, response, MAX_LENGTH) < 0){
+    if(sendCommandInterpretResponse(ftp, "CWD", path, response, MAX_LENGTH, false) < 0){
         printf("Error sendimg Comand CWD\n\n");
         return -1;
     }
@@ -372,6 +375,10 @@ int downloadFile(struct ftp* ftp, char * fileName){
         return -1;
     }
     close(ftp->data_socket_fd);
+    char response[MAX_LENGTH];
+    receiveFromControlSocket(ftp, response, MAX_LENGTH);
+    if (response[0] != '2')
+        return -1;
     return 0;
 }
 
@@ -412,7 +419,7 @@ int closeFile(FILE* fp){
  */
 int disconnectFromSocket(struct ftp* ftp) {
     char response[MAX_LENGTH];
-    if(sendCommandInterpretResponse(ftp, "QUIT", "", response, MAX_LENGTH) != 2){
+    if(sendCommandInterpretResponse(ftp, "QUIT", "", response, MAX_LENGTH, false) != 2){
         printf("Error sending Command Quit\n\n");
         return -1;
     }

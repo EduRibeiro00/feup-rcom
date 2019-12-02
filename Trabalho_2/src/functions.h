@@ -11,6 +11,7 @@
 #include <signal.h>
 #include <netdb.h>
 #include <strings.h>
+#include <stdbool.h>
 #include "macros.h"
 
 /**
@@ -84,7 +85,6 @@ int sendToControlSocket(struct ftp* ftp, char* cmdHeader, char* cmdBody);
  */
 int receiveFromControlSocket(struct ftp *ftp, char* string, size_t size);
 
-
 /**
  * Function that sends a command to the control socket and interprets the response received
  * 
@@ -93,9 +93,10 @@ int receiveFromControlSocket(struct ftp *ftp, char* string, size_t size);
  * @param cmdBody Body of the command to be sent
  * @param response Buffer that is going to store the number code received from the server
  * @param responseLength Number of digits to be received on the response
+ * @param readingFile Indicates if the file is about to be read from the data socket
  * @return int Positive (depending on response) if success; -1 otherwise
  */
-int sendCommandInterpretResponse(struct ftp* ftp, char* cmdHeader,  char* cmdBody, char* response, size_t responseLength);
+int sendCommandInterpretResponse(struct ftp* ftp, char* cmdHeader,  char* cmdBody, char* response, size_t responseLength, bool readingFile);
 
 
 /**
